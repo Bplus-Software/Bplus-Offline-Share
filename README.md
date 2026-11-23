@@ -105,3 +105,8 @@ Fix selection touch ownership and add plain text multi-selection. 1.1.6 was not 
 ## 1.1.8 device-test candidate
 
 Includes 1.1.7 text selection and gesture ownership fix. Prepares dialog content/style/width before showing and replaces movement animations with alpha-only fade. Actual phone animation remains unverified. See release118-notes.txt. 1.1.5 remains latest.
+
+
+## 1.1.9 device-test candidate
+
+Plain Delete flow, exact document/provider deletion routes with supported Android consent and named-file failure dialog, expanded categorized emoji grid and composer spacing. Actual Android provider deletion and emoji pixels still need phone validation. See release119-notes.txt. 1.1.5 stays latest.

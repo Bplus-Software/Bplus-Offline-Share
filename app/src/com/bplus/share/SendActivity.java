@@ -150,6 +150,7 @@ public class SendActivity extends Activity {
     private void pickFiles() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION|Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         i.setType("*/*");
         i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(i, REQ_PICK);
@@ -160,14 +161,14 @@ public class SendActivity extends Activity {
         if (req == REQ_PICK && res == RESULT_OK && data != null) {
             if (data.getClipData() != null) {
                 for (int i = 0; i < data.getClipData().getItemCount(); i++)
-                    addUri(data.getClipData().getItemAt(i).getUri());
-            } else if (data.getData() != null) addUri(data.getData());
+                    addUri(data.getClipData().getItemAt(i).getUri(),data.getFlags());
+            } else if (data.getData() != null) addUri(data.getData(),data.getFlags());
             showPick();
         }
     }
 
-    private void addUri(Uri u) {
-        try { getContentResolver().takePersistableUriPermission(u, Intent.FLAG_GRANT_READ_URI_PERMISSION); } catch (Exception ignored) {}
+    private void addUri(Uri u,int flags) {
+        try { getContentResolver().takePersistableUriPermission(u, flags&(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION)); } catch (Exception ignored) {}
         uris.add(u);
         String name = "file"; long size = 0;
         try (Cursor c = getContentResolver().query(u, null, null, null, null)) {

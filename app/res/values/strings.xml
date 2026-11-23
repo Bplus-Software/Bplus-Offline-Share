@@ -231,7 +231,7 @@
 <string name="select_all">Select all</string>
 <string name="send_selected_confirm">Send %1$d selected files to %2$s?</string>
 <string name="remove_cards_only">Remove selected chat cards only</string>
-<string name="delete_local_files">Delete selected local file copies</string>
+<string name="delete_local_files">Delete files from this phone</string>
 <string name="remove_cards_note">Remove %1$d chat cards on this phone only? Files stay on disk and other phones are unchanged.</string>
 <string name="delete_files_note">Permanently delete up to %1$d selected local file copies? Original files you sent may also be selected. This cannot be undone; chat cards stay as records. Other phones are unchanged. Android may refuse protected files.</string>
 <string name="delete_result">Delete request finished. %1$d files could not be deleted. Chat cards were kept.</string>
@@ -254,10 +254,24 @@
 <string name="send_all_files_note">Send copies of %1$d chat file entries to %2$s? Originals and cards stay here. Repeated entries may send duplicate copies. No automatic retries.</string>
 <string name="no_chat_files">No file cards in this chat</string>
     <string name="remove_card_note">Remove 1 chat card on this phone only? Files stay on disk and other phones are unchanged.</string>
-    <string name="remove_selected_messages">Remove selected messages only</string>
-    <string name="remove_message_note">Remove 1 message from this chat on this phone only? Files stay on disk and other phones are unchanged.</string>
-    <string name="remove_messages_note">Remove %1$d messages from this chat on this phone only? Files stay on disk and other phones are unchanged.</string>
+    <string name="remove_selected_messages">Delete from this chat</string>
+    <string name="remove_message_note">Delete this message from this chat? The file stays on your phone.</string>
+    <string name="remove_messages_note">Delete these %1$d messages from this chat? Files stay on your phone.</string>
     <string name="send_selected_items">Send selected messages/files</string>
     <string name="send_items_confirm">Send %1$d selected items as copies to %2$s? Originals stay here.</string>
     <string name="send_items_result">Sent %1$d of %2$d selected items.</string>
+<string name="delete_one_short">Delete this file from your phone? This cannot be undone. Other phones are unchanged.</string>
+<string name="delete_many_short">Delete these %1$d files from your phone? This cannot be undone. Other phones are unchanged.</string>
+<string name="delete_summary">Deleted: %1$d. Not deleted: %2$d.</string>
+<string name="delete_no_reference">No saved file link. Find the file in your file manager.</string>
+<string name="delete_refused">Android or the file provider did not allow deletion. Delete it in your file manager.</string>
+<string name="delete_read_only">This file is read-only to B+ Share. Delete it in your file manager.</string>
+<string name="delete_cancelled">Deletion was cancelled.</string>
+<string name="delete_records_kept">Chat messages were kept.</string>
+<string name="emoji_faces">Faces</string>
+<string name="emoji_hands">Hands</string>
+<string name="emoji_hearts">Hearts &amp; celebration</string>
+<string name="emoji_nature">Nature</string>
+<string name="emoji_food">Food &amp; drink</string>
+<string name="emoji_objects">Activities &amp; things</string>
 </resources>

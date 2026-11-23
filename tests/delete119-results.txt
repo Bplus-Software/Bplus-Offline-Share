@@ -1,0 +1,8 @@
+PASS typed route resolves exact saved file
+PASS exact saved file can be deleted
+PASS legacy flat route preserved
+PASS invalid category rejected
+PASS filename traversal rejected
+PASS unrelated routes rejected
+PASS symlink category escape rejected
+7 filesystem route tests, not Android provider-permission tests.

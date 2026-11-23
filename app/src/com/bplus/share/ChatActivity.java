@@ -101,9 +101,9 @@ public class ChatActivity extends Activity {
             input.setText("");
             sendText(text);
         });
-        TextView emoji=Ui.t(this,"☺",22,Ui.accent,App.cairoB);emoji.setGravity(Gravity.CENTER);bar.addView(emoji,0,Ui.lp(Ui.dp(this,36),Ui.dp(this,40)));
+        TextView emoji=Ui.t(this,"☺",22,Ui.accent,App.cairoB);emoji.setGravity(Gravity.CENTER);LinearLayout.LayoutParams emojiLp=Ui.lp(Ui.dp(this,44),Ui.dp(this,44));emojiLp.setMarginEnd(Ui.dp(this,12));bar.addView(emoji,0,emojiLp);
         emoji.setContentDescription(getString(R.string.emoji_title));
-        emoji.setOnClickListener(v->{String[] choices={"👍","😊","❤️","😂","🙏"};new AppDialog(this).setTitle(getString(R.string.emoji_title)).setItems(choices,(d,n)->{int start=Math.max(0,input.getSelectionStart());input.getText().insert(start,choices[n]);input.requestFocus();((android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(input,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);}).setNegativeButton(getString(R.string.cancel),null).show();});
+        emoji.setOnClickListener(v->EmojiPicker.show(this,input));
         root.addView(bar);
         setContentView(root);
 
@@ -195,13 +195,14 @@ public class ChatActivity extends Activity {
     private void pickFile() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION|Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         i.setType("*/*");
         i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(i, REQ_PICK);
     }
 
     @Override protected void onActivityResult(int req, int res, Intent data) {
-        super.onActivityResult(req, res, data);
+        super.onActivityResult(req, res, data);if(selection!=null&&selection.activityResult(req,res))return;
         if(req==62 && res==RESULT_OK && data!=null && data.getData()!=null && locating!=null){
             Uri u=data.getData();if(!Attachments.readable(this,u)){android.widget.Toast.makeText(this,R.string.attach_permission,1).show();return;}try{getContentResolver().takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
             JSONObject selected=locating;locating=null;
@@ -216,7 +217,7 @@ public class ChatActivity extends Activity {
         else if (data.getData() != null) uris.add(data.getData());
         exec.execute(() -> {
             for (Uri u : uris) {
-                try { getContentResolver().takePersistableUriPermission(u, Intent.FLAG_GRANT_READ_URI_PERMISSION); } catch (Exception ignored) {}
+                try { getContentResolver().takePersistableUriPermission(u, data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION)); } catch (Exception ignored) {}
                 String name = "file"; long size = 0;
                 try (Cursor c = getContentResolver().query(u, null, null, null, null)) {
                     if (c != null && c.moveToFirst()) {

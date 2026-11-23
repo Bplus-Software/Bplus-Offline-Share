@@ -231,7 +231,7 @@
 <string name="select_all">تحديد الكل</string>
 <string name="send_selected_confirm">إرسال %1$d ملفات محددة إلى %2$s؟</string>
 <string name="remove_cards_only">حذف الكروت المحددة من الشات فقط</string>
-<string name="delete_local_files">حذف نسخ الملفات المحددة من الموبايل</string>
+<string name="delete_local_files">حذف الملفات من الهاتف</string>
 <string name="remove_cards_note">حذف %1$d كروت من الشات على الموبايل ده بس؟ الملفات هتفضل في مكانها وموبايلات الباقي مش هتتأثر.</string>
 <string name="delete_files_note">حذف نهائي لحد %1$d من نسخ الملفات المحددة على الموبايل؟ ممكن التحديد يشمل ملفاتك الأصلية اللي بعتها. مفيش تراجع؛ الكروت هتفضل كسجل. موبايلات الباقي مش هتتأثر وأندرويد ممكن يمنع حذف الملفات المحمية.</string>
 <string name="delete_result">طلب الحذف انتهى. تعذّر حذف %1$d ملفات. كروت الشات فضلت كسجل.</string>
@@ -254,10 +254,24 @@
 <string name="send_all_files_note">تبعت نسخ من %1$d ملفات مسجلة بالدردشة إلى %2$s؟ الأصل والكروت هيفضلوا هنا. السجلات المكررة ممكن تبعت نسخ مكررة. مفيش إعادة إرسال تلقائية.</string>
 <string name="no_chat_files">مفيش ملفات مسجلة في الدردشة</string>
     <string name="remove_card_note">إزالة بطاقة ملف واحدة من هذه المحادثة على هذا الهاتف فقط؟ تبقى الملفات على الهاتف ولا تتغير الأجهزة الأخرى.</string>
-    <string name="remove_selected_messages">حذف الرسائل المحددة فقط</string>
-    <string name="remove_message_note">حذف رسالة واحدة من المحادثة على هذا الهاتف فقط؟ تبقى الملفات ولا تتغير الأجهزة الأخرى.</string>
-    <string name="remove_messages_note">حذف %1$d رسائل من المحادثة على هذا الهاتف فقط؟ تبقى الملفات ولا تتغير الأجهزة الأخرى.</string>
+    <string name="remove_selected_messages">حذف من المحادثة</string>
+    <string name="remove_message_note">حذف هذه الرسالة من المحادثة؟ يبقى الملف على الهاتف.</string>
+    <string name="remove_messages_note">حذف هذه الرسائل (%1$d) من المحادثة؟ تبقى الملفات على الهاتف.</string>
     <string name="send_selected_items">إرسال الرسائل والملفات المحددة</string>
     <string name="send_items_confirm">إرسال نسخ من %1$d عناصر محددة إلى %2$s؟ تبقى النسخ الأصلية هنا.</string>
     <string name="send_items_result">تم إرسال %1$d من %2$d عناصر محددة.</string>
+<string name="delete_one_short">حذف هذا الملف من الهاتف نهائيًا؟ لا يمكن التراجع. لا تتأثر الأجهزة الأخرى.</string>
+<string name="delete_many_short">حذف هذه الملفات (%1$d) من الهاتف نهائيًا؟ لا يمكن التراجع. لا تتأثر الأجهزة الأخرى.</string>
+<string name="delete_summary">تم الحذف: %1$d. لم يُحذف: %2$d.</string>
+<string name="delete_no_reference">لا يوجد رابط محفوظ للملف. ابحث عنه في مدير الملفات.</string>
+<string name="delete_refused">لم يسمح أندرويد أو مزود الملف بالحذف. احذفه من مدير الملفات.</string>
+<string name="delete_read_only">هذا الملف متاح للقراءة فقط في B+ Share. احذفه من مدير الملفات.</string>
+<string name="delete_cancelled">تم إلغاء الحذف.</string>
+<string name="delete_records_kept">لم تُحذف رسائل المحادثة.</string>
+<string name="emoji_faces">وجوه</string>
+<string name="emoji_hands">إشارات اليد</string>
+<string name="emoji_hearts">قلوب واحتفالات</string>
+<string name="emoji_nature">طبيعة</string>
+<string name="emoji_food">طعام ومشروبات</string>
+<string name="emoji_objects">أنشطة وأشياء</string>
 </resources>

@@ -1,0 +1,13 @@
+package com.bplus.share;
+import android.app.*;import android.view.*;import android.widget.*;
+/** Scrollable categorized emoji grid. Inserts only, never sends the composer. */
+public final class EmojiPicker{
+ static final String[][] EMOJI={
+ {"😀","😃","😄","😁","😆","😅","😂","🤣","😊","🙂","🙃","😉","😍","🥰","😘","😋","😎","🤩","🥳","🤔","🤨","😐","😏","🙄","😴","😢","😭","😤","😡","🤯","😱","😳","🥺","🤗","🤫","🤭"},
+ {"👍","👎","👌","✌️","🤞","🤟","🤘","🤙","👋","🤚","✋","🖐️","👏","🙌","🤝","🙏","💪","✍️","☝️","👆","👇","👈","👉","👊"},
+ {"❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","💕","💞","💓","💗","💖","💘","💝","💯","✨","🎉","🎊","🎈","🎁","🌹"},
+ {"🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐵","🐸","🐥","🦋","🌻","🌸","🌴","🌳","☀️","🌙","⭐","🌈"},
+ {"🍏","🍎","🍊","🍋","🍌","🍉","🍇","🍓","🍒","🥭","🍍","🥑","🍔","🍟","🍕","🌭","🥪","🍗","🍰","🎂","🍫","🍿","☕","🍵"},
+ {"⚽","🏀","🏈","⚾","🎾","🏐","🎱","🏆","🏅","🎮","🎧","🎵","🎬","📷","📱","💻","⌚","🚗","🚕","🚌","✈️","🚀","🏠","🕌"}};
+ public static void show(Activity a,EditText input){LinearLayout content=Ui.col(a);Ui.pad(content,14,0,14,8,a);ScrollView scroll=new ScrollView(a);scroll.setFillViewport(false);LinearLayout groups=Ui.col(a);int[] labels={R.string.emoji_faces,R.string.emoji_hands,R.string.emoji_hearts,R.string.emoji_nature,R.string.emoji_food,R.string.emoji_objects};int width=Math.min(a.getResources().getDisplayMetrics().widthPixels-Ui.dp(a,64),Ui.dp(a,402));int columns=Math.max(3,Math.min(7,width/Ui.dp(a,48)));final AlertDialog[] dialog={null};for(int c=0;c<EMOJI.length;c++){TextView label=Ui.t(a,a.getString(labels[c]),13,Ui.dim,App.cairoSB);Ui.pad(label,4,12,4,6,a);groups.addView(label);GridLayout grid=new GridLayout(a);grid.setColumnCount(columns);grid.setUseDefaultMargins(false);for(String emoji:EMOJI[c]){TextView cell=new TextView(a);cell.setText(emoji);cell.setTextSize(26);cell.setGravity(Gravity.CENTER);cell.setIncludeFontPadding(true);cell.setContentDescription(emoji);GridLayout.LayoutParams lp=new GridLayout.LayoutParams();lp.width=0;lp.height=Ui.dp(a,52);lp.columnSpec=GridLayout.spec(GridLayout.UNDEFINED,1f);grid.addView(cell,lp);cell.setOnClickListener(v->{int start=Math.max(0,input.getSelectionStart()),end=Math.max(start,input.getSelectionEnd());input.getText().replace(start,end,emoji);input.setSelection(start+emoji.length());if(dialog[0]!=null)dialog[0].dismiss();input.requestFocus();});}groups.addView(grid,Ui.lp(-1,-2));}scroll.addView(groups);int height=Math.min(Ui.dp(a,390),a.getResources().getDisplayMetrics().heightPixels*55/100);content.addView(scroll,Ui.lp(-1,height));dialog[0]=new AppDialog(a).setTitle(R.string.emoji_title).setView(content).setNegativeButton(R.string.cancel,null).create();dialog[0].show();}
+}
