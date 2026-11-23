@@ -80,15 +80,7 @@ public class TransferService extends Service {
                 .setContentIntent(pi).setOngoing(true).build();
     }
 
-    private void notifyEvent(String title, String text) {
-        try {
-            android.app.NotificationManager nm = getSystemService(android.app.NotificationManager.class);
-            Notification n = new Notification.Builder(this, App.CH)
-                    .setSmallIcon(R.drawable.ic_stat).setContentTitle(title).setContentText(text)
-                    .setAutoCancel(true).build();
-            nm.notify((int) (System.currentTimeMillis() % 100000) + 2, n);
-        } catch (Exception ignored) {}
-    }
+    private void notifyEvent(String title,String text){Alerts.incoming(title,text);}
 
     @Override public int onStartCommand(Intent i, int f, int id) { return START_STICKY; }
     @Override public IBinder onBind(Intent i) { return null; }
@@ -132,7 +124,11 @@ public class TransferService extends Service {
             }
             int len = headers.containsKey("content-length") ? Integer.parseInt(headers.get("content-length")) : -1;
 
-            if(path.startsWith("/nearby/")){
+            if(path.startsWith("/group/")){
+                if(!method.equals("POST")){err(out,400);return;}
+                String route=path.substring(7).split("\\?")[0];
+                try{if(route.equals("file")||route.equals("file-deliver")){LocalGroups.receiveFile(route,q,s.getInetAddress().getHostAddress(),in,len);ok(out);}else{if(len<0||len>20000){err(out,400);return;}json(out,LocalGroups.handle(route,new JSONObject(new String(readBody(in,len),"UTF-8")),s.getInetAddress().getHostAddress()));}}catch(Exception denied){err(out,403);}
+            } else if(path.startsWith("/nearby/")){
                 if(!method.equals("POST")||len<0||len>48000){err(out,400);return;}
                 try{JSONObject result=Nearby.handle(path,new JSONObject(new String(readBody(in,len),"UTF-8")),s.getInetAddress().getHostAddress());json(out,result);}catch(Exception denied){err(out,403);}
             } else if (path.startsWith("/ping")) {
@@ -262,6 +258,7 @@ public class TransferService extends Service {
         while ((c = in.read()) != -1) {
             if (c == '\n') break;
             if (c != '\r') sb.append((char) c);
+            if(sb.length()>16384)throw new IOException("HTTP line too long");
         }
         return sb.length() == 0 && c == -1 ? null : sb.toString();
     }

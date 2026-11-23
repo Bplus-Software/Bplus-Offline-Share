@@ -18,10 +18,11 @@ public class App extends Application {
         try { cairo = Typeface.createFromAsset(getAssets(), "fonts/cairo-400.ttf"); } catch (Exception e) { cairo = Typeface.DEFAULT; }
         try { cairoSB = Typeface.createFromAsset(getAssets(), "fonts/cairo-600.ttf"); } catch (Exception e) { cairoSB = cairo; }
         try { cairoB = Typeface.createFromAsset(getAssets(), "fonts/cairo-700.ttf"); } catch (Exception e) { cairoB = cairo; }
-        Store.init(this);
+        Store.init(this);Attachments.snapshot();
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationManager nm = getSystemService(NotificationManager.class);
             nm.createNotificationChannel(new NotificationChannel(CH, "B+ Share", NotificationManager.IMPORTANCE_LOW));
+            Alerts.setup(this);
         }
         TransferService.start(this);
     }

@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 
 public class ChatActivity extends Activity {
     private static final int REQ_PICK = 61;
+    private FileSelection selection;
     private JSONObject locating;
     private final java.util.Set<String> retrying=java.util.Collections.synchronizedSet(new java.util.HashSet<String>());
     private String peerId;
@@ -37,7 +38,7 @@ public class ChatActivity extends Activity {
         Ui.applyTheme(this);
         peerId = getIntent().getStringExtra("peer");
         peer = Store.peerById(peerId);
-        if(peer==null){finish();return;}
+        if(peer==null){finish();return;}selection=new FileSelection(this,peerId,this::renderThread);
 
         LinearLayout root = Ui.col(this);
         root.setBackgroundColor(Ui.bg);
@@ -99,13 +100,9 @@ public class ChatActivity extends Activity {
             input.setText("");
             sendText(text);
         });
-        LinearLayout quick=Ui.row(this);Ui.pad(quick,14,6,14,6,this);
-        String[] replies={getString(R.string.quick_ok),getString(R.string.quick_received),getString(R.string.quick_sending)};
-        for(String reply:replies){TextView chip=Ui.ghost(this,reply);chip.setTextSize(11);Ui.pad(chip,8,8,8,8,this);quick.addView(chip,Ui.lpw(1));chip.setOnClickListener(v->{input.setText(reply);input.setSelection(input.length());input.requestFocus();});}
-        root.addView(quick);
         TextView emoji=Ui.t(this,"☺",22,Ui.accent,App.cairoB);emoji.setGravity(Gravity.CENTER);bar.addView(emoji,0,Ui.lp(Ui.dp(this,36),Ui.dp(this,40)));
         emoji.setContentDescription(getString(R.string.emoji_title));
-        emoji.setOnClickListener(v->{String[] choices={"👍","😊","❤️","😂","🙏","تمام 👍","وصل، شكرًا"};new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.emoji_title)).setItems(choices,(d,n)->{int start=Math.max(0,input.getSelectionStart());input.getText().insert(start,choices[n]);input.requestFocus();((android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(input,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);}).setNegativeButton(getString(R.string.cancel),null).show();});
+        emoji.setOnClickListener(v->{String[] choices={"👍","😊","❤️","😂","🙏"};new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.emoji_title)).setItems(choices,(d,n)->{int start=Math.max(0,input.getSelectionStart());input.getText().insert(start,choices[n]);input.requestFocus();((android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(input,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);}).setNegativeButton(getString(R.string.cancel),null).show();});
         root.addView(bar);
         setContentView(root);
 
@@ -147,15 +144,17 @@ public class ChatActivity extends Activity {
                 TextView text=Ui.t(this,m.optString("body"),14,me?Color.WHITE:Ui.text,App.cairoSB);
                 text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);if(me&&m.optString("state").equals("failed"))text.setOnClickListener(v->retryMessage(m));bub=text;
             }else{
-                bub=FileCards.card(this,m,()->fileMenu(m));
-                if(FileCards.uri(m)==null)bub.setOnClickListener(v->locate(m));
+                bub=FileCards.card(this,m,()->selection.toggle(m));
+                if(selection.active())bub.setOnClickListener(v->selection.toggle(m));
+                if(selection.has(m))bub.setBackground(Ui.round(0xff375f7a,16,this));
+                if(!selection.active()&&!Attachments.state(this,m).equals("ok"))bub.setOnClickListener(v->locate(m));
             }
             String time = tf.format(new Date(m.optLong("ts")));
             String state=m.optString("state");
             if(me)time+=" · "+getString(state.equals("failed")?(kind.equals("text")?R.string.failed_retry:R.string.file_failed_actions):state.equals("sending")?R.string.sending:R.string.sent);
             TextView stamp = Ui.t(this,time,10,Ui.dim,App.cairoSB);
             LinearLayout cell = Ui.col(this);cell.setGravity(me?Gravity.END:Gravity.START);
-            LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(bub,bp);cell.addView(stamp);
+            LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(bub,bp);if(kind.equals("file")&&!Attachments.state(this,m).equals("ok")){TextView fix=Ui.t(this,Attachments.explanation(this,Attachments.state(this,m))+"\n"+getString(R.string.locate_file),12,Ui.accent,App.cairoSB);fix.setMaxWidth(Ui.dp(this,280));fix.setOnClickListener(v->locate(m));cell.addView(fix);}cell.addView(stamp);
             if(me && state.equals("failed") && kind.equals("text")){
                 String reason=m.optString("error",getString(R.string.old_failure));TextView failure=Ui.t(this,reason+"\n"+getString(R.string.retry_details),11,Ui.dim,App.cairoSB);failure.setMaxWidth(Ui.dp(this,280));failure.setOnClickListener(v->retryMessage(m));cell.addView(failure);
             }
@@ -185,7 +184,7 @@ public class ChatActivity extends Activity {
         JSONObject current=Store.peerById(peerId);String local=Net.localIp(this);String ip=current==null?"?":current.optString("ip");int port=current==null?Store.PORT:current.optInt("port",Store.PORT);
         TextView details=Ui.t(this,getString(R.string.checking),13,Ui.text,App.cairoSB);Ui.pad(details,20,20,20,20,this);details.setTextIsSelectable(true);
         android.app.AlertDialog dialog=new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.connection_details)).setView(details).setPositiveButton(android.R.string.ok,null).setNeutralButton(getString(R.string.open_wifi),(d,n)->PairUi.wifi(this)).setNegativeButton(getString(R.string.copy_details),(d,n)->PairUi.copy(this,details.getText().toString())).create();dialog.show();
-        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.1.0\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
+        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.1.1\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
     }
 
     private void pickFile() {
@@ -199,10 +198,10 @@ public class ChatActivity extends Activity {
     @Override protected void onActivityResult(int req, int res, Intent data) {
         super.onActivityResult(req, res, data);
         if(req==62 && res==RESULT_OK && data!=null && data.getData()!=null && locating!=null){
-            Uri u=data.getData();try{getContentResolver().takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
+            Uri u=data.getData();if(!Attachments.readable(this,u)){android.widget.Toast.makeText(this,R.string.attach_permission,1).show();return;}try{getContentResolver().takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
             JSONObject selected=locating;locating=null;
-            new android.app.AlertDialog.Builder(this).setMessage(getString(R.string.locate_confirm,selected.optString("name"))).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(android.R.string.ok,(d,n)->{
-                JSONArray thread=Store.thread(peerId);for(int j=0;j<thread.length();j++){JSONObject item=thread.optJSONObject(j);if(same(item,selected)){try{item.put("uri",u.toString());item.put("mime",getContentResolver().getType(u));}catch(Exception ignored){}break;}}Store.saveThread(peerId,thread);renderThread();
+            new android.app.AlertDialog.Builder(this).setMessage(getString(R.string.locate_confirm,selected.optString("name"))+"\n"+u.getLastPathSegment()+"\n"+getString(R.string.locate_safe_note)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(android.R.string.ok,(d,n)->{
+                Attachments.snapshot();JSONArray thread=Store.thread(peerId);for(int j=0;j<thread.length();j++){JSONObject item=thread.optJSONObject(j);if(same(item,selected)){try{item.put("uri",u.toString());item.put("mime",getContentResolver().getType(u));}catch(Exception ignored){}break;}}Store.saveThread(peerId,thread);renderThread();
             }).show();return;
         }
         if (req != REQ_PICK || res != RESULT_OK || data == null || peer == null) return;
@@ -233,7 +232,7 @@ public class ChatActivity extends Activity {
 
     private static boolean same(JSONObject a,JSONObject b){return a!=null && (b.optString("id").isEmpty() || a.optString("id").equals(b.optString("id"))) && a.optLong("ts")==b.optLong("ts") && a.optString("name").equals(b.optString("name")) && a.optBoolean("me")==b.optBoolean("me");}
     private void locate(JSONObject m){
-        new android.app.AlertDialog.Builder(this).setMessage(getString(R.string.file_unavailable_help)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.locate_file),(d,n)->{locating=m;Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");startActivityForResult(i,62);}).show();
+        locating=m;Attachments.locate(this,m,62);
     }
     private void fileMenu(JSONObject m){
         String[] options={getString(R.string.open_file),getString(R.string.forward_file),getString(R.string.remove_chat),getString(R.string.locate_file),getString(R.string.share_file),getString(R.string.retry_file)};

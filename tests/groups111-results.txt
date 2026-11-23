@@ -1,0 +1,19 @@
+PASS creator joins a separate live group
+PASS invitation authenticates using inviter token, not recipient token
+PASS unaccepted member cannot send
+PASS join binds originating IP
+PASS wrong group key refused
+PASS accept persists joined state
+PASS duplicate message ID stored once
+PASS host derives sender from authenticated membership
+PASS host rejects spoofed delivery route
+PASS unpaired invitation secret refused
+PASS invitation does not silently join recipient
+PASS unaccepted invitation cannot receive message
+PASS accepted member stores host delivery
+PASS recipient binds host IP
+PASS group file rejects wrong host IP before saving
+PASS duplicate file body drained without creating another file
+PASS duplicate file ID does not duplicate history
+PASS negative file length refused
+18 group assertions passed. JVM only, no Android file transfer or UI.

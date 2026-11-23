@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bplus.share"
-    android:versionCode="5" android:versionName="1.1.0">
+    android:versionCode="6" android:versionName="1.1.1">
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34"/>
@@ -29,6 +29,8 @@
         <activity android:name=".ChatActivity" android:exported="false" android:configChanges="orientation|screenSize|locale|layoutDirection|uiMode"/>
         <activity android:name=".SettingsActivity" android:exported="false" android:configChanges="orientation|screenSize|locale|layoutDirection|uiMode"/>
         <activity android:name=".UpdateActivity" android:exported="false" android:configChanges="orientation|screenSize|locale|layoutDirection|uiMode"/>
+        <activity android:name=".CropActivity" android:exported="false"/>
+        <activity android:name=".GroupChatActivity" android:exported="false"/>
         <activity android:name=".ProfileActivity" android:exported="false"/>
         <activity android:name=".NearbyActivity" android:exported="false"/>
         <activity android:name=".LibraryActivity" android:exported="false"/>

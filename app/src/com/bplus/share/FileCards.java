@@ -27,7 +27,7 @@ public final class FileCards {
  }
  private static String extension(String name){int dot=name.lastIndexOf('.');String ext=dot<0?"FILE":name.substring(dot+1).toUpperCase(Locale.ROOT);return ext.length()>5?"FILE":ext;}
  public static void open(Activity a,JSONObject m){
-  if(!available(a,m)){new AlertDialog.Builder(a).setMessage(a.getString(R.string.file_unavailable_help)).setPositiveButton(android.R.string.ok,null).show();return;}
+  if(!available(a,m)){new AlertDialog.Builder(a).setMessage(Attachments.explanation(a,Attachments.state(a,m))+"\n\n"+a.getString(R.string.locate_safe_note)).setPositiveButton(android.R.string.ok,null).show();return;}
   try{Uri u=uri(m);Intent i=new Intent(Intent.ACTION_VIEW);String mime=a.getContentResolver().getType(u);if(mime==null||mime.equals("*/*"))mime=m.optString("mime",Save.mime(m.optString("name")));if(mime.startsWith("video/")){Intent player=new Intent(a,VideoActivity.class);player.putExtra("uri",u.toString());player.putExtra("name",m.optString("name"));a.startActivity(player);return;}i.setDataAndType(u,mime);i.setClipData(ClipData.newRawUri("attachment",u));i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);a.startActivity(i);}catch(ActivityNotFoundException e){Toast.makeText(a,a.getString(R.string.no_file_app),Toast.LENGTH_LONG).show();}catch(Exception e){Toast.makeText(a,a.getString(R.string.file_open_failed)+" "+e.getClass().getSimpleName(),Toast.LENGTH_LONG).show();}
  }
  public static void share(Activity a,JSONObject m){
