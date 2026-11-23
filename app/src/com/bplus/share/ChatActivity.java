@@ -144,7 +144,7 @@ public class ChatActivity extends Activity {
             View bub;
             if(kind.equals("text")){
                 TextView text=Ui.t(this,m.optString("body"),14,me?Color.WHITE:Ui.text,App.cairoSB);
-                text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);if(me&&m.optString("state").equals("failed"))text.setOnClickListener(v->retryMessage(m));bub=text;
+                text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);if(me&&m.optString("state").equals("failed"))text.setOnClickListener(v->retryMessage(m));text.setOnLongClickListener(v->{selection.toggle(m);return true;});bub=text;
             }else{
                 bub=FileCards.card(this,m,()->selection.toggle(m));
 
@@ -155,7 +155,7 @@ public class ChatActivity extends Activity {
             String state=m.optString("state");
             if(me)time+=" · "+getString(state.equals("failed")?(kind.equals("text")?R.string.failed_retry:R.string.file_failed_actions):state.equals("sending")?R.string.sending:R.string.sent);
             TextView stamp = Ui.t(this,time,10,Ui.dim,App.cairoSB);
-            LinearLayout cell = selection.row(m);cell.setTag(m);cell.setGravity(me?Gravity.END:Gravity.START);if(kind.equals("file")&&selection.has(m))cell.setBackground(Ui.round(0x3058a4ff,12,this));if(kind.equals("file")&&selection.active())cell.setOnClickListener(v->selection.toggle(m));
+            LinearLayout cell = selection.row(m);cell.setTag(m);cell.setGravity(me?Gravity.END:Gravity.START);if(selection.has(m))cell.setBackground(Ui.round(0x3058a4ff,12,this));if(selection.active())cell.setOnClickListener(v->selection.toggle(m));
             LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(kind.equals("file")?selection.decorate(bub,m):bub,bp);if(kind.equals("file")&&!Attachments.state(this,m).equals("ok")){TextView fix=Ui.t(this,Attachments.explanation(this,Attachments.state(this,m))+"\n"+getString(R.string.locate_file),12,Ui.accent,App.cairoSB);fix.setMaxWidth(Ui.dp(this,280));fix.setOnClickListener(v->locate(m));cell.addView(fix);}cell.addView(stamp);
             if(me && state.equals("failed") && kind.equals("text")){
                 String reason=m.optString("error",getString(R.string.old_failure));TextView failure=Ui.t(this,reason+"\n"+getString(R.string.retry_details),11,Ui.dim,App.cairoSB);failure.setMaxWidth(Ui.dp(this,280));failure.setOnClickListener(v->retryMessage(m));cell.addView(failure);
@@ -166,7 +166,7 @@ public class ChatActivity extends Activity {
         if(!preserveSelectionScroll)scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
     }
 
-    private void refreshSelection(){if(msgs==null)return;int y=scroll.getScrollY();java.util.HashSet<String> live=new java.util.HashSet<>();JSONArray saved=Store.thread(peerId);for(int j=0;j<saved.length();j++){JSONObject item=saved.optJSONObject(j);if(item!=null)live.add(FileSelection.key(item));}for(int i=msgs.getChildCount()-1;i>=0;i--){View row=msgs.getChildAt(i);if(row.getTag() instanceof JSONObject&&!live.contains(FileSelection.key((JSONObject)row.getTag())))msgs.removeViewAt(i);}for(int i=0;i<msgs.getChildCount();i++){View row=msgs.getChildAt(i);Object tag=row.getTag();if(tag instanceof JSONObject){JSONObject m=(JSONObject)tag;if(m.optString("kind").equals("file")){row.setBackground(selection.has(m)?Ui.round(0x3058a4ff,12,this):null);row.setOnClickListener(selection.active()?v->selection.toggle(m):null);}}invalidateSelection(row);}scroll.post(()->scroll.scrollTo(0,y));}
+    private void refreshSelection(){if(msgs==null)return;int y=scroll.getScrollY();java.util.HashSet<String> live=new java.util.HashSet<>();JSONArray saved=Store.thread(peerId);for(int j=0;j<saved.length();j++){JSONObject item=saved.optJSONObject(j);if(item!=null)live.add(FileSelection.key(item));}for(int i=msgs.getChildCount()-1;i>=0;i--){View row=msgs.getChildAt(i);if(row.getTag() instanceof JSONObject&&!live.contains(FileSelection.key((JSONObject)row.getTag())))msgs.removeViewAt(i);}for(int i=0;i<msgs.getChildCount();i++){View row=msgs.getChildAt(i);Object tag=row.getTag();if(tag instanceof JSONObject){JSONObject m=(JSONObject)tag;{row.setBackground(selection.has(m)?Ui.round(0x3058a4ff,12,this):null);row.setOnClickListener(selection.active()?v->selection.toggle(m):null);}}invalidateSelection(row);}scroll.post(()->scroll.scrollTo(0,y));}
     private void invalidateSelection(View v){v.invalidate();if(v instanceof android.view.ViewGroup){android.view.ViewGroup g=(android.view.ViewGroup)v;for(int i=0;i<g.getChildCount();i++)invalidateSelection(g.getChildAt(i));}}
     private boolean preserveSelectionScroll;
     private void sendText(String text){

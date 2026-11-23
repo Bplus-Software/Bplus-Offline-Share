@@ -1,0 +1,23 @@
+PASS inactive DOWN stays with card
+PASS long-click entered selection: same UP must not deselect
+PASS next selected-mode DOWN owned by selection
+PASS next tap deselects exactly once
+PASS re-entry DOWN stays with card cycle 0
+PASS re-entry long-press UP preserves selection cycle 0
+PASS deselect tap cycle 0
+PASS re-entry DOWN stays with card cycle 1
+PASS re-entry long-press UP preserves selection cycle 1
+PASS deselect tap cycle 1
+PASS re-entry DOWN stays with card cycle 2
+PASS re-entry long-press UP preserves selection cycle 2
+PASS deselect tap cycle 2
+PASS re-entry DOWN stays with card cycle 3
+PASS re-entry long-press UP preserves selection cycle 3
+PASS deselect tap cycle 3
+PASS re-entry DOWN stays with card cycle 4
+PASS re-entry long-press UP preserves selection cycle 4
+PASS deselect tap cycle 4
+PASS drag is not a selection tap
+PASS cancel does not toggle
+PASS normal inactive short tap remains open gesture
+22 gesture ownership assertions; Android event dispatch/runtime still requires phone verification.

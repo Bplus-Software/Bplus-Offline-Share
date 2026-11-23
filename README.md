@@ -95,3 +95,8 @@ Developed for Basem Helmy.
 ## 1.1.6 device-test candidate
 
 Empty-row-corner selection marks, immediate selected-card removal, chat bulk record/copy actions and shared app-dialog styling. See release116-notes.txt for exact scope and unverified device behavior. This is a pre-release; 1.1.5 remains normal latest. No private conversations/files are included.
+
+
+## 1.1.7 device-test candidate
+
+Fix selection touch ownership and add plain text multi-selection. 1.1.6 was not promoted after a second phone recording exposed a re-entry regression. See release117-notes.txt for actions, test coverage and remaining verification. 1.1.5 remains latest.

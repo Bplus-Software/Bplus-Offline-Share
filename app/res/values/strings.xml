@@ -253,4 +253,11 @@
 <string name="clear_conversation_note">Clear every message and file card in this conversation on this phone? Actual disk files, received library, pairing, group membership and other phones stay unchanged.</string>
 <string name="send_all_files_note">Send copies of %1$d chat file entries to %2$s? Originals and cards stay here. Repeated entries may send duplicate copies. No automatic retries.</string>
 <string name="no_chat_files">No file cards in this chat</string>
+    <string name="remove_card_note">Remove 1 chat card on this phone only? Files stay on disk and other phones are unchanged.</string>
+    <string name="remove_selected_messages">Remove selected messages only</string>
+    <string name="remove_message_note">Remove 1 message from this chat on this phone only? Files stay on disk and other phones are unchanged.</string>
+    <string name="remove_messages_note">Remove %1$d messages from this chat on this phone only? Files stay on disk and other phones are unchanged.</string>
+    <string name="send_selected_items">Send selected messages/files</string>
+    <string name="send_items_confirm">Send %1$d selected items as copies to %2$s? Originals stay here.</string>
+    <string name="send_items_result">Sent %1$d of %2$d selected items.</string>
 </resources>

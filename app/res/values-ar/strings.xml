@@ -253,4 +253,11 @@
 <string name="clear_conversation_note">تمسح كل الرسائل وكروت الملفات في الدردشة على الموبايل ده؟ الملفات نفسها والمكتبة والربط وعضوية الجروب وموبايلات الباقي هيفضلوا زي ما هم.</string>
 <string name="send_all_files_note">تبعت نسخ من %1$d ملفات مسجلة بالدردشة إلى %2$s؟ الأصل والكروت هيفضلوا هنا. السجلات المكررة ممكن تبعت نسخ مكررة. مفيش إعادة إرسال تلقائية.</string>
 <string name="no_chat_files">مفيش ملفات مسجلة في الدردشة</string>
+    <string name="remove_card_note">إزالة بطاقة ملف واحدة من هذه المحادثة على هذا الهاتف فقط؟ تبقى الملفات على الهاتف ولا تتغير الأجهزة الأخرى.</string>
+    <string name="remove_selected_messages">حذف الرسائل المحددة فقط</string>
+    <string name="remove_message_note">حذف رسالة واحدة من المحادثة على هذا الهاتف فقط؟ تبقى الملفات ولا تتغير الأجهزة الأخرى.</string>
+    <string name="remove_messages_note">حذف %1$d رسائل من المحادثة على هذا الهاتف فقط؟ تبقى الملفات ولا تتغير الأجهزة الأخرى.</string>
+    <string name="send_selected_items">إرسال الرسائل والملفات المحددة</string>
+    <string name="send_items_confirm">إرسال نسخ من %1$d عناصر محددة إلى %2$s؟ تبقى النسخ الأصلية هنا.</string>
+    <string name="send_items_result">تم إرسال %1$d من %2$d عناصر محددة.</string>
 </resources>
