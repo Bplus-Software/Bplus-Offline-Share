@@ -245,4 +245,12 @@
 <string name="action_send">إرسال</string>
 <string name="action_delete">حذف</string>
 <string name="action_all">الكل</string>
+<string name="chat_options">خيارات الدردشة</string>
+<string name="clear_file_cards">حذف كل كروت الملفات من الدردشة</string>
+<string name="clear_conversation">مسح الدردشة من الموبايل ده</string>
+<string name="send_all_files">إرسال كل ملفات الدردشة لجهاز آخر</string>
+<string name="clear_file_cards_note">تحذف كل كروت الملفات من الدردشة على الموبايل ده بس؟ الرسائل النصية والملفات نفسها والمكتبة وموبايلات الباقي هيفضلوا زي ما هم. ده مش حذف للملفات من الجهاز.</string>
+<string name="clear_conversation_note">تمسح كل الرسائل وكروت الملفات في الدردشة على الموبايل ده؟ الملفات نفسها والمكتبة والربط وعضوية الجروب وموبايلات الباقي هيفضلوا زي ما هم.</string>
+<string name="send_all_files_note">تبعت نسخ من %1$d ملفات مسجلة بالدردشة إلى %2$s؟ الأصل والكروت هيفضلوا هنا. السجلات المكررة ممكن تبعت نسخ مكررة. مفيش إعادة إرسال تلقائية.</string>
+<string name="no_chat_files">مفيش ملفات مسجلة في الدردشة</string>
 </resources>

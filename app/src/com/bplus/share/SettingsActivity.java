@@ -122,7 +122,7 @@ public class SettingsActivity extends Activity {
         LinearLayout wrap = Ui.col(this);
         wrap.setPadding(pad, pad, pad, 0);
         wrap.addView(e);
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.device_name))
                 .setView(wrap)
                 .setPositiveButton("OK", (d, w) -> {
@@ -145,7 +145,7 @@ public class SettingsActivity extends Activity {
             return;
         }
         String[] items = {getString(R.string.autosend_on), getString(R.string.autosend_off), getString(R.string.pick_folder), getString(R.string.pick_target)};
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.autosend))
                 .setItems(items, (d, which) -> {
                     if (which == 0) Store.set("autosend", "1");
@@ -174,7 +174,7 @@ public class SettingsActivity extends Activity {
             ids.add("grp:" + g.optString("id"));
         }
         if (ids.isEmpty()) return;
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.pick_target))
                 .setItems(labels.toArray(new String[0]), (d, which) -> {
                     Store.set("autosendTarget", ids.get(which));
@@ -199,7 +199,7 @@ public class SettingsActivity extends Activity {
 
     private void pickLanguage() {
         String[] items = {getString(R.string.follow_system), "English", "العربية"};
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.language))
                 .setItems(items, (d, which) -> {
                     Store.set("lang", which == 1 ? "en" : which == 2 ? "ar" : "system");
@@ -210,7 +210,7 @@ public class SettingsActivity extends Activity {
 
     private void pickTheme() {
         String[] items = {getString(R.string.follow_system), getString(R.string.dark), getString(R.string.light)};
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.theme))
                 .setItems(items, (d, which) -> {
                     Store.set("theme", which == 1 ? "dark" : which == 2 ? "light" : "system");

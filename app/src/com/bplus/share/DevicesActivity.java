@@ -176,7 +176,7 @@ public class DevicesActivity extends Activity {
 
     private void showPairOptions() {
         String[] items = {getString(R.string.show_my_code), getString(R.string.scan_code)};
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.pair_title))
                 .setItems(items, (d, which) -> {
                     if (which == 0) showMyCode();
@@ -210,7 +210,7 @@ public class DevicesActivity extends Activity {
         hint.setGravity(Gravity.CENTER);
         Ui.pad(hint, 0, 14, 0, 0, this);
         wrap.addView(hint);
-        new AlertDialog.Builder(this).setView(wrap).show();
+        new AppDialog(this).setView(wrap).show();
     }
 
     private void showNewGroupDialog() {
@@ -232,7 +232,7 @@ public class DevicesActivity extends Activity {
             cb.setOnCheckedChangeListener((v, on) -> checked[idx] = on);
             wrap.addView(cb, Ui.lp(-1, -2));
         }
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.new_group))
                 .setView(wrap)
                 .setPositiveButton(getString(R.string.create), (d, w) -> {

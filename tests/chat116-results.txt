@@ -1,0 +1,10 @@
+PASS confirmed selection snapshot removes original exact file only
+PASS selected removal keeps text
+PASS source records and URI metadata not mutated
+PASS clear file cards retains text
+PASS clear conversation removes local records
+PASS empty selection no-op
+PASS empty legacy IDs use stable metadata fallback
+PASS file-only selected removal cannot erase text ID collision
+PASS empty conversation safe
+9 pure record-rule assertions. No Android UI/storage runtime claim.

@@ -245,4 +245,12 @@
 <string name="action_send">Send</string>
 <string name="action_delete">Delete</string>
 <string name="action_all">All</string>
+<string name="chat_options">Chat options</string>
+<string name="clear_file_cards">Remove all file cards from this chat</string>
+<string name="clear_conversation">Clear this conversation on this phone</string>
+<string name="send_all_files">Send all chat files to another device</string>
+<string name="clear_file_cards_note">Remove all file cards from this chat on this phone only? Text messages, actual disk files, the received library and other phones stay unchanged. This is not disk-file deletion.</string>
+<string name="clear_conversation_note">Clear every message and file card in this conversation on this phone? Actual disk files, received library, pairing, group membership and other phones stay unchanged.</string>
+<string name="send_all_files_note">Send copies of %1$d chat file entries to %2$s? Originals and cards stay here. Repeated entries may send duplicate copies. No automatic retries.</string>
+<string name="no_chat_files">No file cards in this chat</string>
 </resources>

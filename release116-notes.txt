@@ -1,0 +1,14 @@
+B+ Share 1.1.6, device-test pre-release
+
+Changes
+- Chat selection mark moves into the empty opposite corner of each row instead of covering the file card. Selection does not add layout children or change the card measurement. The empty corner and card both toggle selection. Separate row highlights remain.
+- Selected-card deletion now reconciles visible rows against the saved thread immediately. Confirmation uses a snapshot of the exact selected file keys. This fixes the stale-card refresh defect found in 1.1.5; actual phone verification is still needed.
+- Private/group chat menu: Remove all file cards, Clear local conversation, Send copies of all files to a selected paired device. Destructive record changes require confirmation and keep one prior local thread snapshot. They never wipe actual files, library entries, pairing, group membership or another phone. Sending checks that each file is readable before target selection, confirms count/target, retains originals and reports partial results. Repeated entries may send duplicate copies. It is not a disk move.
+- App-owned dialogs use shared rounded app styling, theme palette, Cairo font and accent controls. Android-owned pickers, permissions, share chooser and installer keep system appearance.
+
+Validation and limits
+- Clean signed build, versionCode 11, same signing certificate. 258 matching English/Arabic string keys.
+- Nine pure record-rule assertions; prior sharing (7), groups (18), nearby (17), message-network (5) and updater fault-injection suites pass. Exact released 1.1.5 downloader tested against the candidate using a local redirect/hash harness. These are JVM/source tests, not Android UI/storage/installer proof.
+- The 1.1.6 UI has not been rendered on an Android device here. Mark placement, no scroll/card movement, actual deletion refresh, dialogs and bulk transfer behavior still need phone screenshots/recording. Risk unmeasured. This is a test handoff, not normal latest; 1.1.5 remains latest until device review supports promotion.
+- Install over the existing app without uninstalling. This pre-release is excluded from the in-app latest update check. Android may block downgrading; uninstalling to downgrade can lose local chats/settings. The earlier release is not a safe automatic rollback.
+- Existing limits remain: trusted reachable local Wi-Fi only, unencrypted local HTTP; no internet relay; group host must remain reachable, no offline queue/history sync/host migration/member removal/leave; sound depends on permissions/channels/DND/reachability; file transfer resume/checksum and files >=2 GB unsupported. Old missing attachment references are not automatically recovered. No Windows changes.

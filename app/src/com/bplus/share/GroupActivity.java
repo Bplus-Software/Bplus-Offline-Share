@@ -115,7 +115,7 @@ public class GroupActivity extends Activity {
             if (!in) { names.add(p.optString("name")); ids.add(id); }
         }
         if (ids.isEmpty()) return;
-        new AlertDialog.Builder(this)
+        new AppDialog(this)
                 .setTitle(getString(R.string.add_device))
                 .setItems(names.toArray(new String[0]), (d, which) -> {
                     try {

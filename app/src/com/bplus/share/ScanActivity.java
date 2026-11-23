@@ -141,7 +141,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
             handled = false;
             return;
         }
-        if(!qrConfirmed){stopCamera();new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.accept_pair)).setMessage(payload.optString("name")+"\n@"+payload.optString("username")+"\n"+getString(R.string.identity_notice)).setNegativeButton(getString(R.string.cancel),(d,n)->{handled=false;showScan();}).setPositiveButton(getString(R.string.accept_pair),(d,n)->{qrConfirmed=true;onQr(payload.toString());}).setOnCancelListener(d->{handled=false;showScan();}).show();return;}
+        if(!qrConfirmed){stopCamera();new AppDialog(this).setTitle(getString(R.string.accept_pair)).setMessage(payload.optString("name")+"\n@"+payload.optString("username")+"\n"+getString(R.string.identity_notice)).setNegativeButton(getString(R.string.cancel),(d,n)->{handled=false;showScan();}).setPositiveButton(getString(R.string.accept_pair),(d,n)->{qrConfirmed=true;onQr(payload.toString());}).setOnCancelListener(d->{handled=false;showScan();}).show();return;}
         state = 1;
         stopCamera();
         container.removeAllViews();
@@ -231,7 +231,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
         done.setOnClickListener(v -> finish());
         TextView migrate=Ui.ghost(this,getString(R.string.move_history));
         Ui.pad(migrate,10,20,10,20,this);wrap.addView(migrate);
-        migrate.setOnClickListener(v->new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.move_history)).setMessage(getString(R.string.history_confirm,peerName)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.copy_history),(dialog,which)->{
+        migrate.setOnClickListener(v->new AppDialog(this).setTitle(getString(R.string.move_history)).setMessage(getString(R.string.history_confirm,peerName)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.copy_history),(dialog,which)->{
             migrate.setEnabled(false);migrate.setText(getString(R.string.checking));
             exec.execute(()->{boolean ok=maybeMoveHistory(payload.optString("ip"),payload.optInt("port",Store.PORT),peerToken,peerId);main.post(()->{migrate.setEnabled(true);migrate.setText(getString(R.string.move_history));android.widget.Toast.makeText(this,getString(ok?R.string.history_copied:R.string.history_failed),android.widget.Toast.LENGTH_LONG).show();});});
         }).show());

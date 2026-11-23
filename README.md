@@ -90,3 +90,8 @@ Local transfers use unencrypted HTTP with bearer tokens. Use trusted private net
 `build.sh` uses Android SDK platform/build-tools 34, JDK 17, aapt2, ecj and d8. Set up the paths in the script for your environment. Signing requires your own keystore and a signing password provided through `BPLUS_KEYSTORE_PASSWORD`. Do not commit signing keys, credentials or generated APKs.
 
 Developed for Basem Helmy.
+
+
+## 1.1.6 device-test candidate
+
+Empty-row-corner selection marks, immediate selected-card removal, chat bulk record/copy actions and shared app-dialog styling. See release116-notes.txt for exact scope and unverified device behavior. This is a pre-release; 1.1.5 remains normal latest. No private conversations/files are included.
