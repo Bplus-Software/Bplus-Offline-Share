@@ -28,3 +28,9 @@ Peer/local token means a token matching the receiver's local token or one in its
 ## Known limitations
 
 No mutual identity confirmation, token rotation, encrypted transport, authenticated sender binding, mDNS discovery, transfer resume, or file-level integrity check. These should be designed as a protocol v2 before broad untrusted-network use. Chat/file history copies skip threads that already exist locally rather than merge them.
+
+## 1.1.0 nearby extension
+
+POST JSON endpoints under `/nearby/`, maximum 48,000-byte request body. Visible only while NearbyActivity is resumed. `/profile` gives a bounded display profile without tokens; `/request` accepts a cleaned profile and a random 32-character request secret, returning a request ID. `/status` requires request ID, secret and originating IP. Pending/declined/blocked/cancelled responses contain no token. Accepted status includes the receiving phone profile and token. `/confirm` accepts the sender token only for an accepted request and stores the peer. `/cancel` cancels pending or accepted requests before confirmation. Both screens must remain open to finish. Closing clears outstanding requests. Expiry 60 seconds, cooldown 30 seconds per IP, 32-request ceiling. Blocks are stored by self-claimed device ID, not cryptographic identity. This is not an encrypted or authenticated identity protocol. QR remains bearer-token pairing.
+
+New received files use typed subfolders. No old files are moved. Received file URIs remain local and are omitted from explicit history copy.

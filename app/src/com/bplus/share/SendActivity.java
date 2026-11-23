@@ -208,7 +208,7 @@ public class SendActivity extends Activity {
         try {
             payload.put("v", 1); payload.put("app", "bplus-share");
             payload.put("id", Store.get("deviceId", ""));
-            payload.put("name", Store.deviceName());
+            payload.put("name", Profile.local().optString("name"));payload.put("username",Profile.local().optString("username"));
             payload.put("ip", ip); payload.put("port", Store.PORT);
             payload.put("token", Store.token());
             payload.put("batch", batchId);

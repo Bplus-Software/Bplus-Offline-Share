@@ -2,6 +2,23 @@
 
 Native Android app for direct phone-to-phone file sharing on a trusted local Wi-Fi network. Android 8 or later. English and Arabic, light and dark themes.
 
+## Version 1.1.0, unverified Android test build
+
+- Chat-list home, All/Unread/Groups filters and four navigation tabs: Chats, Transfers, Profile and Settings.
+- Editable display name and photo, with a stable generated local @username. These are labels, not verified identities or globally reserved accounts. Pair again to refresh a paired device profile.
+- Add nearby uses NSD/mDNS on the same reachable Wi-Fi with both Nearby screens open. Requests require Accept/Decline/Block; no token is returned while pending. Requests expire in 60 seconds, one pending per IP, 30-second cooldown. Persistent block uses the claimed device ID, so it is not protection against a malicious identity-changing client. QR remains available, with scanner confirmation.
+- Photo/name are advertised only while Nearby is open, and exchanged with paired devices. An unpaired ping returns reachability only. Closing Nearby clears requests and stops advertisement/discovery. No automatic chat-history copy.
+- Video attachments with a local reference open inside the app using Android VideoView controls, seeking and fullscreen rotation. Unsupported formats offer another app. Codec support depends on the phone.
+- Received library: Videos / Photos / Files, with matching NEW save subfolders under Downloads/B+ Share. Existing flat files and references remain untouched. Browse old files opens Android's document picker; it does not move files or recover missing copies.
+
+Validation: clean SDK34 build, versionCode 5, original signing certificate. Seventeen JVM state/endpoint assertions verify pending requests never return credentials, IP/secret binding, expiry, cooldown, blocking, close and confirmation. Message network regressions and updater fault-injection tests pass. Exact released 1.0.3 downloader recognizes and downloads candidate 1.1.0 through redirects with matching SHA-256.
+
+Important: the redesigned Android UI has NEVER been rendered at runtime or visually verified. Only mockups were visually inspected. Software emulator attempts failed to boot in the available environment. Physical-phone discovery, request dialogs, storage permissions, video playback, installation and two-phone transfer are NOT tested. This is an unverified trial build for the first phone test, not a claim that these flows work on a device.
+
+Both phones need 1.1.0 for nearby requests. Use QR if the router blocks discovery. Update over the old app, do not uninstall. Version 1.0.3 stays downloadable, but Android normally blocks installing an older versionCode over a newer one. Returning to 1.0.3 may require uninstalling and lose app-local chats/settings; it is not a guaranteed data-preserving rollback. Keep an existing 1.0.3 device unchanged until testing the new build if continuity matters.
+
+No internet relay, online directory or Windows client. Local transport remains unencrypted, trusted private networks only. Ordinary file transfers have no resume/checksum and files 2 GB or larger are unsupported.
+
 ## Version 1.0.3
 
 - Failed text messages retain a concrete HTTP/network failure reason. Tap the failed message to review the reason, inspect connectivity or retry that exact message. Retry uses a stable local message ID rather than updating the last pending message.
@@ -35,7 +52,7 @@ Download the APK from the latest GitHub release and install it over the previous
 
 Connect both phones to the same trusted Wi-Fi network, or try one phone's hotspot with the other joined. Keep both apps open. First try pairing and a small file. Guest Wi-Fi may prevent phones from communicating.
 
-This is trial software. Android runtime, installer permission screens, hotspot support and real two-phone transfers have not been verified for 1.0.2. JVM fault-injection tests cover the updater network implementation, not the complete Android app. See `tests/results.txt` and `tests-updater.py`.
+This is trial software. Android runtime, installer permission screens, hotspot support and real two-phone transfers have not been verified for 1.1.0. JVM fault-injection tests cover the updater network implementation, not the complete Android app. See `tests/results.txt` and `tests-updater.py`.
 
 ## Features and limits
 

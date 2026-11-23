@@ -44,7 +44,7 @@ public class Store {
         return null;
     }
 
-    public static void upsertPeer(JSONObject peer) {
+    public static synchronized void upsertPeer(JSONObject peer) {
         JSONArray a = peers();
         boolean found = false;
         for (int i = 0; i < a.length(); i++) {
@@ -58,7 +58,7 @@ public class Store {
         savePeers(a);
     }
 
-    public static void removePeer(String id) {
+    public static synchronized void removePeer(String id) {
         JSONArray a = peers(); JSONArray out = new JSONArray();
         for (int i = 0; i < a.length(); i++) {
             JSONObject o = a.optJSONObject(i);

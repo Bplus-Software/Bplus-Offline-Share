@@ -70,9 +70,7 @@ public class Net {
     public static JSONObject pair(String ip, int port, String qrToken) {
         error.remove();
         try {
-            JSONObject body = new JSONObject();
-            body.put("id", Store.get("deviceId", ""));
-            body.put("name", Store.deviceName());
+            JSONObject body = Profile.local();
             body.put("token", Store.token());
             HttpURLConnection h = open("POST", "http://" + ip + ":" + port + "/pair?token=" + qrToken);
             h.setDoOutput(true);

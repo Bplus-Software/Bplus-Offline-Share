@@ -1,0 +1,18 @@
+PASS closed gate refuses requests
+PASS request secret bound
+PASS request IP bound
+PASS one pending per IP
+PASS per-IP cooldown
+PASS request expiry
+PASS accepted request can be cancelled before confirm
+PASS closing gate clears requests
+PASS blocked identity refused
+PASS visible discovery profile contains no token
+PASS request response contains no token
+PASS pending status exposes no token
+PASS pre-acceptance confirm refused
+PASS pre-acceptance peer store unchanged
+PASS token only after explicit acceptance
+PASS confirmation stores accepted peer
+PASS profile hidden after screen closes
+17 assertions passed. JVM state/endpoint tests, not Android discovery or UI tests.

@@ -20,7 +20,7 @@ public final class UpdateHttp {
    if(!url.getProtocol().equals("https")&&!url.getProtocol().equals("http"))throw new IOException("Unsupported URL protocol");
    HttpURLConnection c=(HttpURLConnection)url.openConnection();
    c.setConnectTimeout(connectMs);c.setReadTimeout(readMs);c.setInstanceFollowRedirects(false);
-   c.setRequestProperty("User-Agent","BplusShare-Updater/1.0.3");c.setRequestProperty("Accept-Encoding","identity");
+   c.setRequestProperty("User-Agent","BplusShare-Updater/1.1.0");c.setRequestProperty("Accept-Encoding","identity");
    if(offset>0)c.setRequestProperty("Range","bytes="+offset+"-");
    Response r=new Response(c);
    try{

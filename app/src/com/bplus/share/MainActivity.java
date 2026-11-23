@@ -1,120 +1,14 @@
 package com.bplus.share;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
-import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
+import android.app.*;import android.content.*;import android.os.*;import android.view.*;import android.widget.*;import org.json.*;import java.util.*;
 public class MainActivity extends Activity {
-
-    @Override protected void onCreate(Bundle b) {
-        super.onCreate(b);
-        Ui.applyLocale(this);
-        Ui.applyTheme(this);
-        getWindow().setStatusBarColor(Ui.bg);
-        getWindow().setNavigationBarColor(Ui.bg);
-
-        LinearLayout root = Ui.col(this);
-        root.setBackgroundColor(Ui.bg);
-
-        SpannableString name = new SpannableString("B+ Share");
-        name.setSpan(new ForegroundColorSpan(Ui.accent), 1, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        TextView title = Ui.t(this, name.toString(), 20, Ui.text, App.cairoB);
-        title.setText(name);
-
-        LinearLayout top = Ui.row(this);
-        Ui.pad(top, 20, 14, 20, 6, this);
-        top.addView(title, Ui.lpw(1));
-        TextView gear = Ui.t(this, "⚙", 17, Ui.dim, App.cairoSB);
-        gear.setGravity(Gravity.CENTER);
-        gear.setBackground(Ui.round(Ui.field, 12, this));
-        top.addView(gear, Ui.lp(Ui.dp(this, 38), Ui.dp(this, 38)));
-        gear.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
-        root.addView(top);
-
-        // hero logo
-        LinearLayout hero = Ui.col(this);
-        hero.setGravity(Gravity.CENTER_HORIZONTAL);
-        TextView logo = new TextView(this);
-        logo.setText("B+");
-        logo.setTextSize(34);
-        logo.setTypeface(App.cairoB);
-        logo.setTextColor(Color.WHITE);
-        logo.setGravity(Gravity.CENTER);
-        GradientDrawable lg = Ui.round(Ui.light ? Color.rgb(47,110,220) : Color.rgb(29,38,53), 26, this);
-        if (!Ui.light) lg.setStroke(Ui.dp(this, 1), Ui.border);
-        logo.setBackground(lg);
-        LinearLayout.LayoutParams llp = Ui.lp(Ui.dp(this, 86), Ui.dp(this, 86));
-        llp.topMargin = Ui.dp(this, 34);
-        hero.addView(logo, llp);
-        TextView tag = Ui.t(this, getString(R.string.tagline), 13.5f, Ui.dim, App.cairoSB);
-        tag.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams tlp = Ui.lp(-2, -2);
-        tlp.topMargin = Ui.dp(this, 14);
-        hero.addView(tag, tlp);
-        root.addView(hero);
-
-        LinearLayout btns = Ui.col(this);
-        Ui.pad(btns, 24, 36, 24, 0, this);
-        btns.addView(bigCard("↗", Ui.accent, getString(R.string.send_files), getString(R.string.send_sub),
-                v -> startActivity(new Intent(this, SendActivity.class))));
-        btns.addView(bigCard("↙", Ui.green, getString(R.string.receive_files), getString(R.string.receive_sub),
-                v -> startActivity(new Intent(this, ScanActivity.class))));
-        btns.addView(bigCard("☷", Ui.accent, getString(R.string.chats_title), getString(R.string.chats_sub),
-                v -> startActivity(new Intent(this, ChatsActivity.class))));
-        btns.addView(bigCard("▦", Ui.dim, getString(R.string.devices_groups), "",
-                v -> startActivity(new Intent(this, DevicesActivity.class))));
-        root.addView(btns);
-
-        TextView footer = Ui.t(this, getString(R.string.footer), 12, Color.rgb(94,104,120), App.cairoSB);
-        footer.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams flp = Ui.lp(-1, -2);
-        flp.topMargin = Ui.dp(this, 40);
-        root.addView(footer, flp);
-
-        android.widget.ScrollView page=new android.widget.ScrollView(this);page.setFillViewport(true);page.addView(root);setContentView(page);
-
-        if (Build.VERSION.SDK_INT >= 33 &&
-                checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
-            requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 7);
-        if (Build.VERSION.SDK_INT <= 28 &&
-                checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 8);
-
-        TransferService.start(this);
-    }
-
-    private View bigCard(String icon, int iconColor, String title, String sub, View.OnClickListener click) {
-        LinearLayout card = Ui.row(this);
-        card.setBackground(Ui.roundBorder(Ui.card, Ui.border, 20, this));
-        Ui.pad(card, 20, 18, 20, 18, this);
-        TextView ic = Ui.t(this, icon, 22, iconColor, App.cairoB);
-        ic.setGravity(Gravity.CENTER);
-        ic.setBackground(Ui.round(tint(iconColor), 16, this));
-        card.addView(ic, Ui.lp(Ui.dp(this, 52), Ui.dp(this, 52)));
-        LinearLayout meta = Ui.col(this);
-        Ui.pad(meta, 16, 0, 16, 0, this);
-        meta.addView(Ui.t(this, title, 17, Ui.text, App.cairoB));
-        if (!sub.isEmpty()) meta.addView(Ui.t(this, sub, 12.5f, Ui.dim, App.cairoSB));
-        card.addView(meta, Ui.lpw(1));
-        LinearLayout.LayoutParams lp = Ui.lp(-1, -2);
-        lp.bottomMargin = Ui.dp(this, 16);
-        card.setLayoutParams(lp);
-        card.setOnClickListener(click);
-        return card;
-    }
-
-    private static int tint(int color) {
-        return Color.argb(36, Color.red(color), Color.green(color), Color.blue(color));
-    }
+ private LinearLayout content;private String filter="all",query="";
+ @Override protected void onCreate(Bundle b){super.onCreate(b);Ui.applyLocale(this);Ui.applyTheme(this);Profile.init();}
+ @Override protected void onResume(){super.onResume();build();}
+ private void build(){LinearLayout root=Ui.col(this);root.setBackgroundColor(Ui.bg);getWindow().setStatusBarColor(Ui.bg);getWindow().setNavigationBarColor(Ui.bg);LinearLayout top=Ui.row(this);Ui.pad(top,22,18,22,12,this);top.addView(Ui.t(this,"B+ Share",24,Ui.accent,App.cairoB),Ui.lpw(1));TextView add=Ui.ghost(this,"＋");Ui.pad(add,15,6,15,6,this);top.addView(add);add.setContentDescription(getString(R.string.nearby_title));add.setOnClickListener(v->new AlertDialog.Builder(this).setItems(new String[]{getString(R.string.nearby_title),getString(R.string.qr_fallback)},(d,n)->startActivity(new Intent(this,n==0?NearbyActivity.class:DevicesActivity.class))).show());root.addView(top);
+ EditText search=new EditText(this);search.setSingleLine(true);search.setText(query);search.setTextSize(13);search.setTextColor(Ui.text);search.setHintTextColor(Ui.dim);search.setHint(getString(R.string.search_local));search.setTypeface(App.cairo);Ui.pad(search,22,8,22,8,this);root.addView(search);
+ LinearLayout filters=Ui.row(this);for(String key:new String[]{"all","unread","groups"}){TextView chip=Ui.ghost(this,getString(key.equals("all")?R.string.filter_all:key.equals("unread")?R.string.filter_unread:R.string.filter_groups));Ui.pad(chip,14,10,14,10,this);filters.addView(chip,Ui.lpw(1));chip.setOnClickListener(v->{filter=key;render();});}root.addView(filters);
+ ScrollView sc=new ScrollView(this);content=Ui.col(this);Ui.pad(content,22,0,22,20,this);sc.addView(content);root.addView(sc,Ui.lpW1());LinearLayout nav=Ui.row(this);nav.setBackgroundColor(Ui.bar);int[] labels={R.string.chats_title,R.string.transfer_tab,R.string.my_profile,R.string.settings};for(int i=0;i<4;i++){final int index=i;TextView tab=Ui.ghost(this,getString(labels[i]));tab.setTextSize(11);tab.setGravity(Gravity.CENTER);Ui.pad(tab,3,17,3,17,this);nav.addView(tab,Ui.lpw(1));tab.setOnClickListener(v->{if(index==0){filter="all";render();}else if(index==1)transfers();else startActivity(new Intent(this,index==2?ProfileActivity.class:SettingsActivity.class));});}root.addView(nav);setContentView(root);search.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){}public void onTextChanged(CharSequence s,int st,int before,int count){query=s.toString();render();}public void afterTextChanged(android.text.Editable e){}});render();if(Build.VERSION.SDK_INT>=33&&checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)!=0)requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS},7);if(Build.VERSION.SDK_INT<=28&&checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!=0)requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},8);TransferService.start(this);}
+ private void render(){content.removeAllViews();if(filter.equals("groups")){JSONArray groups=Store.groups();for(int j=0;j<groups.length();j++){JSONObject g=groups.optJSONObject(j);if(g==null)continue;TextView row=Ui.ghost(this,"▦ "+g.optString("name"));Ui.pad(row,0,20,0,20,this);content.addView(row);row.setOnClickListener(v->{Intent i=new Intent(this,GroupActivity.class);i.putExtra("group",g.optString("id"));startActivity(i);});}TextView manage=Ui.cta(this,getString(R.string.devices_groups));content.addView(manage);manage.setOnClickListener(v->startActivity(new Intent(this,DevicesActivity.class)));return;}ArrayList<JSONObject> peers=new ArrayList<>();JSONArray a=Store.peers();for(int i=0;i<a.length();i++)if(a.optJSONObject(i)!=null)peers.add(a.optJSONObject(i));Collections.sort(peers,(x,y)->Long.compare(lastTime(y),lastTime(x)));int count=0;for(JSONObject p:peers){String id=p.optString("id");JSONArray t=Store.thread(id);JSONObject last=t.optJSONObject(t.length()-1);boolean unread=last!=null&&!last.optBoolean("me")&&last.optLong("ts")>Long.parseLong(Store.get("read_"+id,"0"));if(filter.equals("unread")&&!unread)continue;if(!(p.optString("name")+p.optString("username")).toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT)))continue;LinearLayout row=Ui.row(this);Ui.pad(row,0,16,0,16,this);row.addView(Profile.avatar(this,p,52));LinearLayout meta=Ui.col(this);Ui.pad(meta,13,0,13,0,this);meta.addView(Ui.t(this,p.optString("name"),16,Ui.text,App.cairoB));if(!p.optString("username").isEmpty())meta.addView(Ui.t(this,"@"+p.optString("username"),12,Ui.accent,App.cairoSB));meta.addView(Ui.t(this,last==null?getString(R.string.start_chat):last.optString("kind").equals("file")?"📎 "+last.optString("name"):last.optString("body").substring(0,Math.min(100,last.optString("body").length())),12,Ui.dim,App.cairoSB));row.addView(meta,Ui.lpw(1));if(unread)row.addView(Ui.t(this,"●",16,Ui.accent,App.cairoB));row.setOnClickListener(v->{Store.set("read_"+id,String.valueOf(System.currentTimeMillis()));Intent i=new Intent(this,ChatActivity.class);i.putExtra("peer",id);startActivity(i);});content.addView(row);count++;}if(count==0)content.addView(Ui.t(this,getString(R.string.empty_chat_list),14,Ui.dim,App.cairoSB));}
+ private long lastTime(JSONObject p){JSONArray t=Store.thread(p.optString("id"));JSONObject m=t.optJSONObject(t.length()-1);return m==null?0:m.optLong("ts");}
+ private void transfers(){content.removeAllViews();int[] labels={R.string.send_files,R.string.receive_files,R.string.received_library,R.string.devices_groups};Class[] classes={SendActivity.class,ScanActivity.class,LibraryActivity.class,DevicesActivity.class};for(int i=0;i<labels.length;i++){final Class target=classes[i];TextView b=Ui.cta(this,getString(labels[i]));LinearLayout.LayoutParams lp=Ui.lp(-1,-2);lp.topMargin=Ui.dp(this,18);content.addView(b,lp);b.setOnClickListener(v->startActivity(new Intent(this,target)));}}
 }

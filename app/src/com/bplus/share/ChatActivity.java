@@ -47,10 +47,13 @@ public class ChatActivity extends Activity {
         TextView back = Ui.t(this, "‹", 26, Ui.dim, App.cairoB);
         back.setGravity(Gravity.CENTER);
         head.addView(back, Ui.lp(Ui.dp(this, 38), Ui.dp(this, 38)));
+        head.addView(Profile.avatar(this,peer,40));
         back.setOnClickListener(v -> finish());
         LinearLayout meta = Ui.col(this);
         Ui.pad(meta, 12, 0, 12, 0, this);
         meta.addView(Ui.t(this, name, 16, Ui.text, App.cairoB));
+        if(!peer.optString("username").isEmpty())meta.addView(Ui.t(this,"@"+peer.optString("username"),11,Ui.dim,App.cairoSB));
+        Store.set("read_"+peerId,String.valueOf(System.currentTimeMillis()));
         TextView status = Ui.t(this, "", 11, Ui.green, App.cairoB);
         meta.addView(status);
         head.addView(meta, Ui.lpw(1));
@@ -182,7 +185,7 @@ public class ChatActivity extends Activity {
         JSONObject current=Store.peerById(peerId);String local=Net.localIp(this);String ip=current==null?"?":current.optString("ip");int port=current==null?Store.PORT:current.optInt("port",Store.PORT);
         TextView details=Ui.t(this,getString(R.string.checking),13,Ui.text,App.cairoSB);Ui.pad(details,20,20,20,20,this);details.setTextIsSelectable(true);
         android.app.AlertDialog dialog=new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.connection_details)).setView(details).setPositiveButton(android.R.string.ok,null).setNeutralButton(getString(R.string.open_wifi),(d,n)->PairUi.wifi(this)).setNegativeButton(getString(R.string.copy_details),(d,n)->PairUi.copy(this,details.getText().toString())).create();dialog.show();
-        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.0.3\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
+        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.1.0\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
     }
 
     private void pickFile() {

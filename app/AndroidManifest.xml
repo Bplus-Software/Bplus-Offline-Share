@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bplus.share"
-    android:versionCode="4" android:versionName="1.0.3">
+    android:versionCode="5" android:versionName="1.1.0">
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34"/>
     <uses-feature android:name="android.hardware.camera.any" android:required="false"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -28,6 +29,10 @@
         <activity android:name=".ChatActivity" android:exported="false" android:configChanges="orientation|screenSize|locale|layoutDirection|uiMode"/>
         <activity android:name=".SettingsActivity" android:exported="false" android:configChanges="orientation|screenSize|locale|layoutDirection|uiMode"/>
         <activity android:name=".UpdateActivity" android:exported="false" android:configChanges="orientation|screenSize|locale|layoutDirection|uiMode"/>
+        <activity android:name=".ProfileActivity" android:exported="false"/>
+        <activity android:name=".NearbyActivity" android:exported="false"/>
+        <activity android:name=".LibraryActivity" android:exported="false"/>
+        <activity android:name=".VideoActivity" android:exported="false" android:configChanges="orientation|screenSize"/>
         <activity android:name=".ChatsActivity" android:exported="false"/>
         <provider android:name=".AttachmentProvider" android:authorities="com.bplus.share.files" android:exported="false" android:grantUriPermissions="true"/>
         <provider android:name=".UpdateProvider" android:authorities="com.bplus.share.updates" android:exported="false" android:grantUriPermissions="true"/>

@@ -27,6 +27,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
     private final ExecutorService exec = Executors.newSingleThreadExecutor();
     private final Handler main = new Handler(Looper.getMainLooper());
     private volatile boolean handled;
+    private boolean qrConfirmed;
     private JSONObject payload;
     private String pairError="";
     private JSONArray files;
@@ -140,6 +141,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
             handled = false;
             return;
         }
+        if(!qrConfirmed){stopCamera();new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.accept_pair)).setMessage(payload.optString("name")+"\n@"+payload.optString("username")+"\n"+getString(R.string.identity_notice)).setNegativeButton(getString(R.string.cancel),(d,n)->{handled=false;showScan();}).setPositiveButton(getString(R.string.accept_pair),(d,n)->{qrConfirmed=true;onQr(payload.toString());}).setOnCancelListener(d->{handled=false;showScan();}).show();return;}
         state = 1;
         stopCamera();
         container.removeAllViews();
@@ -160,7 +162,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
             peerName = res.optString("name");
             peerToken = qrToken;
             try {
-                JSONObject peer = new JSONObject();
+                JSONObject peer = Profile.clean(res);
                 peer.put("id", peerId);
                 peer.put("name", peerName);
                 peer.put("ip", ip);

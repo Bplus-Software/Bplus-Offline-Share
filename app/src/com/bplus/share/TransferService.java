@@ -132,22 +132,25 @@ public class TransferService extends Service {
             }
             int len = headers.containsKey("content-length") ? Integer.parseInt(headers.get("content-length")) : -1;
 
-            if (path.startsWith("/ping")) {
+            if(path.startsWith("/nearby/")){
+                if(!method.equals("POST")||len<0||len>48000){err(out,400);return;}
+                try{JSONObject result=Nearby.handle(path,new JSONObject(new String(readBody(in,len),"UTF-8")),s.getInetAddress().getHostAddress());json(out,result);}catch(Exception denied){err(out,403);}
+            } else if (path.startsWith("/ping")) {
                 JSONObject o = new JSONObject();
-                o.put("id", Store.get("deviceId", ""));
-                o.put("name", Store.deviceName());
+                o.put("reachable",true);
+                if(Nearby.knownAddress(s.getInetAddress().getHostAddress())){o.put("id",Store.get("deviceId",""));o.put("name",Store.deviceName());}
                 json(out, o);
             } else if (path.startsWith("/pair")) {
                 if(!q.getOrDefault("token", "").equals(Store.token())) { err(out,403); return; }
+                if(len<0||len>48000){err(out,400);return;}
                 byte[] body = readBody(in, len);
-                JSONObject peer = new JSONObject(new String(body, "UTF-8"));
+                JSONObject input=new JSONObject(new String(body,"UTF-8"));
+                JSONObject peer=Profile.clean(input);peer.put("token",input.getString("token"));
                 peer.put("ip", s.getInetAddress().getHostAddress());
                 peer.put("port", Store.PORT);
                 peer.put("lastSeen", System.currentTimeMillis());
                 Store.upsertPeer(peer);
-                JSONObject res = new JSONObject();
-                res.put("id", Store.get("deviceId", ""));
-                res.put("name", Store.deviceName());
+                JSONObject res = Profile.local();
                 emit("pair", peer);
                 json(out, res);
             } else if (path.startsWith("/manifest")) {
@@ -180,7 +183,7 @@ public class TransferService extends Service {
                 fin.close();
                 out.flush();
             } else if (path.startsWith("/recv")) {
-                if (!peerTokenOk(q.get("token"))) { err(out, 403); return; }
+                if (!peerTokenOk(q.get("token")) || !Nearby.knownAddress(s.getInetAddress().getHostAddress())) { err(out, 403); return; }
                 String name = URLDecoder.decode(q.getOrDefault("name", "file"), "UTF-8");
                 if(len<0) {err(out,400);return;}
                 Save.Target saved=Save.create(this,name);
@@ -200,7 +203,7 @@ public class TransferService extends Service {
                 emit("recv-file", ev);
                 ok(out);
             } else if (path.startsWith("/msg")) {
-                if (!peerTokenOk(q.get("token"))) { err(out, 403); return; }
+                if (!peerTokenOk(q.get("token")) || !Nearby.knownAddress(s.getInetAddress().getHostAddress())) { err(out, 403); return; }
                 byte[] body = readBody(in, len);
                 JSONObject m = new JSONObject(new String(body, "UTF-8"));
                 if (m.optString("text", "").isEmpty()) { ok(out); return; }
@@ -222,7 +225,7 @@ public class TransferService extends Service {
                 emit("batchdone", ev);
                 ok(out);
             } else if (path.startsWith("/history")) {
-                if (!peerTokenOk(q.get("token"))) { err(out, 403); return; }
+                if (!peerTokenOk(q.get("token")) || !Nearby.knownAddress(s.getInetAddress().getHostAddress())) { err(out, 403); return; }
                 JSONObject o = new JSONObject();
                 JSONArray peers = Store.peers();
                 JSONObject threads = new JSONObject();
