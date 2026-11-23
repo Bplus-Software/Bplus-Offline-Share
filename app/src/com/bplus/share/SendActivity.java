@@ -28,7 +28,7 @@ public class SendActivity extends Activity {
     private final List<String> names = new ArrayList<>();
     private final List<Long> sizes = new ArrayList<>();
     private String batchId;
-    private String peerName = "";
+    private String peerName = "", pairedId="";
     private TextView[] fileBars;
     private ProgressBar[] fileProgress;
     private long[] fileDone;
@@ -57,7 +57,7 @@ public class SendActivity extends Activity {
     private void onEvent(String type, JSONObject data) {
         try {
             if ("pair".equals(type) && state == 1) {
-                peerName = data.optString("name");
+                peerName = data.optString("name");pairedId=data.optString("id");
                 state = 2;
                 showTransfer();
             } else if ("serve-progress".equals(type) && state == 2) {
@@ -70,7 +70,9 @@ public class SendActivity extends Activity {
                     if (fileDone[i] >= size && fileBars != null && fileBars[i] != null) {
                         fileBars[i].setText("✓");
                         fileBars[i].setTextColor(Ui.green);
-                        if (!served[i]) { served[i] = true; overallDone += size; }
+                        if (!served[i]) { served[i] = true; overallDone += size;
+                            if(!pairedId.isEmpty()){JSONObject message=new JSONObject();message.put("kind","file");message.put("name",names.get(i));message.put("size",sizes.get(i));message.put("uri",uris.get(i).toString());message.put("mime",Save.mime(names.get(i)));message.put("me",true);message.put("ts",System.currentTimeMillis());message.put("state","sent");Store.addMsg(pairedId,message);}
+                        }
                     }
                 }
                 updateOverall(size);

@@ -196,6 +196,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
                 String k = keys.next();
                 if (k.equals(Store.get("deviceId", ""))) continue;
                 JSONArray t = threads.getJSONArray(k);
+                for(int j=0;j<t.length();j++){JSONObject item=t.optJSONObject(j);if(item!=null)item.remove("uri");}
                 if (Store.thread(k).length() == 0) Store.saveThread(k, t);
             }
             return true;
@@ -326,6 +327,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
                         finishedBytes += size;
                         JSONObject msg = new JSONObject();
                         msg.put("kind", "file"); msg.put("name", name); msg.put("size", size);
+                        msg.put("uri",Net.receivedUri());msg.put("mime",Save.mime(name));
                         msg.put("me", false); msg.put("ts", System.currentTimeMillis()); msg.put("state", "received");
                         Store.addMsg(peerId, msg);
                         main.post(() -> {

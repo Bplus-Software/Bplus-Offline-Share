@@ -137,4 +137,27 @@
 <string name="copy_history">نسخ المحادثات</string>
 <string name="history_copied">تم نسخ المحادثات. سجلات الملفات مش بتشمل الملفات الأصلية.</string>
 <string name="history_failed">المحادثات ما اتنسختش. راجع الموبايل التاني أو المحادثات الموجودة.</string>
+<string name="chats_title">المحادثات</string>
+<string name="chats_sub">افتح محادثة على طول</string>
+<string name="no_chats">اربط جهاز علشان تبدأ محادثة.</string>
+<string name="start_chat">ابدأ محادثة</string>
+<string name="file_unavailable">الملف مش متاح</string>
+<string name="tap_to_open">اضغط للفتح · مطوّلًا للخيارات</string>
+<string name="file_unavailable_help">الملف الأصلي مش متاح هنا أو إذن الوصول انتهى. سجلات المحادثات القديمة ما كانتش بتحفظ الملف نفسه. تقدر تحدد نسخة موجودة على موبايلك.</string>
+<string name="no_file_app">مفيش تطبيق مثبت يفتح النوع ده.</string>
+<string name="file_open_failed">تعذّر فتح الملف:</string>
+<string name="forward_file">إرسال لجهاز أو مجموعة</string>
+<string name="forward_confirm">إرسال نسخة من %1$s إلى %2$s؟</string>
+<string name="send_now">إرسال الآن</string>
+<string name="forward_result">تم الإرسال إلى %1$d من %2$d أجهزة.</string>
+<string name="quick_ok">تمام 👍</string>
+<string name="quick_received">وصل، شكرًا</string>
+<string name="quick_sending">هبعته حالًا</string>
+<string name="emoji_title">إضافة إيموجي</string>
+<string name="locate_file">تحديد مكان الملف</string>
+<string name="locate_confirm">استخدام الملف اللي اخترته كنسخة محلية من %1$s؟ اتأكد إنك اخترت الملف الصحيح.</string>
+<string name="open_file">فتح</string>
+<string name="remove_chat">إزالة من المحادثة</string>
+<string name="remove_chat_help">إزالة الرسالة من محادثتك هنا بس؟ الملف الأصلي هيفضل محفوظ، ومش هيتحذف أي شيء من الجهاز التاني.</string>
+<string name="remove_message">إزالة الرسالة فقط</string>
 </resources>

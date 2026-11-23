@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 
 public class ChatActivity extends Activity {
     private static final int REQ_PICK = 61;
+    private JSONObject locating;
     private String peerId;
     private JSONObject peer;
     private LinearLayout msgs;
@@ -35,6 +36,7 @@ public class ChatActivity extends Activity {
         Ui.applyTheme(this);
         peerId = getIntent().getStringExtra("peer");
         peer = Store.peerById(peerId);
+        if(peer==null){finish();return;}
 
         LinearLayout root = Ui.col(this);
         root.setBackgroundColor(Ui.bg);
@@ -91,6 +93,13 @@ public class ChatActivity extends Activity {
             input.setText("");
             sendText(text);
         });
+        LinearLayout quick=Ui.row(this);Ui.pad(quick,14,6,14,6,this);
+        String[] replies={getString(R.string.quick_ok),getString(R.string.quick_received),getString(R.string.quick_sending)};
+        for(String reply:replies){TextView chip=Ui.ghost(this,reply);chip.setTextSize(11);Ui.pad(chip,8,8,8,8,this);quick.addView(chip,Ui.lpw(1));chip.setOnClickListener(v->{input.setText(reply);input.setSelection(input.length());input.requestFocus();});}
+        root.addView(quick);
+        TextView emoji=Ui.t(this,"☺",22,Ui.accent,App.cairoB);emoji.setGravity(Gravity.CENTER);bar.addView(emoji,0,Ui.lp(Ui.dp(this,36),Ui.dp(this,40)));
+        emoji.setContentDescription(getString(R.string.emoji_title));
+        emoji.setOnClickListener(v->{String[] choices={"👍","😊","❤️","😂","🙏","تمام 👍","وصل، شكرًا"};new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.emoji_title)).setItems(choices,(d,n)->{int start=Math.max(0,input.getSelectionStart());input.getText().insert(start,choices[n]);input.requestFocus();((android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(input,android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);}).setNegativeButton(getString(R.string.cancel),null).show();});
         root.addView(bar);
         setContentView(root);
 
@@ -127,32 +136,21 @@ public class ChatActivity extends Activity {
             if (m == null) continue;
             boolean me = m.optBoolean("me");
             String kind = m.optString("kind", "text");
-            TextView bub;
-            if (kind.equals("text")) {
-                bub = Ui.t(this, m.optString("body"), 14, me ? Color.WHITE : Ui.text, App.cairoSB);
-            } else {
-                String state = m.optString("state", "");
-                String label = "📎 " + m.optString("name") + "\n" + Ui.fmtSize(m.optLong("size"));
-                if ("sent".equals(state)) label += " · " + getString(R.string.sent);
-                else if ("failed".equals(state)) label += " · " + getString(R.string.failed_retry);
-                bub = Ui.t(this, label, 13.5f, me ? Color.WHITE : Ui.text, App.cairoSB);
-                if ("failed".equals(state)) {
-                    final int idx = i;
-                    bub.setOnClickListener(v -> retryFile(idx));
-                }
+            View bub;
+            if(kind.equals("text")){
+                TextView text=Ui.t(this,m.optString("body"),14,me?Color.WHITE:Ui.text,App.cairoSB);
+                text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);bub=text;
+            }else{
+                bub=FileCards.card(this,m,()->fileMenu(m));
+                if(FileCards.uri(m)==null)bub.setOnClickListener(v->locate(m));
             }
-            bub.setLineSpacing(0, 1.25f);
-            GradientDrawable bg = Ui.round(me ? Ui.accent : Ui.card, 16, this);
-            bub.setBackground(bg);
-            Ui.pad(bub, 13, 9, 13, 9, this);
             String time = tf.format(new Date(m.optLong("ts")));
-            TextView stamp = Ui.t(this, time, 10, me ? Color.argb(160,255,255,255) : Ui.dim, App.cairoSB);
-            LinearLayout cell = Ui.col(this);
-            cell.setGravity(me ? Gravity.END : Gravity.START);
-            LinearLayout.LayoutParams bp = Ui.lp(-2, -2);
-            bp.bottomMargin = Ui.dp(this, 10);
-            bp.gravity = me ? Gravity.END : Gravity.START;
-            cell.addView(bub, bp);
+            String state=m.optString("state");
+            if(me)time+=" · "+getString(state.equals("failed")?R.string.failed_retry:state.equals("sending")?R.string.sending:R.string.sent);
+            TextView stamp = Ui.t(this,time,10,Ui.dim,App.cairoSB);
+            LinearLayout cell = Ui.col(this);cell.setGravity(me?Gravity.END:Gravity.START);
+            LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(bub,bp);cell.addView(stamp);
+            Ui.pad(cell,0,0,0,12,this);
             msgs.addView(cell);
         }
         scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
@@ -195,6 +193,13 @@ public class ChatActivity extends Activity {
 
     @Override protected void onActivityResult(int req, int res, Intent data) {
         super.onActivityResult(req, res, data);
+        if(req==62 && res==RESULT_OK && data!=null && data.getData()!=null && locating!=null){
+            Uri u=data.getData();try{getContentResolver().takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
+            JSONObject selected=locating;locating=null;
+            new android.app.AlertDialog.Builder(this).setMessage(getString(R.string.locate_confirm,selected.optString("name"))).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(android.R.string.ok,(d,n)->{
+                JSONArray thread=Store.thread(peerId);for(int j=0;j<thread.length();j++){JSONObject item=thread.optJSONObject(j);if(same(item,selected)){try{item.put("uri",u.toString());item.put("mime",getContentResolver().getType(u));}catch(Exception ignored){}break;}}Store.saveThread(peerId,thread);renderThread();
+            }).show();return;
+        }
         if (req != REQ_PICK || res != RESULT_OK || data == null || peer == null) return;
         java.util.ArrayList<Uri> uris = new java.util.ArrayList<>();
         if (data.getClipData() != null)
@@ -221,9 +226,17 @@ public class ChatActivity extends Activity {
         });
     }
 
-    private void retryFile(int idx) {
-        // re-send is only possible for QR batches; direct sends would need the original uri.
-        // v1.0: inform user the device is unreachable / ask to resend from picker.
-        android.widget.Toast.makeText(this, getString(R.string.no_device_nearby), android.widget.Toast.LENGTH_LONG).show();
+    private static boolean same(JSONObject a,JSONObject b){return a!=null && a.optLong("ts")==b.optLong("ts") && a.optString("name").equals(b.optString("name")) && a.optBoolean("me")==b.optBoolean("me");}
+    private void locate(JSONObject m){
+        new android.app.AlertDialog.Builder(this).setMessage(getString(R.string.file_unavailable_help)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.locate_file),(d,n)->{locating=m;Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");startActivityForResult(i,62);}).show();
+    }
+    private void fileMenu(JSONObject m){
+        String[] options={getString(R.string.open_file),getString(R.string.forward_file),getString(R.string.remove_chat),getString(R.string.locate_file)};
+        new android.app.AlertDialog.Builder(this).setTitle(m.optString("name")).setItems(options,(d,n)->{
+            if(n==0){if(FileCards.uri(m)==null)locate(m);else FileCards.open(this,m);}
+            else if(n==1)FileCards.forward(this,m);
+            else if(n==3)locate(m);
+            else new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.remove_chat)).setMessage(getString(R.string.remove_chat_help)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.remove_message),(confirm,which)->{JSONArray old=Store.thread(peerId),kept=new JSONArray();boolean removed=false;for(int j=0;j<old.length();j++){JSONObject item=old.optJSONObject(j);if(!removed&&same(item,m)){removed=true;continue;}kept.put(item);}Store.saveThread(peerId,kept);renderThread();}).show();
+        }).show();
     }
 }

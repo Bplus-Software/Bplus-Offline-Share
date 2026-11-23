@@ -22,7 +22,7 @@ public final class PairUi {
  public static void failure(Activity a,LinearLayout root,String name,String ip,int port,String reason,Runnable retry){
   root.removeAllViews();root.addView(Ui.topBar(a,a.getString(R.string.pair_title),true,null));ScrollView sc=new ScrollView(a);LinearLayout box=Ui.col(a);Ui.pad(box,24,26,24,20,a);sc.addView(box);root.addView(sc,Ui.lpW1());
   box.addView(Ui.t(a,a.getString(R.string.peer_not_responding),22,Ui.text,App.cairoB));
-  String details="B+ Share 1.0.1\n"+a.getString(R.string.target_device)+": "+name+"\n"+a.getString(R.string.target_address)+": "+ip+":"+port+"\n"+a.getString(R.string.local_address)+": "+Net.localIp(a)+"\n"+a.getString(R.string.failure_reason)+": "+reason;
+  String details="B+ Share 1.0.2\n"+a.getString(R.string.target_device)+": "+name+"\n"+a.getString(R.string.target_address)+": "+ip+":"+port+"\n"+a.getString(R.string.local_address)+": "+Net.localIp(a)+"\n"+a.getString(R.string.failure_reason)+": "+reason;
   TextView d=Ui.t(a,details,13,Ui.dim,App.cairoSB);d.setTextIsSelectable(true);Ui.pad(d,16,18,16,18,a);d.setBackground(Ui.roundBorder(Ui.card,Ui.border,18,a));LinearLayout.LayoutParams lp=Ui.lp(-1,-2);lp.topMargin=Ui.dp(a,24);box.addView(d,lp);
   TextView help=Ui.t(a,a.getString(R.string.pair_help),13,Ui.dim,App.cairoSB);Ui.pad(help,0,20,0,20,a);box.addView(help);
   button(a,box,a.getString(R.string.try_again),retry,true);button(a,box,a.getString(R.string.open_wifi),()->wifi(a),false);button(a,box,a.getString(R.string.copy_details),()->copy(a,details),false);

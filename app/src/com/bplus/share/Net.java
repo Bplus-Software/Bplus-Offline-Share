@@ -100,15 +100,20 @@ public class Net {
         } catch (Exception e) { failed(e); return null; }
     }
 
+    private static final ThreadLocal<String> receivedUri=new ThreadLocal<>();
+    public static String receivedUri(){return receivedUri.get();}
+
     // pull a file from a sender's batch
     public static boolean download(String ip, int port, String token, String batch, int idx,
                                    String name, long size, Context c, Progress pr) {
+        receivedUri.remove();
+        Save.Target target=null;
         try {
             HttpURLConnection h = open("GET", "http://" + ip + ":" + port + "/file?token=" + token + "&batch=" + batch + "&i=" + idx);
             if (h.getResponseCode() != 200) return false;
             InputStream in = new BufferedInputStream(h.getInputStream());
-            OutputStream out = Save.openOut(c, name);
-            if (out == null) return false;
+            target=Save.create(c,name);
+            OutputStream out=target.out;
             byte[] buf = new byte[65536];
             long done = 0; int n;
             while ((n = in.read(buf)) > 0) {
@@ -116,9 +121,11 @@ public class Net {
                 done += n;
                 if (pr != null) pr.onProgress(done, size);
             }
-            out.close(); in.close();
+            in.close();
+            if(done!=size)throw new IOException("Incomplete transfer");
+            target.complete();receivedUri.set(target.uri.toString());
             return true;
-        } catch (Exception e) { return false; }
+        } catch (Exception e) { if(target!=null)target.abort();return false; }
     }
 
     // push a file to a peer's inbox

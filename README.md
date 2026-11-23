@@ -2,6 +2,16 @@
 
 Native Android app for direct phone-to-phone file sharing on a trusted local Wi-Fi network. Android 8 or later. English and Arabic, light and dark themes.
 
+## Version 1.0.2
+
+- A Chats button on the main screen opens the paired-device conversation list.
+- New sent/received file messages retain local content URIs. Image cards load sampled thumbnails; document cards show file type, name, size and state. Tap to open using Android; long-press for Open, Forward, Remove from chat or Locate file.
+- Forward selects a paired device or group and asks for confirmation. Remove from chat removes only the local message, never the underlying file or another device's copy.
+- Old/migrated file records do not contain the original files. Locate file lets the user explicitly associate a local copy; nothing is recovered automatically.
+- Emoji insertion and quick replies fill the composer for editing before Send. No message reactions, launcher shortcuts or internet relay were added.
+- Received files record their content URI and MIME type. Incomplete receives are discarded. Device-local file URIs are stripped from copied chat history.
+- The exact 1.0.1 downloader passed a redirected download of the candidate 1.0.2 APK with matching SHA-256 in a JVM test. Android installer, permission prompts and file viewing remain untested on-device.
+
 ## Version 1.0.1
 
 - Wi-Fi/hotspot setup guidance before QR pairing and file offers; cellular addresses are no longer used in QR codes.
@@ -16,7 +26,7 @@ Download the APK from the latest GitHub release and install it over the previous
 
 Connect both phones to the same trusted Wi-Fi network, or try one phone's hotspot with the other joined. Keep both apps open. First try pairing and a small file. Guest Wi-Fi may prevent phones from communicating.
 
-This is trial software. Android runtime, installer permission screens, hotspot support and real two-phone transfers have not been verified for 1.0.1. JVM fault-injection tests cover the updater network implementation, not the complete Android app. See `tests/results.txt` and `tests-updater.py`.
+This is trial software. Android runtime, installer permission screens, hotspot support and real two-phone transfers have not been verified for 1.0.2. JVM fault-injection tests cover the updater network implementation, not the complete Android app. See `tests/results.txt` and `tests-updater.py`.
 
 ## Features and limits
 

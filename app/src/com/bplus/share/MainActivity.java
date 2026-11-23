@@ -70,6 +70,8 @@ public class MainActivity extends Activity {
                 v -> startActivity(new Intent(this, SendActivity.class))));
         btns.addView(bigCard("↙", Ui.green, getString(R.string.receive_files), getString(R.string.receive_sub),
                 v -> startActivity(new Intent(this, ScanActivity.class))));
+        btns.addView(bigCard("☷", Ui.accent, getString(R.string.chats_title), getString(R.string.chats_sub),
+                v -> startActivity(new Intent(this, ChatsActivity.class))));
         btns.addView(bigCard("▦", Ui.dim, getString(R.string.devices_groups), "",
                 v -> startActivity(new Intent(this, DevicesActivity.class))));
         root.addView(btns);
@@ -80,7 +82,7 @@ public class MainActivity extends Activity {
         flp.topMargin = Ui.dp(this, 40);
         root.addView(footer, flp);
 
-        setContentView(root);
+        android.widget.ScrollView page=new android.widget.ScrollView(this);page.setFillViewport(true);page.addView(root);setContentView(page);
 
         if (Build.VERSION.SDK_INT >= 33 &&
                 checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)

@@ -182,20 +182,18 @@ public class TransferService extends Service {
             } else if (path.startsWith("/recv")) {
                 if (!peerTokenOk(q.get("token"))) { err(out, 403); return; }
                 String name = URLDecoder.decode(q.getOrDefault("name", "file"), "UTF-8");
-                OutputStream fout = Save.openOut(this, name);
-                byte[] buf = new byte[65536];
-                long remaining = len; int n;
-                while (remaining > 0) {
-                    n = in.read(buf, 0, (int) Math.min(buf.length, remaining));
-                    if (n < 0) break;
-                    if (fout != null) fout.write(buf, 0, n);
-                    remaining -= n;
-                }
-                if (fout != null) fout.close();
+                if(len<0) {err(out,400);return;}
+                Save.Target saved=Save.create(this,name);
+                try {
+                    byte[] buf = new byte[65536];long remaining=len;int n;
+                    while(remaining>0){n=in.read(buf,0,(int)Math.min(buf.length,remaining));if(n<0)throw new IOException("Incomplete file");saved.out.write(buf,0,n);remaining-=n;}
+                    saved.complete();
+                }catch(Exception e){saved.abort();throw e;}
                 String from = q.getOrDefault("from", "");
                 JSONObject msg = new JSONObject();
                 msg.put("kind", "file"); msg.put("name", name); msg.put("size", len);
                 msg.put("me", false); msg.put("ts", System.currentTimeMillis()); msg.put("state", "received");
+                msg.put("uri",saved.uri.toString());msg.put("mime",Save.mime(name));
                 if (!from.isEmpty()) Store.addMsg(from, msg);
                 notifyEvent(getString(R.string.app_name), getString(R.string.notif_file, name));
                 JSONObject ev = new JSONObject(); ev.put("from", from); ev.put("name", name);
@@ -230,7 +228,9 @@ public class TransferService extends Service {
                 JSONObject threads = new JSONObject();
                 for (int i = 0; i < peers.length(); i++) {
                     JSONObject pr = peers.getJSONObject(i);
-                    threads.put(pr.getString("id"), Store.thread(pr.getString("id")));
+                    JSONArray portable=new JSONArray(Store.thread(pr.getString("id")).toString());
+                    for(int j=0;j<portable.length();j++){JSONObject item=portable.optJSONObject(j);if(item!=null)item.remove("uri");}
+                    threads.put(pr.getString("id"), portable);
                 }
                 o.put("threads", threads);
                 o.put("deviceName", Store.deviceName());
@@ -374,6 +374,7 @@ public class TransferService extends Service {
             msg.put("kind", "file"); msg.put("name", name); msg.put("size", size);
             msg.put("me", true); msg.put("ts", System.currentTimeMillis());
             msg.put("state", ok ? "sent" : "failed");
+            msg.put("uri",uri.toString());msg.put("mime",Save.mime(name));
             Store.addMsg(peer.optString("id"), msg);
         } catch (Exception ignored) {}
         return ok;
