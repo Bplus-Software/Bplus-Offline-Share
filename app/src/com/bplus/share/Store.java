@@ -36,6 +36,7 @@ public class Store {
     public static void savePeers(JSONArray a) { set("peers", a.toString()); }
 
     public static JSONObject peerById(String id) {
+        if(id==null||id.isEmpty())return null;
         JSONArray a = peers();
         for (int i = 0; i < a.length(); i++) {
             JSONObject o = a.optJSONObject(i);
