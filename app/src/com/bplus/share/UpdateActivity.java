@@ -61,9 +61,9 @@ public class UpdateActivity extends Activity {
   busy=true;phase="checking";detail="";version="";render();
   worker.execute(()->{try{
    String installed=AppVersion.installed(this);
-   JSONObject release=ReleaseChoice.choose(new JSONArray(UpdateHttp.text(API)),Store.get("includeTestVersions","1").equals("1"),installed);if(release==null){phase="current";detail=getString(R.string.installed_version,AppVersion.display(this));return;}
+   JSONObject release=ReleaseChoice.choose(new JSONArray(UpdateHttp.text(API)),Store.get("includeTestVersions","1").equals("1"),installed,AppVersion.code(this));if(release==null){phase="current";detail=getString(R.string.installed_version,AppVersion.display(this));return;}
    version=release.getString("tag_name");
-   if(!UpdateHttp.newer(version,installed)){phase="current";detail=getString(R.string.installed_version,AppVersion.display(this));return;}
+   if(!ReleaseChoice.newer(release,installed,AppVersion.code(this))){phase="current";detail=getString(R.string.installed_version,AppVersion.display(this));return;}
    JSONArray assets=release.getJSONArray("assets");JSONObject asset=null;
    for(int i=0;i<assets.length();i++){JSONObject a=assets.getJSONObject(i);if(a.optString("name").endsWith(".apk")){if(asset!=null)throw new IOException("More than one APK; choose the release in GitHub");asset=a;}}
    if(asset==null)throw new IOException("Release has no APK asset");
