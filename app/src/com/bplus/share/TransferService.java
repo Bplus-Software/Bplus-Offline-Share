@@ -214,7 +214,7 @@ public class TransferService extends Service {
                 msg.put("me", false); msg.put("ts", System.currentTimeMillis()); msg.put("state", "received");
                 if (!from.isEmpty()) Store.addMsg(from, msg);
                 JSONObject peer = Store.peerById(from);
-                String pname = peer != null ? peer.optString("name") : "B+ Share";
+                String pname = peer != null ? peer.optString("name") : "B+ Offline Share";
                 notifyEvent(pname, m.optString("text", ""));
                 JSONObject ev = new JSONObject(); ev.put("from", from);
                 emit("msg", ev);

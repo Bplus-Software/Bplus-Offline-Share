@@ -21,7 +21,7 @@ public class App extends Application {
         Store.init(this);Attachments.snapshot();
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationManager nm = getSystemService(NotificationManager.class);
-            nm.createNotificationChannel(new NotificationChannel(CH, "B+ Share", NotificationManager.IMPORTANCE_LOW));
+            nm.createNotificationChannel(new NotificationChannel(CH, getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW));
             Alerts.setup(this);
         }
         TransferService.start(this);

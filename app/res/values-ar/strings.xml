@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">B+ شير</string>
+    <string name="app_name">B+ Offline Share</string>
     <string name="tagline">نقل الملفات من موبايل لموبايل</string>
     <string name="send_files">إرسال ملفات</string>
     <string name="send_sub">اختار أي ملفات واعرض رمز QR</string>
@@ -13,7 +13,7 @@
     <string name="next">التالي ←</string>
     <string name="files_selected">%1$d ملفات مختارة</string>
     <string name="show_code">اعرض الرمز ده</string>
-    <string name="qr_hint">افتح B+ شير على الموبايل التاني واختار "استقبال ملفات"</string>
+    <string name="qr_hint">افتح B+ Offline Share على الموبايل التاني واختار "استقبال ملفات"</string>
     <string name="waiting">في انتظار الاتصال…</string>
     <string name="this_phone">الموبايل ده: %1$s</string>
     <string name="cancel">إلغاء</string>
@@ -45,7 +45,7 @@
     <string name="device_name_sub">بيظهر للموبايل التاني عند الربط</string>
     <string name="save_to">حفظ الملفات المستلمة في</string>
     <string name="check_updates">التحقق من التحديثات</string>
-    <string name="updates_sub">التحديثات بتيجي من صفحة إصدارات B+ شير على جيت هب</string>
+    <string name="updates_sub">التحديثات بتيجي من صفحة إصدارات B+ Offline Share على جيت هب</string>
     <string name="up_to_date">v%1$s · محدث</string>
     <string name="update_available">فيه v%1$s · اضغط للفتح</string>
     <string name="checking">بيتحقق…</string>
@@ -64,7 +64,7 @@
     <string name="dark">غامق</string>
     <string name="light">فاتح</string>
     <string name="about">عن التطبيق</string>
-    <string name="about_sub">B+ شير v%1$s · طوره باسم حلمي</string>
+    <string name="about_sub">B+ Offline Share v%1$s · طوره باسم حلمي</string>
     <string name="prayer">اللهم ارحم والدي (حلمي سعدون) واغفر له</string>
     <string name="devices">الأجهزة</string>
     <string name="pair_hint">اربط جهاز جديد برمز QR. اضغط على أي جهاز عشان تفتح الشات - الرسايل والملفات بيسافروا مع بعض في محادثة واحدة.</string>
@@ -91,7 +91,7 @@
     <string name="failed_retry">ماتبعتتش · اضغط للمحاولة تاني</string>
     <string name="download">تحميل</string>
     <string name="today">اليوم</string>
-    <string name="notif_ready">B+ شير جاهز للاستقبال</string>
+    <string name="notif_ready">B+ Offline Share جاهز للاستقبال</string>
     <string name="notif_ready_sub">الموبايلات المرتبطة تقدر توصل للجهاز ده</string>
     <string name="notif_file">اتستلم: %1$s</string>
     <string name="notif_msg">%1$s: %2$s</string>
@@ -103,7 +103,7 @@
     <string name="installed_version">النسخة الحالية: %1$s</string>
     <string name="copy_details">نسخ تفاصيل المشكلة</string>
     <string name="updater_note">التحديثات من basem-sadoun/Bplus-Share. أندرويد هيطلب موافقتك قبل التثبيت. محادثاتك وإعداداتك بتفضل على الموبايل.</string>
-    <string name="allow_install_help">اسمح لـ B+ Share بتثبيت التحديثات في الشاشة الجاية، وارجع هنا. تقدر تقفل الإذن بعد كده.</string>
+    <string name="allow_install_help">اسمح لـ B+ Offline Share بتثبيت التحديثات في الشاشة الجاية، وارجع هنا. تقدر تقفل الإذن بعد كده.</string>
     <string name="updater_idle">تحقّق من وجود تحديث</string>
     <string name="updater_current">أنت على أحدث نسخة</string>
     <string name="updater_found">في تحديث جديد</string>
@@ -131,7 +131,7 @@
     <string name="target_address">العنوان المطلوب</string>
     <string name="local_address">عنوان موبايلك</string>
     <string name="failure_reason">السبب</string>
-    <string name="pair_help">خلّي B+ Share مفتوح على الموبايلين واتأكد من الشبكة. لو دي شبكة ضيوف، جرّب شبكة تانية أو نقطة اتصال. التفاصيل مش بتشمل رمز الربط أو محتوى ملفاتك.</string>
+    <string name="pair_help">خلّي B+ Offline Share مفتوح على الموبايلين واتأكد من الشبكة. لو دي شبكة ضيوف، جرّب شبكة تانية أو نقطة اتصال. التفاصيل مش بتشمل رمز الربط أو محتوى ملفاتك.</string>
     <string name="try_again">جرّب تاني</string>
 <string name="history_confirm">نسخ نص المحادثات وسجلات الملفات من %1$s؟ دي نسخة محلية مرة واحدة. محتوى الملفات نفسه مش هيتنقل. المحادثات الموجودة هنا هتفضل زي ما هي.</string>
 <string name="copy_history">نسخ المحادثات</string>
@@ -265,7 +265,7 @@
 <string name="delete_summary">تم الحذف: %1$d. لم يُحذف: %2$d.</string>
 <string name="delete_no_reference">لا يوجد رابط محفوظ للملف. ابحث عنه في مدير الملفات.</string>
 <string name="delete_refused">لم يسمح أندرويد أو مزود الملف بالحذف. احذفه من مدير الملفات.</string>
-<string name="delete_read_only">هذا الملف متاح للقراءة فقط في B+ Share. احذفه من مدير الملفات.</string>
+<string name="delete_read_only">هذا الملف متاح للقراءة فقط في B+ Offline Share. احذفه من مدير الملفات.</string>
 <string name="delete_cancelled">تم إلغاء الحذف.</string>
 <string name="delete_records_kept">لم تُحذف رسائل المحادثة.</string>
 <string name="emoji_faces">وجوه</string>
@@ -277,7 +277,7 @@
 <string name="delete_everyone">حذف لدى الجميع</string>
 <string name="recall_private_only">الحذف لدى الجميع متاح في المحادثات الخاصة فقط.</string>
 <string name="recall_unavailable">حدد فقط رسائل أو ملفات أرسلتها بهذه الميزة. يلزم إصدار 1.1.10 أو أحدث على الهاتفين. لا يمكن حذف العناصر القديمة عن بُعد.</string>
-<string name="recall_confirm">حذف الرسائل المحددة من الهاتفين وملفاتها المستلمة عبر B+ Share من الهاتف الآخر؟ تبقى ملفاتك الأصلية هنا. لا يمكن التراجع.</string>
+<string name="recall_confirm">حذف الرسائل المحددة من الهاتفين وملفاتها المستلمة عبر B+ Offline Share من الهاتف الآخر؟ تبقى ملفاتك الأصلية هنا. لا يمكن التراجع.</string>
 <string name="recall_result">تم الحذف من الهاتفين: %1$d. غير مؤكد: %2$d. تبقى العناصر غير المؤكدة هنا. قد يكون الهاتف الآخر غير متصل أو بإصدار قديم أو غير قادر على حذف الملف. حاول مجددًا أو اختر الحذف من هذه المحادثة.</string>
 <string name="recall_pending_label">الحذف لدى الجميع غير مؤكد</string>
 <string name="delete_success_cards_removed">تمت إزالة الملفات المحذوفة بنجاح من المحادثة أيضًا. تبقى العناصر التي فشل حذفها.</string>
@@ -299,7 +299,7 @@
 <string name="voice_cancel_release">اترك للإلغاء</string>
 <string name="auto_update_check">البحث عن تحديثات تلقائيًا</string>
 <string name="auto_update_check_note">عند التفعيل، يبحث عند فتح الشاشة الرئيسية، مرة كل 6 ساعات بحد أقصى أثناء تشغيل التطبيق. لا بحث بالخلفية ولا تنزيل أو تثبيت تلقائي.</string>
-<string name="incoming_share">المشاركة إلى B+ Share</string>
+<string name="incoming_share">المشاركة إلى B+ Offline Share</string>
 <string name="share_loading">جارٍ تجهيز المحتوى...</string>
 <string name="share_text_limit">النص محدود بـ8000 حرف.</string>
 <string name="share_file_limit">شارك حتى 20 ملفًا في المرة.</string>
@@ -311,4 +311,5 @@
 <string name="share_choose_chat">اختر محادثة خاصة مقترنة</string>
 <string name="share_target_confirm">إرسال إلى %1$s؟ الملفات: %2$d. الرسائل النصية: %3$d.</string>
 <string name="share_open_chat">فتح المحادثة</string>
+<string name="version_unknown">غير معروف</string>
 </resources>

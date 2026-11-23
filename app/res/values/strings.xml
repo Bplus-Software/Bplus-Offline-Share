@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">B+ Share</string>
+    <string name="app_name">B+ Offline Share</string>
     <string name="tagline">Phone-to-phone file transfer</string>
     <string name="send_files">Send files</string>
     <string name="send_sub">Pick anything and show a QR code</string>
@@ -13,7 +13,7 @@
     <string name="next">Next →</string>
     <string name="files_selected">%1$d files selected</string>
     <string name="show_code">Show this code</string>
-    <string name="qr_hint">Open B+ Share on the other phone and choose "Receive files"</string>
+    <string name="qr_hint">Open B+ Offline Share on the other phone and choose "Receive files"</string>
     <string name="waiting">Waiting to connect…</string>
     <string name="this_phone">This phone: %1$s</string>
     <string name="cancel">Cancel</string>
@@ -45,7 +45,7 @@
     <string name="device_name_sub">Shown to the other phone when pairing</string>
     <string name="save_to">Save received files to</string>
     <string name="check_updates">Check for updates</string>
-    <string name="updates_sub">Updates come from the B+ Share GitHub releases page</string>
+    <string name="updates_sub">Updates come from the B+ Offline Share GitHub releases page</string>
     <string name="up_to_date">v%1$s · up to date</string>
     <string name="update_available">v%1$s available · tap to open</string>
     <string name="checking">Checking…</string>
@@ -64,7 +64,7 @@
     <string name="dark">Dark</string>
     <string name="light">Light</string>
     <string name="about">About</string>
-    <string name="about_sub">B+ Share v%1$s · developed by Basem Helmy</string>
+    <string name="about_sub">B+ Offline Share v%1$s · developed by Basem Helmy</string>
     <string name="prayer">May God have mercy and forgiveness on my father (Helmi Saadoun)</string>
     <string name="devices">Devices</string>
     <string name="pair_hint">Pair a new device with a QR code. Tap a device to open its chat - messages and files travel together in one thread.</string>
@@ -91,7 +91,7 @@
     <string name="failed_retry">Not delivered · tap to retry</string>
     <string name="download">Download</string>
     <string name="today">Today</string>
-    <string name="notif_ready">B+ Share is ready to receive</string>
+    <string name="notif_ready">B+ Offline Share is ready to receive</string>
     <string name="notif_ready_sub">Other paired phones can reach this device</string>
     <string name="notif_file">Received: %1$s</string>
     <string name="notif_msg">%1$s: %2$s</string>
@@ -103,7 +103,7 @@
     <string name="installed_version">Installed version: %1$s</string>
     <string name="copy_details">Copy details</string>
     <string name="updater_note">Updates come from basem-sadoun/Bplus-Share. Android will ask before installation. Your chats and settings stay on this phone.</string>
-    <string name="allow_install_help">Allow B+ Share to install updates on the next screen, then return here. You can turn this permission off afterward.</string>
+    <string name="allow_install_help">Allow B+ Offline Share to install updates on the next screen, then return here. You can turn this permission off afterward.</string>
     <string name="updater_idle">Check for a new version</string>
     <string name="updater_current">You are up to date</string>
     <string name="updater_found">Update available</string>
@@ -131,7 +131,7 @@
     <string name="target_address">Target address</string>
     <string name="local_address">This phone address</string>
     <string name="failure_reason">Reason</string>
-    <string name="pair_help">Keep B+ Share open on both phones and check their network. On guest Wi-Fi, try another network or a hotspot. Details do not include pairing tokens or file contents.</string>
+    <string name="pair_help">Keep B+ Offline Share open on both phones and check their network. On guest Wi-Fi, try another network or a hotspot. Details do not include pairing tokens or file contents.</string>
     <string name="try_again">Try again</string>
 <string name="history_confirm">Copy chat text and file records from %1$s? This is a one-time local copy. File contents are not copied. Existing threads on this phone are kept.</string>
 <string name="copy_history">Copy history</string>
@@ -265,7 +265,7 @@
 <string name="delete_summary">Deleted: %1$d. Not deleted: %2$d.</string>
 <string name="delete_no_reference">No saved file link. Find the file in your file manager.</string>
 <string name="delete_refused">Android or the file provider did not allow deletion. Delete it in your file manager.</string>
-<string name="delete_read_only">This file is read-only to B+ Share. Delete it in your file manager.</string>
+<string name="delete_read_only">This file is read-only to B+ Offline Share. Delete it in your file manager.</string>
 <string name="delete_cancelled">Deletion was cancelled.</string>
 <string name="delete_records_kept">Chat messages were kept.</string>
 <string name="emoji_faces">Faces</string>
@@ -277,7 +277,7 @@
 <string name="delete_everyone">Delete for everyone</string>
 <string name="recall_private_only">Delete for everyone is available in private chats only.</string>
 <string name="recall_unavailable">Select only messages or files you sent with this feature. Both phones need 1.1.10 or newer. Older items cannot be deleted remotely.</string>
-<string name="recall_confirm">Delete the selected messages on both phones and their B+ Share received files on the other phone? Your original files stay here. This cannot be undone.</string>
+<string name="recall_confirm">Delete the selected messages on both phones and their B+ Offline Share received files on the other phone? Your original files stay here. This cannot be undone.</string>
 <string name="recall_result">Deleted on both phones: %1$d. Not confirmed: %2$d. Unconfirmed items stay in this chat. The other phone may be offline, outdated, or unable to delete the file. Try again or choose Delete from this chat.</string>
 <string name="recall_pending_label">Delete for everyone not confirmed</string>
 <string name="delete_success_cards_removed">Successfully deleted files were also removed from this chat. Failed items stay here.</string>
@@ -299,7 +299,7 @@
 <string name="voice_cancel_release">Release to cancel</string>
 <string name="auto_update_check">Check for updates automatically</string>
 <string name="auto_update_check_note">When enabled, checks when the home screen opens, at most once every 6 hours while the app is running. No background checks, downloads or installs.</string>
-<string name="incoming_share">Share to B+ Share</string>
+<string name="incoming_share">Share to B+ Offline Share</string>
 <string name="share_loading">Preparing shared content...</string>
 <string name="share_text_limit">Text is limited to 8000 characters.</string>
 <string name="share_file_limit">Share up to 20 files at once.</string>
@@ -311,4 +311,5 @@
 <string name="share_choose_chat">Choose a paired private chat</string>
 <string name="share_target_confirm">Send to %1$s? Files: %2$d. Text messages: %3$d.</string>
 <string name="share_open_chat">Open chat</string>
+<string name="version_unknown">Unknown</string>
 </resources>

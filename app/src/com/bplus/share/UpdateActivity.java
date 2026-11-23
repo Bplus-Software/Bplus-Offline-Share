@@ -24,17 +24,17 @@ public class UpdateActivity extends Activity {
  private TextView status,info,primary;
  private ProgressBar progress;
  private boolean permissionPending;
- private static String current(Activity a){try{return a.getPackageManager().getPackageInfo(a.getPackageName(),0).versionName;}catch(Exception e){return "1.1.16";}}
+
  private File apk(){return new File(getFilesDir(),"update.apk");}
  @Override protected void onCreate(Bundle b){super.onCreate(b);Ui.applyLocale(this);Ui.applyTheme(this);
   LinearLayout root=Ui.col(this);root.setBackgroundColor(Ui.bg);root.addView(Ui.topBar(this,getString(R.string.updater_title),true,null));
   ScrollView scroll=new ScrollView(this);box=Ui.col(this);Ui.pad(box,24,24,24,24,this);scroll.addView(box);root.addView(scroll,Ui.lpW1());setContentView(root);
-  box.addView(Ui.t(this,"B+ Share",24,Ui.text,App.cairoB));box.addView(Ui.t(this,getString(R.string.installed_version,current(this)),13,Ui.dim,App.cairoSB));
+  box.addView(Ui.t(this,getString(R.string.app_name),24,Ui.text,App.cairoB));box.addView(Ui.t(this,getString(R.string.installed_version,AppVersion.display(this)),13,Ui.dim,App.cairoSB));
   status=Ui.t(this,"",19,Ui.text,App.cairoB);Ui.pad(status,0,30,0,14,this);box.addView(status);
   progress=Ui.hbar(this,10);progress.setMax(1000);box.addView(progress,Ui.lp(-1,Ui.dp(this,10)));
   info=Ui.t(this,"",13,Ui.dim,App.cairoSB);Ui.pad(info,0,20,0,20,this);info.setTextIsSelectable(true);box.addView(info);
   primary=Ui.cta(this,getString(R.string.check_updates));primary.setGravity(Gravity.CENTER);box.addView(primary,Ui.lp(-1,-2));primary.setOnClickListener(v->{if(busy)return;if(phase.equals("found")||phase.equals("download_failed"))download();else if(phase.equals("ready"))install();else check();});
-  TextView copy=Ui.ghost(this,getString(R.string.copy_details));Ui.pad(copy,12,16,12,16,this);box.addView(copy);copy.setOnClickListener(v->PairUi.copy(this,"B+ Share "+current(this)+"\nUpdater: "+phase+"\n"+detail+"\nRelease: "+version+"\nBytes: "+bytes+" / "+size+"\nAPI: "+API));
+  TextView copy=Ui.ghost(this,getString(R.string.copy_details));Ui.pad(copy,12,16,12,16,this);box.addView(copy);copy.setOnClickListener(v->PairUi.copy(this,getString(R.string.app_name)+" "+AppVersion.display(this)+"\nUpdater: "+phase+"\n"+detail+"\nRelease: "+version+"\nBytes: "+bytes+" / "+size+"\nAPI: "+API));
   TextView note=Ui.t(this,getString(R.string.updater_note),12,Ui.dim,App.cairoSB);Ui.pad(note,0,24,0,0,this);box.addView(note);visible=this;render();
  }
  @Override protected void onResume(){super.onResume();visible=this;render();if(permissionPending){permissionPending=false;if(getPackageManager().canRequestPackageInstalls())install();else{detail=getString(R.string.allow_install_help);render();}}}
@@ -60,9 +60,10 @@ public class UpdateActivity extends Activity {
  private void check(){
   busy=true;phase="checking";detail="";version="";render();
   worker.execute(()->{try{
-   JSONObject release=ReleaseChoice.choose(new JSONArray(UpdateHttp.text(API)),Store.get("includeTestVersions","1").equals("1"),current(this));if(release==null){phase="current";detail=getString(R.string.installed_version,current(this));return;}
+   String installed=AppVersion.installed(this);
+   JSONObject release=ReleaseChoice.choose(new JSONArray(UpdateHttp.text(API)),Store.get("includeTestVersions","1").equals("1"),installed);if(release==null){phase="current";detail=getString(R.string.installed_version,AppVersion.display(this));return;}
    version=release.getString("tag_name");
-   if(!UpdateHttp.newer(version,current(this))){phase="current";detail=getString(R.string.installed_version,current(this));return;}
+   if(!UpdateHttp.newer(version,installed)){phase="current";detail=getString(R.string.installed_version,AppVersion.display(this));return;}
    JSONArray assets=release.getJSONArray("assets");JSONObject asset=null;
    for(int i=0;i<assets.length();i++){JSONObject a=assets.getJSONObject(i);if(a.optString("name").endsWith(".apk")){if(asset!=null)throw new IOException("More than one APK; choose the release in GitHub");asset=a;}}
    if(asset==null)throw new IOException("Release has no APK asset");

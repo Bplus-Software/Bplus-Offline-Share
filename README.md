@@ -1,3 +1,9 @@
+# B+ Offline Share
+
+Current device-test pre-release: 1.1.17. Rename and real installed-version display fix. See release1117-notes.txt for validation and limits. Package/signing identity and existing Downloads/B+ Share storage path unchanged. No internet transport in this release.
+
+## Historical source notes
+
 # B+ Share
 
 Native Android app for direct phone-to-phone file sharing on a trusted local Wi-Fi network. Android 8 or later. English and Arabic, light and dark themes.
