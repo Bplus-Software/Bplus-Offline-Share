@@ -6,5 +6,9 @@
         <item name="android:fontFamily">sans</item>
         <item name="android:colorAccent">#4C8DFF</item>
     </style>
+    <style name="AppDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_fade_out</item>
+    </style>
     <color name="icbg">#1D2635</color>
 </resources>

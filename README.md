@@ -100,3 +100,8 @@ Empty-row-corner selection marks, immediate selected-card removal, chat bulk rec
 ## 1.1.7 device-test candidate
 
 Fix selection touch ownership and add plain text multi-selection. 1.1.6 was not promoted after a second phone recording exposed a re-entry regression. See release117-notes.txt for actions, test coverage and remaining verification. 1.1.5 remains latest.
+
+
+## 1.1.8 device-test candidate
+
+Includes 1.1.7 text selection and gesture ownership fix. Prepares dialog content/style/width before showing and replaces movement animations with alpha-only fade. Actual phone animation remains unverified. See release118-notes.txt. 1.1.5 remains latest.

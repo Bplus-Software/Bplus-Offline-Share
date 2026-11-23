@@ -1,0 +1,1 @@
+PASS exact released 1.1.7 downloader: 1.1.8 version recognition, metadata, redirected candidate APK and SHA-256. Local HTTP harness, not live release or Android installer.
