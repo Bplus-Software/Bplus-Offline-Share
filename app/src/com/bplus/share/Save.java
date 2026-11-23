@@ -14,7 +14,7 @@ public class Save {
   public final Uri uri;public final OutputStream out;private final Context c;private final File file;public String name;
   Target(Context c,Uri u,OutputStream o,File f){this.c=c;uri=u;out=o;file=f;}
   public void complete()throws IOException{out.close();if(Build.VERSION.SDK_INT>=29){ContentValues v=new ContentValues();v.put(MediaStore.Downloads.IS_PENDING,0);c.getContentResolver().update(uri,v,null,null);}
-   try{JSONObjectRecord.record(uri,name);}catch(Exception ignored){}
+   try{Store.set("ownedReceived_"+uri.toString(),"1");JSONObjectRecord.record(uri,name);}catch(Exception ignored){}
   }
   public void abort(){try{out.close();}catch(Exception ignored){}try{if(file!=null)file.delete();else c.getContentResolver().delete(uri,null,null);}catch(Exception ignored){}}
  }

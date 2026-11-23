@@ -20,7 +20,7 @@ public final class UpdateHttp {
    if(!url.getProtocol().equals("https")&&!url.getProtocol().equals("http"))throw new IOException("Unsupported URL protocol");
    HttpURLConnection c=(HttpURLConnection)url.openConnection();
    c.setConnectTimeout(connectMs);c.setReadTimeout(readMs);c.setInstanceFollowRedirects(false);
-   c.setRequestProperty("User-Agent","BplusShare-Updater/1.1.9");c.setRequestProperty("Accept-Encoding","identity");
+   c.setRequestProperty("User-Agent","BplusShare-Updater/1.1.10");c.setRequestProperty("Accept-Encoding","identity");
    if(offset>0)c.setRequestProperty("Range","bytes="+offset+"-");
    Response r=new Response(c);
    try{
@@ -79,6 +79,6 @@ public final class UpdateHttp {
   try{MessageDigest md=MessageDigest.getInstance("SHA-256");try(InputStream in=new FileInputStream(f)){byte[] b=new byte[65536];int n;while((n=in.read(b))!=-1)md.update(b,0,n);}StringBuilder s=new StringBuilder();for(byte b:md.digest())s.append(String.format("%02x",b&255));return s.toString();}catch(java.security.NoSuchAlgorithmException e){throw new IOException(e);}
  }
  public static boolean newer(String remote,String local)throws IOException{
-  try{String[] a=remote.replaceFirst("^[vV]","").split("\\."),b=local.split("\\.");for(int i=0;i<Math.max(a.length,b.length);i++){int x=i<a.length?Integer.parseInt(a[i]):0,y=i<b.length?Integer.parseInt(b[i]):0;if(x!=y)return x>y;}return false;}catch(Exception e){throw new IOException("Unrecognized release version");}
+  try{String[] a=remote.replaceFirst("^[vV]","").split("\\."),b=local.replaceFirst("^[vV]","").split("\\.");for(int i=0;i<Math.max(a.length,b.length);i++){int x=i<a.length?Integer.parseInt(a[i]):0,y=i<b.length?Integer.parseInt(b[i]):0;if(x!=y)return x>y;}return false;}catch(Exception e){throw new IOException("Unrecognized release version");}
  }
 }

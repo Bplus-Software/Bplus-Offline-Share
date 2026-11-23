@@ -274,4 +274,13 @@
 <string name="emoji_nature">طبيعة</string>
 <string name="emoji_food">طعام ومشروبات</string>
 <string name="emoji_objects">أنشطة وأشياء</string>
+<string name="delete_everyone">حذف لدى الجميع</string>
+<string name="recall_private_only">الحذف لدى الجميع متاح في المحادثات الخاصة فقط.</string>
+<string name="recall_unavailable">حدد فقط رسائل أو ملفات أرسلتها بهذه الميزة. يلزم إصدار 1.1.10 أو أحدث على الهاتفين. لا يمكن حذف العناصر القديمة عن بُعد.</string>
+<string name="recall_confirm">حذف الرسائل المحددة من الهاتفين وملفاتها المستلمة عبر B+ Share من الهاتف الآخر؟ تبقى ملفاتك الأصلية هنا. لا يمكن التراجع.</string>
+<string name="recall_result">تم الحذف من الهاتفين: %1$d. غير مؤكد: %2$d. تبقى العناصر غير المؤكدة هنا. قد يكون الهاتف الآخر غير متصل أو بإصدار قديم أو غير قادر على حذف الملف. حاول مجددًا أو اختر الحذف من هذه المحادثة.</string>
+<string name="recall_pending_label">الحذف لدى الجميع غير مؤكد</string>
+<string name="delete_success_cards_removed">تمت إزالة الملفات المحذوفة بنجاح من المحادثة أيضًا. تبقى العناصر التي فشل حذفها.</string>
+<string name="include_test_versions">تضمين الإصدارات التجريبية</string>
+<string name="include_test_versions_note">إظهار الإصدارات التجريبية الأحدث في التحديثات. قد تحتوي على أخطاء.</string>
 </resources>

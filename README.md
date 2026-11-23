@@ -110,3 +110,8 @@ Includes 1.1.7 text selection and gesture ownership fix. Prepares dialog content
 ## 1.1.9 device-test candidate
 
 Plain Delete flow, exact document/provider deletion routes with supported Android consent and named-file failure dialog, expanded categorized emoji grid and composer spacing. Actual Android provider deletion and emoji pixels still need phone validation. See release119-notes.txt. 1.1.5 stays latest.
+
+
+## 1.1.10 device-test candidate
+
+New private-chat receipt-bound Delete for everyone, local permanent-delete success removes selected cards, persistent emoji panel, and in-app test-release discovery enabled by default. Both phones need this version for new receipt-bound items; old/QR batch/group recall is unsupported. See release1110-notes.txt. GitHub normal latest stays 1.1.5. Voice notes planned separately.

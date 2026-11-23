@@ -13,7 +13,7 @@ import java.util.concurrent.*;
 import org.json.*;
 
 public class UpdateActivity extends Activity {
- private static final String API="https://api.github.com/repos/basem-sadoun/Bplus-Share/releases/latest";
+ private static final String API="https://api.github.com/repos/basem-sadoun/Bplus-Share/releases?per_page=100";
  private static final ExecutorService worker=Executors.newSingleThreadExecutor();
  private static volatile boolean busy;
  private static volatile String phase="idle",detail="",version="",assetUrl="",digest="";
@@ -24,7 +24,7 @@ public class UpdateActivity extends Activity {
  private TextView status,info,primary;
  private ProgressBar progress;
  private boolean permissionPending;
- private static String current(Activity a){try{return a.getPackageManager().getPackageInfo(a.getPackageName(),0).versionName;}catch(Exception e){return "1.1.9";}}
+ private static String current(Activity a){try{return a.getPackageManager().getPackageInfo(a.getPackageName(),0).versionName;}catch(Exception e){return "1.1.10";}}
  private File apk(){return new File(getFilesDir(),"update.apk");}
  @Override protected void onCreate(Bundle b){super.onCreate(b);Ui.applyLocale(this);Ui.applyTheme(this);
   LinearLayout root=Ui.col(this);root.setBackgroundColor(Ui.bg);root.addView(Ui.topBar(this,getString(R.string.updater_title),true,null));
@@ -60,8 +60,7 @@ public class UpdateActivity extends Activity {
  private void check(){
   busy=true;phase="checking";detail="";version="";render();
   worker.execute(()->{try{
-   JSONObject release=new JSONObject(UpdateHttp.text(API));
-   if(release.optBoolean("draft")||release.optBoolean("prerelease"))throw new IOException("Latest release is not stable");
+   JSONObject release=ReleaseChoice.choose(new JSONArray(UpdateHttp.text(API)),Store.get("includeTestVersions","1").equals("1"),current(this));if(release==null){phase="current";detail=getString(R.string.installed_version,current(this));return;}
    version=release.getString("tag_name");
    if(!UpdateHttp.newer(version,current(this))){phase="current";detail=getString(R.string.installed_version,current(this));return;}
    JSONArray assets=release.getJSONArray("assets");JSONObject asset=null;

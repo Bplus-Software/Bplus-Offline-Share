@@ -125,10 +125,12 @@ public class Net {
 
     // push a file to a peer's inbox
     public static boolean send(Context c, String ip, int port, String token, Uri uri, String name, long size, Progress pr) {
+        return send(c,ip,port,token,uri,name,size,pr,"","");}
+    public static boolean send(Context c,String ip,int port,String token,Uri uri,String name,long size,Progress pr,String wire,String key){
         error.remove();
         try {
             HttpURLConnection h = open("POST", "http://" + ip + ":" + port + "/recv?token=" + token
-                    + "&name=" + java.net.URLEncoder.encode(name, "UTF-8") + "&from=" + Store.get("deviceId", ""));
+                    + "&name=" + java.net.URLEncoder.encode(name, "UTF-8") + "&from=" + Store.get("deviceId", "")+"&wire="+wire+"&key="+key+"&senderToken="+Store.token());
             h.setDoOutput(true);
             h.setRequestProperty("Content-Type", "application/octet-stream");
             h.setFixedLengthStreamingMode(size);
@@ -150,9 +152,11 @@ public class Net {
     }
 
     public static boolean sendMsg(String ip,int port,String token,String text){
+        return sendMsg(ip,port,token,text,"","");}
+    public static boolean sendMsg(String ip,int port,String token,String text,String wire,String key){
         error.remove();HttpURLConnection h=null;
         try{
-            JSONObject body=new JSONObject();body.put("text",text);body.put("from",Store.get("deviceId",""));
+            JSONObject body=new JSONObject();body.put("text",text);body.put("from",Store.get("deviceId",""));body.put("wire",wire);body.put("key",key);body.put("senderToken",Store.token());
             h=open("POST","http://"+ip+":"+port+"/msg?token="+token);h.setReadTimeout(8000);h.setDoOutput(true);h.setRequestProperty("Content-Type","application/json");byte[] bytes=body.toString().getBytes("UTF-8");h.setFixedLengthStreamingMode(bytes.length);try(OutputStream out=h.getOutputStream()){out.write(bytes);}int code=h.getResponseCode();if(code!=200){error.set("HTTP "+code);return false;}return true;
         }catch(Exception e){failed(e);return false;}finally{if(h!=null)h.disconnect();}
     }

@@ -115,8 +115,8 @@ public class ChatActivity extends Activity {
         if (getIntent().getBooleanExtra("attach", false)) pickFile();
     }
 
-    @Override public void onBackPressed(){if(selection!=null&&selection.back())return;super.onBackPressed();}
-    @Override protected void onDestroy() {
+    @Override public void onBackPressed(){if(EmojiPicker.dismiss(this))return;if(selection!=null&&selection.back())return;super.onBackPressed();}
+    @Override protected void onDestroy() {EmojiPicker.dismiss(this);
         TransferService.unlisten("chat");
         super.onDestroy();
     }
@@ -156,7 +156,7 @@ public class ChatActivity extends Activity {
             if(me)time+=" · "+getString(state.equals("failed")?(kind.equals("text")?R.string.failed_retry:R.string.file_failed_actions):state.equals("sending")?R.string.sending:R.string.sent);
             TextView stamp = Ui.t(this,time,10,Ui.dim,App.cairoSB);
             LinearLayout cell = selection.row(m);cell.setTag(m);cell.setGravity(me?Gravity.END:Gravity.START);if(selection.has(m))cell.setBackground(Ui.round(0x3058a4ff,12,this));if(selection.active())cell.setOnClickListener(v->selection.toggle(m));
-            LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(kind.equals("file")?selection.decorate(bub,m):bub,bp);if(kind.equals("file")&&!Attachments.state(this,m).equals("ok")){TextView fix=Ui.t(this,Attachments.explanation(this,Attachments.state(this,m))+"\n"+getString(R.string.locate_file),12,Ui.accent,App.cairoSB);fix.setMaxWidth(Ui.dp(this,280));fix.setOnClickListener(v->locate(m));cell.addView(fix);}cell.addView(stamp);
+            LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(kind.equals("file")?selection.decorate(bub,m):bub,bp);if(kind.equals("file")&&!Attachments.state(this,m).equals("ok")){TextView fix=Ui.t(this,Attachments.explanation(this,Attachments.state(this,m))+"\n"+getString(R.string.locate_file),12,Ui.accent,App.cairoSB);fix.setMaxWidth(Ui.dp(this,280));fix.setOnClickListener(v->locate(m));cell.addView(fix);}cell.addView(stamp);if(m.optBoolean("recallFailed"))cell.addView(Ui.t(this,getString(R.string.recall_pending_label),11,0xffff8585,App.cairoSB));
             if(me && state.equals("failed") && kind.equals("text")){
                 String reason=m.optString("error",getString(R.string.old_failure));TextView failure=Ui.t(this,reason+"\n"+getString(R.string.retry_details),11,Ui.dim,App.cairoSB);failure.setMaxWidth(Ui.dp(this,280));failure.setOnClickListener(v->retryMessage(m));cell.addView(failure);
             }
@@ -170,11 +170,11 @@ public class ChatActivity extends Activity {
     private void invalidateSelection(View v){v.invalidate();if(v instanceof android.view.ViewGroup){android.view.ViewGroup g=(android.view.ViewGroup)v;for(int i=0;i<g.getChildCount();i++)invalidateSelection(g.getChildAt(i));}}
     private boolean preserveSelectionScroll;
     private void sendText(String text){
-        JSONObject m=new JSONObject();try{m.put("id",java.util.UUID.randomUUID().toString());m.put("kind","text");m.put("body",text);m.put("me",true);m.put("ts",System.currentTimeMillis());m.put("state","sending");Store.addMsg(peerId,m);}catch(Exception ignored){}renderThread();deliver(m);
+        JSONObject m=new JSONObject();try{m.put("id",java.util.UUID.randomUUID().toString());m.put("wireId",Recall.secret());m.put("recallKey",Recall.secret());m.put("kind","text");m.put("body",text);m.put("me",true);m.put("ts",System.currentTimeMillis());m.put("state","sending");Store.addMsg(peerId,m);}catch(Exception ignored){}renderThread();deliver(m);
     }
     private void deliver(JSONObject m){
         String id=m.optString("id");if(!retrying.add(id))return;
-        exec.execute(()->{JSONObject current=Store.peerById(peerId);boolean ok=current!=null&&Net.sendMsg(current.optString("ip"),current.optInt("port",Store.PORT),current.optString("token"),m.optString("body"));String why=ok?"":current==null?getString(R.string.peer_missing):Net.lastError();
+        exec.execute(()->{JSONObject current=Store.peerById(peerId);boolean ok=current!=null&&Net.sendMsg(current.optString("ip"),current.optInt("port",Store.PORT),current.optString("token"),m.optString("body"),m.optString("wireId"),m.optString("recallKey"));String why=ok?"":current==null?getString(R.string.peer_missing):Net.lastError();
             synchronized(Store.class){JSONArray thread=Store.thread(peerId);for(int i=0;i<thread.length();i++){JSONObject item=thread.optJSONObject(i);if(item!=null&&id.equals(item.optString("id"))){try{item.put("state",ok?"sent":"failed");item.put("error",why);}catch(Exception ignored){}break;}}Store.saveThread(peerId,thread);}retrying.remove(id);runOnUiThread(this::renderThread);
         });
     }

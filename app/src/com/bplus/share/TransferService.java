@@ -178,8 +178,13 @@ public class TransferService extends Service {
                 }
                 fin.close();
                 out.flush();
+            } else if(path.split("\\?")[0].equals("/recall")){
+                if(!method.equals("POST")||len<0||len>2048){err(out,400);return;}
+                try{JSONObject request=new JSONObject(new String(readBody(in,len),"UTF-8"));json(out,Recall.handle(request,s.getInetAddress().getHostAddress(),uri->eraseReceived(uri)));JSONObject ev=new JSONObject();ev.put("from",request.optString("from"));emit("msg",ev);}catch(Exception denied){err(out,403);}
             } else if (path.startsWith("/recv")) {
                 if (!peerTokenOk(q.get("token")) || !Nearby.knownAddress(s.getInetAddress().getHostAddress())) { err(out, 403); return; }
+                String from=q.getOrDefault("from", ""),wire=q.getOrDefault("wire",""),receiptKey=q.getOrDefault("key","");boolean tracked=!wire.isEmpty();
+                if(tracked){Recall.authenticate(Store.peerById(from),s.getInetAddress().getHostAddress(),q.get("senderToken"));if(!Recall.valid(wire)||!Recall.valid(receiptKey)){err(out,400);return;}if(Recall.exists(from,wire,receiptKey)){byte[] skip=new byte[65536];int left=len,n;while(left>0){n=in.read(skip,0,Math.min(left,skip.length));if(n<0)throw new IOException();left-=n;}ok(out);return;}}
                 String name = URLDecoder.decode(q.getOrDefault("name", "file"), "UTF-8");
                 if(len<0) {err(out,400);return;}
                 Save.Target saved=Save.create(this,name);
@@ -188,11 +193,11 @@ public class TransferService extends Service {
                     while(remaining>0){n=in.read(buf,0,(int)Math.min(buf.length,remaining));if(n<0)throw new IOException("Incomplete file");saved.out.write(buf,0,n);remaining-=n;}
                     saved.complete();
                 }catch(Exception e){saved.abort();throw e;}
-                String from = q.getOrDefault("from", "");
+                if(tracked)Recall.received(from,wire,receiptKey,"file",saved.uri.toString());
                 JSONObject msg = new JSONObject();
                 msg.put("kind", "file"); msg.put("name", name); msg.put("size", len);
                 msg.put("me", false); msg.put("ts", System.currentTimeMillis()); msg.put("state", "received");
-                msg.put("uri",saved.uri.toString());msg.put("mime",Save.mime(name));
+                msg.put("uri",saved.uri.toString());msg.put("mime",Save.mime(name));if(tracked)msg.put("wireId",wire);
                 if (!from.isEmpty()) Store.addMsg(from, msg);
                 notifyEvent(getString(R.string.app_name), getString(R.string.notif_file, name));
                 JSONObject ev = new JSONObject(); ev.put("from", from); ev.put("name", name);
@@ -203,9 +208,9 @@ public class TransferService extends Service {
                 byte[] body = readBody(in, len);
                 JSONObject m = new JSONObject(new String(body, "UTF-8"));
                 if (m.optString("text", "").isEmpty()) { ok(out); return; }
-                String from = m.optString("from", "");
+                String from = m.optString("from", ""),wire=m.optString("wire"),receiptKey=m.optString("key");boolean tracked=!wire.isEmpty();if(tracked){Recall.authenticate(Store.peerById(from),s.getInetAddress().getHostAddress(),m.optString("senderToken"));if(!Recall.valid(wire)||!Recall.valid(receiptKey)){err(out,400);return;}if(Recall.exists(from,wire,receiptKey)){ok(out);return;}Recall.received(from,wire,receiptKey,"text","");}
                 JSONObject msg = new JSONObject();
-                msg.put("kind", "text"); msg.put("body", m.optString("text", ""));
+                msg.put("kind", "text"); msg.put("body", m.optString("text", ""));if(tracked)msg.put("wireId",wire);
                 msg.put("me", false); msg.put("ts", System.currentTimeMillis()); msg.put("state", "received");
                 if (!from.isEmpty()) Store.addMsg(from, msg);
                 JSONObject peer = Store.peerById(from);
@@ -228,7 +233,7 @@ public class TransferService extends Service {
                 for (int i = 0; i < peers.length(); i++) {
                     JSONObject pr = peers.getJSONObject(i);
                     JSONArray portable=new JSONArray(Store.thread(pr.getString("id")).toString());
-                    for(int j=0;j<portable.length();j++){JSONObject item=portable.optJSONObject(j);if(item!=null)item.remove("uri");}
+                    for(int j=0;j<portable.length();j++){JSONObject item=portable.optJSONObject(j);if(item!=null){item.remove("uri");item.remove("wireId");item.remove("recallKey");}}
                     threads.put(pr.getString("id"), portable);
                 }
                 o.put("threads", threads);
@@ -366,16 +371,20 @@ public class TransferService extends Service {
         });
     }
 
+    private boolean eraseReceived(String raw){if(!Store.get("ownedReceived_"+raw,"").equals("1"))return false;try{Uri uri=Uri.parse(raw);boolean ok=getContentResolver().delete(uri,null,null)>0;if(!ok){try(android.database.Cursor c=getContentResolver().query(uri,new String[]{android.provider.OpenableColumns.DISPLAY_NAME},null,null,null)){ok=c!=null&&!c.moveToFirst();}}if(ok)Recall.retireUri(raw);return ok;}catch(Exception e){return false;}}
+
+    public static boolean sendTextToPeer(JSONObject peer,String text){String wire=Recall.secret(),key=Recall.secret();boolean ok=Net.sendMsg(peer.optString("ip"),peer.optInt("port",Store.PORT),peer.optString("token"),text,wire,key);try{JSONObject m=new JSONObject().put("kind","text").put("body",text).put("wireId",wire).put("recallKey",key).put("me",true).put("ts",System.currentTimeMillis()).put("state",ok?"sent":"failed");Store.addMsg(peer.optString("id"),m);}catch(Exception ignored){}return ok;}
     public static boolean sendToPeer(JSONObject peer, Uri uri, String name, long size) {
+        String wire=Recall.secret(),receiptKey=Recall.secret();
         boolean ok = Net.send(App.ctx(), peer.optString("ip"), peer.optInt("port", Store.PORT),
-                peer.optString("token"), uri, name, size, null);
+                peer.optString("token"), uri, name, size, null,wire,receiptKey);
         JSONObject msg = new JSONObject();
         try {
             msg.put("kind", "file"); msg.put("name", name); msg.put("size", size);
             msg.put("me", true); msg.put("ts", System.currentTimeMillis());
             msg.put("state", ok ? "sent" : "failed");
             if(!ok)msg.put("error",Net.lastError());
-            msg.put("uri",uri.toString());msg.put("mime",Save.mime(name));
+            msg.put("uri",uri.toString());msg.put("mime",Save.mime(name));msg.put("wireId",wire);msg.put("recallKey",receiptKey);
             Store.addMsg(peer.optString("id"), msg);
         } catch (Exception ignored) {}
         return ok;

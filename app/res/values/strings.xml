@@ -274,4 +274,13 @@
 <string name="emoji_nature">Nature</string>
 <string name="emoji_food">Food &amp; drink</string>
 <string name="emoji_objects">Activities &amp; things</string>
+<string name="delete_everyone">Delete for everyone</string>
+<string name="recall_private_only">Delete for everyone is available in private chats only.</string>
+<string name="recall_unavailable">Select only messages or files you sent with this feature. Both phones need 1.1.10 or newer. Older items cannot be deleted remotely.</string>
+<string name="recall_confirm">Delete the selected messages on both phones and their B+ Share received files on the other phone? Your original files stay here. This cannot be undone.</string>
+<string name="recall_result">Deleted on both phones: %1$d. Not confirmed: %2$d. Unconfirmed items stay in this chat. The other phone may be offline, outdated, or unable to delete the file. Try again or choose Delete from this chat.</string>
+<string name="recall_pending_label">Delete for everyone not confirmed</string>
+<string name="delete_success_cards_removed">Successfully deleted files were also removed from this chat. Failed items stay here.</string>
+<string name="include_test_versions">Include test versions</string>
+<string name="include_test_versions_note">Show newer pre-releases in the updater. Test versions may have bugs.</string>
 </resources>

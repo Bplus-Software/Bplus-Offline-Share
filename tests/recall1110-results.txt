@@ -1,0 +1,12 @@
+PASS unguessable receipt IDs and capabilities
+PASS wrong sender IP denied
+PASS wrong sender token denied
+PASS unpaired sender denied
+PASS old unknown item not guessed
+PASS wrong per-message capability denied
+PASS failed byte deletion retains remote card
+PASS only receiver-owned receipt URI reaches erase, request URI ignored
+PASS exact received card removed, unrelated record retained
+PASS idempotent acknowledgement avoids repeat deletion after lost response
+PASS text recall never calls byte eraser
+11 receipt/auth/deletion assertions. JVM ledger harness, not two physical phones.
