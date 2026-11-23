@@ -241,4 +241,8 @@
 <string name="deselect_file">إلغاء تحديد الملف</string>
 <string name="share_batch_stopped">مفيش حاجة اتشاركت. حدّد مكان الملف غير المتاح أو شيله من التحديد، وبعدها جرّب تاني.</string>
 <string name="find_nearby">البحث عن أشخاص قريبين</string>
+<string name="action_share">مشاركة</string>
+<string name="action_send">إرسال</string>
+<string name="action_delete">حذف</string>
+<string name="action_all">الكل</string>
 </resources>

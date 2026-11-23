@@ -147,7 +147,7 @@ public class ChatActivity extends Activity {
             }else{
                 bub=FileCards.card(this,m,()->selection.toggle(m));
                 if(selection.active())bub.setOnClickListener(v->selection.toggle(m));
-                if(selection.has(m))bub.setBackground(Ui.round(0xff375f7a,16,this));
+
                 if(!selection.active()&&!Attachments.state(this,m).equals("ok"))bub.setOnClickListener(v->locate(m));
             }
             String time = tf.format(new Date(m.optLong("ts")));
@@ -185,7 +185,7 @@ public class ChatActivity extends Activity {
         JSONObject current=Store.peerById(peerId);String local=Net.localIp(this);String ip=current==null?"?":current.optString("ip");int port=current==null?Store.PORT:current.optInt("port",Store.PORT);
         TextView details=Ui.t(this,getString(R.string.checking),13,Ui.text,App.cairoSB);Ui.pad(details,20,20,20,20,this);details.setTextIsSelectable(true);
         android.app.AlertDialog dialog=new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.connection_details)).setView(details).setPositiveButton(android.R.string.ok,null).setNeutralButton(getString(R.string.open_wifi),(d,n)->PairUi.wifi(this)).setNegativeButton(getString(R.string.copy_details),(d,n)->PairUi.copy(this,details.getText().toString())).create();dialog.show();
-        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.1.2\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
+        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.1.3\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
     }
 
     private void pickFile() {

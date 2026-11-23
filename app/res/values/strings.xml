@@ -241,4 +241,8 @@
 <string name="deselect_file">Deselect file</string>
 <string name="share_batch_stopped">Nothing was shared. Locate the unavailable file or deselect it, then try again.</string>
 <string name="find_nearby">Find nearby</string>
+<string name="action_share">Share</string>
+<string name="action_send">Send</string>
+<string name="action_delete">Delete</string>
+<string name="action_all">All</string>
 </resources>
