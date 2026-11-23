@@ -24,7 +24,7 @@ public class UpdateActivity extends Activity {
  private TextView status,info,primary;
  private ProgressBar progress;
  private boolean permissionPending;
- private static String current(Activity a){try{return a.getPackageManager().getPackageInfo(a.getPackageName(),0).versionName;}catch(Exception e){return "1.1.14";}}
+ private static String current(Activity a){try{return a.getPackageManager().getPackageInfo(a.getPackageName(),0).versionName;}catch(Exception e){return "1.1.15";}}
  private File apk(){return new File(getFilesDir(),"update.apk");}
  @Override protected void onCreate(Bundle b){super.onCreate(b);Ui.applyLocale(this);Ui.applyTheme(this);
   LinearLayout root=Ui.col(this);root.setBackgroundColor(Ui.bg);root.addView(Ui.topBar(this,getString(R.string.updater_title),true,null));
