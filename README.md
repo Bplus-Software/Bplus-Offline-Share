@@ -115,3 +115,8 @@ Plain Delete flow, exact document/provider deletion routes with supported Androi
 ## 1.1.10 device-test candidate
 
 New private-chat receipt-bound Delete for everyone, local permanent-delete success removes selected cards, persistent emoji panel, and in-app test-release discovery enabled by default. Both phones need this version for new receipt-bound items; old/QR batch/group recall is unsupported. See release1110-notes.txt. GitHub normal latest stays 1.1.5. Voice notes planned separately.
+
+
+## 1.1.11 voice-message device-test candidate
+
+Private/group hold-to-record AAC notes, release to send, slide to cancel; audio cards with play/pause/seek/duration. Foreground mic permission explanation; no background recording. Actual Android audio/gesture/layout test remains pending. Includes 1.1.10 test updater/recall/emoji changes. See release1111-notes.txt. No promotion.

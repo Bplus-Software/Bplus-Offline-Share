@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 
 public class ChatActivity extends Activity {
     private static final int REQ_PICK = 61;
-    private FileSelection selection;
+    private FileSelection selection;private VoiceRecorder voice;
     private JSONObject locating;
     private final java.util.Set<String> retrying=java.util.Collections.synchronizedSet(new java.util.HashSet<String>());
     private String peerId;
@@ -104,6 +104,7 @@ public class ChatActivity extends Activity {
         TextView emoji=Ui.t(this,"☺",22,Ui.accent,App.cairoB);emoji.setGravity(Gravity.CENTER);LinearLayout.LayoutParams emojiLp=Ui.lp(Ui.dp(this,44),Ui.dp(this,44));emojiLp.setMarginEnd(Ui.dp(this,12));bar.addView(emoji,0,emojiLp);
         emoji.setContentDescription(getString(R.string.emoji_title));
         emoji.setOnClickListener(v->EmojiPicker.show(this,input));
+        TextView mic=Ui.t(this,"🎙",23,Ui.accent,App.cairoB);mic.setGravity(Gravity.CENTER);bar.addView(mic,Ui.lp(Ui.dp(this,44),Ui.dp(this,48)));voice=new VoiceRecorder(this,mic,(uri,voiceName,size)->exec.execute(()->{TransferService.sendToPeer(peer,uri,voiceName,size);runOnUiThread(this::renderThread);}));
         root.addView(bar);
         setContentView(root);
 
@@ -116,7 +117,7 @@ public class ChatActivity extends Activity {
     }
 
     @Override public void onBackPressed(){if(EmojiPicker.dismiss(this))return;if(selection!=null&&selection.back())return;super.onBackPressed();}
-    @Override protected void onDestroy() {EmojiPicker.dismiss(this);
+    @Override protected void onDestroy() {if(voice!=null)voice.cancel();VoicePlayer.release(this);EmojiPicker.dismiss(this);
         TransferService.unlisten("chat");
         super.onDestroy();
     }
@@ -132,7 +133,10 @@ public class ChatActivity extends Activity {
         });
     }
 
+    @Override protected void onResume(){super.onResume();if(msgs!=null)renderThread();}
+    @Override protected void onPause(){if(voice!=null)voice.cancel();VoicePlayer.release(this);super.onPause();}
     private void renderThread() {
+        VoicePlayer.release(this);
         msgs.removeAllViews();
         JSONArray t = Store.thread(peerId);
         SimpleDateFormat tf = new SimpleDateFormat("HH:mm", Locale.US);

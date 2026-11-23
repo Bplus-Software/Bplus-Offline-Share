@@ -1,0 +1,18 @@
+B+ Share 1.1.11, voice-message device-test pre-release
+
+Voice messages
+- Private and local-host group chats have a microphone button. Press and hold to record, release to send, slide sideways more than 80dp to cancel. Recording cancellation is latched. Tap shorter than 0.6 seconds is discarded. Leaving the chat or receiving a touch cancellation discards the recording. No automatic send on timer.
+- First use explains microphone access in the app, then requests Android's recording permission. After granting, hold again. No background recording/service added. Five-minute safety limit discards the recording and tells you; it does not silently send a partial note.
+- AAC/M4A recording is sent through the existing normal file transport. Private notes use the new receipt-bound transfer and can be recalled under the 1.1.10 limits; group notes use existing host relay and do not gain Delete for everyone.
+- Audio file cards add play/pause, seek bar, elapsed/total time after loading. Playback prepares on first Play, and players are released on leaving/rebuilding chats. Audio can still use the ordinary file open/share actions. All audio attachments get this player, not only microphone recordings.
+- Successful/failed sent recordings remain in app-local voice storage as the source file for their card/retry; cancelled recordings are deleted. No hidden cleanup timer, transcription, cloud speech service or internet upload added. Removing a card alone retains its local audio file; explicit file deletion can remove it.
+
+Included from 1.1.10
+- New direct private receipt-bound Delete for everyone, persistent emoji panel, local permanent-delete success removes selected cards, and Include test versions setting ON by default.
+- Once 1.1.10 is installed, Settings > Check for updates can discover/download this pre-release. Older versions need one manual install. Package/signature/SHA/size/newer-versionCode installation checks remain.
+
+Validation and limits
+- Clean build, original signer, versionCode16, 297 matching EN/AR keys. Pure voice rules test slide directions, short/empty/cancel/limit guards and valid release; source checks cover recording permission, codec, lifecycle stop, play/pause/seek/duration. Receipt/updater/gesture/record/deletion-path/share/group/nearby/message/fault suites pass. Exact 1.1.10 network updater candidate redirect/hash harness passed; live pre-release discovery is checked after publication.
+- No Android microphone recording, actual audio quality/playback, seek, mic permission, slide-cancel, composer layout or two-phone voice transfer has been run here. No 1.1.11 runtime pixels. Test-only, risk unmeasured. Start with disposable short notes and check cancel before sending anything important.
+- Existing LAN/reachability/unencrypted HTTP/group-host/no-offline-queue and file/share/installer limits remain. Android mic privacy/other active apps/device codec behavior can refuse recording or playback. Only current foreground chat records; denied permission does not record. No Windows or internet relay.
+- Pre-release, no promotion. GitHub normal latest stays 1.1.5. Install over current without uninstalling; downgrade can require uninstalling and lose local chats/settings.

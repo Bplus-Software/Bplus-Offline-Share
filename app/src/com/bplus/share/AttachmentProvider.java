@@ -7,7 +7,7 @@ import android.provider.OpenableColumns;
 import java.io.*;
 public class AttachmentProvider extends ContentProvider {
  public boolean onCreate(){return true;}
- private File file(Uri uri)throws FileNotFoundException{try{return AttachmentPaths.resolve(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"B+ Share"),uri.getPathSegments());}catch(IOException e){throw new FileNotFoundException("Attachment unavailable");}}
+ private File file(Uri uri)throws FileNotFoundException{try{if(uri.getPathSegments().size()==2&&uri.getPathSegments().get(0).equals("voice")){File root=new File(getContext().getFilesDir(),"voice").getCanonicalFile();File f=new File(root,uri.getLastPathSegment()).getCanonicalFile();if(!root.equals(f.getParentFile()))throw new IOException();return f;}return AttachmentPaths.resolve(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"B+ Share"),uri.getPathSegments());}catch(IOException e){throw new FileNotFoundException("Attachment unavailable");}}
  public String getType(Uri u){return Save.mime(u.getLastPathSegment());}
  public ParcelFileDescriptor openFile(Uri u,String mode)throws FileNotFoundException{if(!mode.equals("r"))throw new FileNotFoundException("Read only");return ParcelFileDescriptor.open(file(u),ParcelFileDescriptor.MODE_READ_ONLY);}
  public Cursor query(Uri u,String[] p,String s,String[] a,String sort){MatrixCursor c=new MatrixCursor(new String[]{OpenableColumns.DISPLAY_NAME,OpenableColumns.SIZE});try{File f=file(u);c.addRow(new Object[]{f.getName(),f.length()});}catch(Exception ignored){}return c;}

@@ -283,4 +283,13 @@
 <string name="delete_success_cards_removed">تمت إزالة الملفات المحذوفة بنجاح من المحادثة أيضًا. تبقى العناصر التي فشل حذفها.</string>
 <string name="include_test_versions">تضمين الإصدارات التجريبية</string>
 <string name="include_test_versions_note">إظهار الإصدارات التجريبية الأحدث في التحديثات. قد تحتوي على أخطاء.</string>
+<string name="voice_hold">اضغط للتسجيل، اترك للإرسال، اسحب للإلغاء</string>
+<string name="voice_title">رسالة صوتية</string>
+<string name="voice_permission_note">اسمح بالوصول إلى الميكروفون لتسجيل الرسائل الصوتية أثناء فتح المحادثة. اضغط للتسجيل، واترك للإرسال أو اسحب جانبًا للإلغاء.</string>
+<string name="voice_allow">متابعة</string>
+<string name="voice_recording">جارٍ التسجيل. اترك للإرسال، اسحب جانبًا للإلغاء. الحد الأقصى 5 دقائق.</string>
+<string name="voice_failed">تعذر التسجيل. تحقق من إذن الميكروفون وحاول مجددًا.</string>
+<string name="voice_play">تشغيل أو إيقاف الرسالة الصوتية</string>
+<string name="voice_play_failed">الصوت غير متاح</string>
+<string name="voice_limit">وصل التسجيل إلى الحد الأقصى وتم إلغاؤه.</string>
 </resources>

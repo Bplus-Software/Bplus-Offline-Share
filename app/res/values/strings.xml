@@ -283,4 +283,13 @@
 <string name="delete_success_cards_removed">Successfully deleted files were also removed from this chat. Failed items stay here.</string>
 <string name="include_test_versions">Include test versions</string>
 <string name="include_test_versions_note">Show newer pre-releases in the updater. Test versions may have bugs.</string>
+<string name="voice_hold">Hold to record, release to send, slide to cancel</string>
+<string name="voice_title">Voice message</string>
+<string name="voice_permission_note">Allow microphone access to record voice messages while this chat is open. Hold the mic to record, release to send, or slide sideways to cancel.</string>
+<string name="voice_allow">Continue</string>
+<string name="voice_recording">Recording. Release to send, slide sideways to cancel. Maximum 5 minutes.</string>
+<string name="voice_failed">Could not record. Check microphone access and try again.</string>
+<string name="voice_play">Play or pause voice message</string>
+<string name="voice_play_failed">Audio unavailable</string>
+<string name="voice_limit">Recording limit reached. This recording was discarded.</string>
 </resources>
