@@ -235,4 +235,10 @@
 <string name="remove_cards_note">حذف %1$d كروت من الشات على الموبايل ده بس؟ الملفات هتفضل في مكانها وموبايلات الباقي مش هتتأثر.</string>
 <string name="delete_files_note">حذف نهائي لحد %1$d من نسخ الملفات المحددة على الموبايل؟ ممكن التحديد يشمل ملفاتك الأصلية اللي بعتها. مفيش تراجع؛ الكروت هتفضل كسجل. موبايلات الباقي مش هتتأثر وأندرويد ممكن يمنع حذف الملفات المحمية.</string>
 <string name="delete_result">طلب الحذف انتهى. تعذّر حذف %1$d ملفات. كروت الشات فضلت كسجل.</string>
+<string name="share_other_apps">مشاركة لتطبيقات تانية</string>
+<string name="file_options">خيارات الملف</string>
+<string name="select_file">تحديد الملف</string>
+<string name="deselect_file">إلغاء تحديد الملف</string>
+<string name="share_batch_stopped">مفيش حاجة اتشاركت. حدّد مكان الملف غير المتاح أو شيله من التحديد، وبعدها جرّب تاني.</string>
+<string name="find_nearby">البحث عن أشخاص قريبين</string>
 </resources>

@@ -2,6 +2,17 @@
 
 Native Android app for direct phone-to-phone file sharing on a trusted local Wi-Fi network. Android 8 or later. English and Arabic, light and dark themes.
 
+## Version 1.1.2, unvalidated device-test pre-release
+
+- Restores external file sharing that became unreachable in private/group chats when 1.1.1 added selection. Selection header now has a distinct Share icon, separate from internal Send. Android's chooser supports one or multiple readable content URIs with per-item ClipData and temporary read grants. Mixed MIME batches are handled. WhatsApp/Messenger appear only if installed and compatible. The user chooses the recipient and confirms there; opening the chooser does not mean a file was sent. An unavailable item stops the whole batch with a named error rather than being silently skipped.
+- Compact in-content selection header replaces the normal header instead of stacking a system action bar above it. Count, back-to-exit, selected checkmarks and unselected circles. Tap a file or its mark to add/remove it. Select all remains. Works in private/group chats and the visible library category. Library offers Share/Send/Select all, not deletion of chat entries. Chat deletion behavior remains explicitly confirmed, card-only vs local bytes.
+- Visible per-file options menu: Open / Share to other apps / Select, across private chats, group chats and library. Filename limited to two lines with ellipsis. Long names remain available in the options title.
+- Find nearby moves from the top + to a clear right-side floating magnifier. Accessibility label: Find nearby. Top overflow keeps QR, library, transfers, group creation and legacy lists available.
+
+Validation: clean SDK34 build, versionCode 7 and original signing certificate, 246 matching EN/AR keys. Seven JVM assertions exercise the actual share-intent builder against Android value-object doubles and MIME rules: single/multiple streams, all-item ClipData, read grant, empty/file-URI rejection and MIME aggregation. Eighteen group, seventeen nearby and five message-network assertions pass; updater fault injection and exact released 1.1.1 downloader passed against this candidate with matching SHA. These do not establish Android OS chooser grants, selection gestures, missing-item dialogs or WhatsApp/Messenger receipt on real phones.
+
+1.1.2 UI has not been rendered at Android runtime. The screenshot of 1.1.1 exposed the missing sharing/checkmark behavior; it is not visual validation of this build. This is an unvalidated test handoff, risk unmeasured. Prefer a second phone first. Install manually over the existing app, do not uninstall. Normal latest remains 1.0.3 and the updater excludes pre-releases. Downgrade can require uninstall and lose local chats/settings. Existing group, storage, notification and network limitations from 1.1.1 remain. No internet relay, Windows or encryption. Trusted private Wi-Fi only.
+
 ## Version 1.1.1, unvalidated device-test pre-release
 
 - Compact flat bottom navigation: Chats / Groups / Profile / Settings, drawn icons, rounded search, smaller filters and tighter chat rows. Transfers/library/QR remain under +. Colored first-letter default avatars replace the stock Android graphic.

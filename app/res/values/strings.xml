@@ -235,4 +235,10 @@
 <string name="remove_cards_note">Remove %1$d chat cards on this phone only? Files stay on disk and other phones are unchanged.</string>
 <string name="delete_files_note">Permanently delete up to %1$d selected local file copies? Original files you sent may also be selected. This cannot be undone; chat cards stay as records. Other phones are unchanged. Android may refuse protected files.</string>
 <string name="delete_result">Delete request finished. %1$d files could not be deleted. Chat cards were kept.</string>
+<string name="share_other_apps">Share to other apps</string>
+<string name="file_options">File options</string>
+<string name="select_file">Select file</string>
+<string name="deselect_file">Deselect file</string>
+<string name="share_batch_stopped">Nothing was shared. Locate the unavailable file or deselect it, then try again.</string>
+<string name="find_nearby">Find nearby</string>
 </resources>

@@ -1,1 +1,1 @@
-PASS exact released 1.1.0 downloader: 1.1.1 version recognition, metadata, redirected candidate APK and SHA-256. Local HTTP harness, not live release or Android installer.
+PASS exact released 1.1.1 downloader: 1.1.2 version recognition, metadata, redirected candidate APK and SHA-256. Local HTTP harness, not live release or Android installer.

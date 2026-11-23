@@ -1,0 +1,8 @@
+PASS same MIME retained
+PASS mixed images use image wildcard
+PASS mixed categories use wildcard
+PASS single share has stream, ClipData and read grant
+PASS multiple share includes every URI and read grant
+PASS empty batch refused
+PASS file URI refused
+7 assertions. JVM Android doubles, not actual chooser/WhatsApp behavior.
