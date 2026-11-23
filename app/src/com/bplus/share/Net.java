@@ -15,9 +15,25 @@ import java.util.Enumeration;
 
 public class Net {
 
+    private static final ThreadLocal<String> error = new ThreadLocal<>();
+    public static String lastError(){String e=error.get();return e==null?"No response":e;}
+    private static void failed(Exception e){error.set(e.getClass().getSimpleName()+": "+(e instanceof java.net.SocketTimeoutException?"Connection timed out":e instanceof java.net.ConnectException?"Connection refused or unreachable":e instanceof java.net.NoRouteToHostException?"No route to device":"Network or response error"));}
+
     public interface Progress { void onProgress(long done, long total); }
 
     public static String localIp(Context c) {
+        try {
+            android.net.ConnectivityManager cm=(android.net.ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
+            for(android.net.Network network:cm.getAllNetworks()){
+                android.net.NetworkCapabilities cap=cm.getNetworkCapabilities(network);
+                if(cap==null || !cap.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI))continue;
+                android.net.LinkProperties links=cm.getLinkProperties(network);
+                if(links!=null)for(android.net.LinkAddress link:links.getLinkAddresses()){
+                    InetAddress a=link.getAddress();if(a instanceof Inet4Address && !a.isLoopbackAddress() && !a.isLinkLocalAddress())return a.getHostAddress();
+                }
+            }
+        }catch(Exception ignored){}
+
         try {
             WifiManager wm = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             int ip = wm.getConnectionInfo().getIpAddress();
@@ -27,13 +43,13 @@ public class Net {
         try {
             Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
             while (en.hasMoreElements()) {
-                Enumeration<InetAddress> addrs = en.nextElement().getInetAddresses();
-                while (addrs.hasMoreElements()) {
-                    InetAddress a = addrs.nextElement();
-                    if (!a.isLoopbackAddress() && a instanceof Inet4Address) return a.getHostAddress();
-                }
+                NetworkInterface ni=en.nextElement();
+                String name=ni.getName().toLowerCase(java.util.Locale.ROOT);
+                if(!ni.isUp() || !(name.startsWith("wlan") || name.startsWith("wifi") || name.startsWith("ap") || name.startsWith("swlan") || name.startsWith("softap"))) continue;
+                Enumeration<InetAddress> addrs=ni.getInetAddresses();
+                while(addrs.hasMoreElements()) { InetAddress a=addrs.nextElement(); if(!a.isLoopbackAddress() && !a.isLinkLocalAddress() && a instanceof Inet4Address) return a.getHostAddress(); }
             }
-        } catch (Exception ignored) {}
+        } catch(Exception ignored) {}
         return null;
     }
 
@@ -55,6 +71,7 @@ public class Net {
     }
 
     public static JSONObject pair(String ip, int port, String qrToken) {
+        error.remove();
         try {
             JSONObject body = new JSONObject();
             body.put("id", Store.get("deviceId", ""));
@@ -67,17 +84,20 @@ public class Net {
             h.setFixedLengthStreamingMode(b.length);
             h.getOutputStream().write(b);
             h.getOutputStream().close();
-            if (h.getResponseCode() != 200) return null;
+            h.setReadTimeout(10000);
+            if (h.getResponseCode() != 200) {error.set("HTTP "+h.getResponseCode());return null;}
             return new JSONObject(readAll(h.getInputStream()));
-        } catch (Exception e) { return null; }
+        } catch (Exception e) { failed(e); return null; }
     }
 
     public static JSONArray manifest(String ip, int port, String token, String batch) {
+        error.remove();
         try {
             HttpURLConnection h = open("GET", "http://" + ip + ":" + port + "/manifest?token=" + token + "&batch=" + batch);
-            if (h.getResponseCode() != 200) return null;
+            h.setReadTimeout(10000);
+            if (h.getResponseCode() != 200) {error.set("HTTP "+h.getResponseCode());return null;}
             return new JSONObject(readAll(h.getInputStream())).getJSONArray("files");
-        } catch (Exception e) { return null; }
+        } catch (Exception e) { failed(e); return null; }
     }
 
     // pull a file from a sender's batch

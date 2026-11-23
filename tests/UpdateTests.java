@@ -1,0 +1,11 @@
+import com.bplus.share.UpdateHttp;import java.io.*;public class UpdateTests{
+ static String base;static String digest;static File out=new File("/tmp/update-test.apk");
+ static void download(String path,boolean partial)throws Exception{out.delete();if(partial){try(FileOutputStream o=new FileOutputStream(out)){o.write(new byte[131072]);}}UpdateHttp.download(base+path,out,1048576,digest,(d,t,a)->{});if(!UpdateHttp.sha(out).equals(digest))throw new Exception("Hash differs");System.out.println("PASS "+path);}
+ static void failure(String path,boolean text)throws Exception{out.delete();long begin=System.currentTimeMillis();try{if(text)UpdateHttp.text(base+path);else UpdateHttp.download(base+path,out,1048576,digest,(d,t,a)->{});throw new RuntimeException("Expected failure "+path);}catch(IOException e){if(System.currentTimeMillis()-begin>4500)throw new RuntimeException("Unbounded request");System.out.println("PASS "+path+" visible reason: "+e.getMessage());}}
+ public static void main(String[] a)throws Exception{base=a[0];digest=a[1];UpdateHttp.connectMs=300;UpdateHttp.readMs=300;UpdateHttp.requestMs=900;
+ String api=UpdateHttp.text(base+"/api");if(!api.contains("v1.0.2")||!api.contains("/redirect"))throw new Exception("Fake API read failed");System.out.println("PASS fake GitHub API");
+ download("/redirect",false);download("/drop",false);download("/ignore",true);failure("/stall",false);failure("/stall-api",true);failure("/slow-api",true);failure("/missing",false);failure("/missing",true);failure("/loop",true);
+ if(!UpdateHttp.newer("v1.0.2","1.0.1")||UpdateHttp.newer("v1.0","1.0.1")||UpdateHttp.newer("v1.0.1","1.0.1"))throw new Exception("Version compare");System.out.println("PASS semantic version comparisons");
+ out.delete();try{UpdateHttp.download(base+"/asset",out,1048576,"bad-digest",(d,t,n)->{});throw new RuntimeException("Hash mismatch accepted");}catch(IOException e){if(out.exists())throw new RuntimeException("Bad digest retained");System.out.println("PASS mismatched digest rejected");}
+ out.delete();System.exit(0);
+ }}

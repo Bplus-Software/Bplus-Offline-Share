@@ -138,6 +138,7 @@ public class TransferService extends Service {
                 o.put("name", Store.deviceName());
                 json(out, o);
             } else if (path.startsWith("/pair")) {
+                if(!q.getOrDefault("token", "").equals(Store.token())) { err(out,403); return; }
                 byte[] body = readBody(in, len);
                 JSONObject peer = new JSONObject(new String(body, "UTF-8"));
                 peer.put("ip", s.getInetAddress().getHostAddress());
@@ -217,6 +218,7 @@ public class TransferService extends Service {
                 emit("msg", ev);
                 ok(out);
             } else if (path.startsWith("/batchdone")) {
+                if(!q.getOrDefault("token", "").equals(Store.token())) { err(out,403); return; }
                 JSONObject ev = new JSONObject();
                 ev.put("batch", q.getOrDefault("batch", ""));
                 emit("batchdone", ev);

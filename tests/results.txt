@@ -1,0 +1,13 @@
+PASS fake GitHub API
+PASS /redirect
+PASS /drop
+PASS /ignore
+PASS /stall visible reason: Download failed after retries: SocketTimeoutException: Read timed out
+PASS /stall-api visible reason: Read timed out
+PASS /slow-api visible reason: Socket closed
+PASS /missing visible reason: Download failed after retries: IOException: HTTP 404
+PASS /missing visible reason: HTTP 404
+PASS /loop visible reason: Too many redirects
+PASS semantic version comparisons
+PASS mismatched digest rejected
+PASS Range offset confirmed; 404 no retry

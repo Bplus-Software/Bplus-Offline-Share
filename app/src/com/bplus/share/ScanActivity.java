@@ -28,6 +28,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
     private final Handler main = new Handler(Looper.getMainLooper());
     private volatile boolean handled;
     private JSONObject payload;
+    private String pairError="";
     private JSONArray files;
     private String peerId = "", peerName = "", peerToken = "";
     private TextView overallPct, overallSub;
@@ -62,6 +63,8 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
 
     // ---------- scanning ----------
     private void showScan() {
+        if(Net.localIp(this)==null){PairUi.setup(this,container,this::showScan);return;}
+        handled=false;
         container.removeAllViews();
         LinearLayout top = Ui.topBar(this, getString(R.string.scan_title), true, null);
         container.addView(top);
@@ -152,7 +155,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
             int port = payload.optInt("port", Store.PORT);
             String qrToken = payload.optString("token");
             JSONObject res = Net.pair(ip, port, qrToken);
-            if (res == null) { main.post(this::failPair); return; }
+            if (res == null) { pairError=Net.lastError(); main.post(this::failPair); return; }
             peerId = res.optString("id");
             peerName = res.optString("name");
             peerToken = qrToken;
@@ -166,11 +169,11 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
                 peer.put("lastSeen", System.currentTimeMillis());
                 Store.upsertPeer(peer);
             } catch (Exception ignored) {}
-            maybeMoveHistory(ip, port, qrToken, peerId);
+            // History migration requires the explicit action on the paired screen.
             String batch = payload.optString("batch", "");
             if (!batch.isEmpty()) {
                 JSONArray mf = Net.manifest(ip, port, qrToken, batch);
-                if (mf == null) { main.post(this::failPair); return; }
+                if (mf == null) { pairError=Net.lastError(); main.post(this::failPair); return; }
                 files = mf;
                 main.post(this::showReceive);
                 downloadAll(ip, port, qrToken, batch);
@@ -180,15 +183,14 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
         });
     }
 
-    private void maybeMoveHistory(String ip, int port, String token, String newPeerId) {
-        if (!Store.get("moveHistory", "1").equals("1")) return;
+    private boolean maybeMoveHistory(String ip, int port, String token, String newPeerId) {
         try {
             boolean isNew = Store.thread(newPeerId).length() == 0;
-            if (!isNew) return;
+            if (!isNew) return false;
             JSONObject h = Net.history(ip, port, token);
-            if (h == null) return;
+            if (h == null) return false;
             JSONObject threads = h.optJSONObject("threads");
-            if (threads == null) return;
+            if (threads == null) return false;
             java.util.Iterator<String> keys = threads.keys();
             while (keys.hasNext()) {
                 String k = keys.next();
@@ -196,15 +198,12 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
                 JSONArray t = threads.getJSONArray(k);
                 if (Store.thread(k).length() == 0) Store.saveThread(k, t);
             }
-        } catch (Exception ignored) {}
+            return true;
+        } catch (Exception ignored) {return false;}
     }
 
     private void failPair() {
-        container.removeAllViews();
-        TextView t = Ui.t(this, getString(R.string.no_device_nearby), 14, Ui.text, App.cairoB);
-        t.setGravity(Gravity.CENTER);
-        Ui.pad(t, 30, 200, 30, 0, this);
-        container.addView(t);
+        PairUi.failure(this,container,payload.optString("name",getString(R.string.target_device)),payload.optString("ip"),payload.optInt("port",Store.PORT),pairError,()->{if(Net.localIp(this)==null)PairUi.setup(this,container,()->onQr(payload.toString()));else onQr(payload.toString());});
     }
 
     // ---------- paired only ----------
@@ -227,6 +226,12 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
         dlp.topMargin = Ui.dp(this, 34);
         wrap.addView(done, dlp);
         done.setOnClickListener(v -> finish());
+        TextView migrate=Ui.ghost(this,getString(R.string.move_history));
+        Ui.pad(migrate,10,20,10,20,this);wrap.addView(migrate);
+        migrate.setOnClickListener(v->new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.move_history)).setMessage(getString(R.string.history_confirm,peerName)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.copy_history),(dialog,which)->{
+            migrate.setEnabled(false);migrate.setText(getString(R.string.checking));
+            exec.execute(()->{boolean ok=maybeMoveHistory(payload.optString("ip"),payload.optInt("port",Store.PORT),peerToken,peerId);main.post(()->{migrate.setEnabled(true);migrate.setText(getString(R.string.move_history));android.widget.Toast.makeText(this,getString(ok?R.string.history_copied:R.string.history_failed),android.widget.Toast.LENGTH_LONG).show();});});
+        }).show());
         container.addView(wrap, Ui.lp(-1, -1));
     }
 

@@ -23,6 +23,6 @@ cp $OUT/app-unaligned.apk $OUT/app-dex.apk
 cd $OUT/dex && zip -q -X $OUT/app-dex.apk classes.dex && cd -
 # 6. align + sign
 $BT/zipalign -f 4 $OUT/app-dex.apk $OUT/app-aligned.apk
-$BT/apksigner sign --ks ~/bplus-drop/bplus-share.keystore --ks-pass pass:bplusshare123 --out ~/bplus-drop/BplusShare.apk $OUT/app-aligned.apk
+$BT/apksigner sign --ks ~/bplus-drop/bplus-share.keystore --ks-pass env:BPLUS_KEYSTORE_PASSWORD --out ~/bplus-drop/BplusShare.apk $OUT/app-aligned.apk
 $BT/apksigner verify --print-certs ~/bplus-drop/BplusShare.apk | head -3
 ls -la ~/bplus-drop/BplusShare.apk

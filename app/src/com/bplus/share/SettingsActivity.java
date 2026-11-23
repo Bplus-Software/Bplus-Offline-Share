@@ -75,11 +75,6 @@ public class SettingsActivity extends Activity {
         autoRow.setOnClickListener(v -> configureAutosend());
         box.addView(autoRow);
 
-        boolean move = Store.get("moveHistory", "1").equals("1");
-        LinearLayout moveRow = Ui.setRow(this, getString(R.string.move_history), getString(R.string.move_history_sub), move ? getString(R.string.autosend_on) : getString(R.string.autosend_off));
-        moveRow.setOnClickListener(v -> { Store.set("moveHistory", move ? "0" : "1"); build(); });
-        box.addView(moveRow);
-
         box.addView(Ui.secHead(this, getString(R.string.general)));
 
         String lang = Store.get("lang", "system");
@@ -94,7 +89,7 @@ public class SettingsActivity extends Activity {
         themeRow.setOnClickListener(v -> pickTheme());
         box.addView(themeRow);
 
-        box.addView(Ui.setRow(this, getString(R.string.about), getString(R.string.about_sub, "1.0"), null));
+        box.addView(Ui.setRow(this, getString(R.string.about), getString(R.string.about_sub, "1.0.1"), null));
         TextView prayer = Ui.t(this, getString(R.string.prayer), 12, Ui.dim, App.cairoSB);
         Ui.pad(prayer, 22, 8, 22, 24, this);
         box.addView(prayer);
@@ -140,30 +135,7 @@ public class SettingsActivity extends Activity {
     }
 
     private void checkUpdates() {
-        Store.set("updateState", getString(R.string.checking));
-        build();
-        Executors.newSingleThreadExecutor().execute(() -> {
-            String latest = null;
-            try {
-                java.net.HttpURLConnection h = (java.net.HttpURLConnection)
-                        new java.net.URL("https://api.github.com/repos/" + REPO + "/releases/latest").openConnection();
-                h.setConnectTimeout(8000);
-                if (h.getResponseCode() == 200) {
-                    JSONObject o = new JSONObject(Net.readAll(h.getInputStream()));
-                    latest = o.optString("tag_name", "").replace("v", "");
-                }
-            } catch (Exception ignored) {}
-            String result;
-            if (latest == null || latest.isEmpty()) result = getString(R.string.up_to_date, "1.0");
-            else if (latest.equals("1.0")) result = getString(R.string.up_to_date, "1.0");
-            else result = getString(R.string.update_available, latest);
-            final String r = result;
-            final String open = latest;
-            runOnUiThread(() -> {
-                Store.set("updateState", r);
-                build();
-            });
-        });
+        startActivity(new Intent(this,UpdateActivity.class));
     }
 
     private void configureAutosend() {

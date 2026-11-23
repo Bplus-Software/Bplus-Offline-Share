@@ -181,6 +181,7 @@ public class SendActivity extends Activity {
 
     // ---------- state 1: QR ----------
     private void showQr() {
+        if(Net.localIp(this)==null){PairUi.setup(this,container,this::showQr);return;}
         state = 1;
         TransferService.start(this);
         container.removeAllViews();

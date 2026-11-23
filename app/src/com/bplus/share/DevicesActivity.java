@@ -185,6 +185,8 @@ public class DevicesActivity extends Activity {
     }
 
     private void showMyCode() {
+        if(!PairUi.ensure(this,this::showMyCode))return;
+        TransferService.start(this);
         LinearLayout wrap = Ui.col(this);
         wrap.setGravity(Gravity.CENTER);
         Ui.pad(wrap, 24, 20, 24, 20, this);
