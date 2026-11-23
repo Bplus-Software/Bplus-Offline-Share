@@ -38,7 +38,7 @@ public class ChatActivity extends Activity {
         Ui.applyTheme(this);
         peerId = getIntent().getStringExtra("peer");
         peer = Store.peerById(peerId);
-        if(peer==null){finish();return;}selection=new FileSelection(this,peerId,this::renderThread);
+        if(peer==null){finish();return;}selection=new FileSelection(this,peerId,this::refreshSelection);
 
         LinearLayout root = Ui.col(this);
         root.setBackgroundColor(Ui.bg);
@@ -146,7 +146,7 @@ public class ChatActivity extends Activity {
                 text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);if(me&&m.optString("state").equals("failed"))text.setOnClickListener(v->retryMessage(m));bub=text;
             }else{
                 bub=FileCards.card(this,m,()->selection.toggle(m));
-                if(selection.active())bub.setOnClickListener(v->selection.toggle(m));
+
 
                 if(!selection.active()&&!Attachments.state(this,m).equals("ok"))bub.setOnClickListener(v->locate(m));
             }
@@ -154,17 +154,20 @@ public class ChatActivity extends Activity {
             String state=m.optString("state");
             if(me)time+=" · "+getString(state.equals("failed")?(kind.equals("text")?R.string.failed_retry:R.string.file_failed_actions):state.equals("sending")?R.string.sending:R.string.sent);
             TextView stamp = Ui.t(this,time,10,Ui.dim,App.cairoSB);
-            LinearLayout cell = Ui.col(this);cell.setGravity(me?Gravity.END:Gravity.START);if(kind.equals("file")&&selection.has(m))cell.setBackgroundColor(0x3058a4ff);if(kind.equals("file")&&selection.active())cell.setOnClickListener(v->selection.toggle(m));
+            LinearLayout cell = Ui.col(this);cell.setTag(m);cell.setGravity(me?Gravity.END:Gravity.START);if(kind.equals("file")&&selection.has(m))cell.setBackground(Ui.round(0x3058a4ff,12,this));if(kind.equals("file")&&selection.active())cell.setOnClickListener(v->selection.toggle(m));
             LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(kind.equals("file")?selection.decorate(bub,m):bub,bp);if(kind.equals("file")&&!Attachments.state(this,m).equals("ok")){TextView fix=Ui.t(this,Attachments.explanation(this,Attachments.state(this,m))+"\n"+getString(R.string.locate_file),12,Ui.accent,App.cairoSB);fix.setMaxWidth(Ui.dp(this,280));fix.setOnClickListener(v->locate(m));cell.addView(fix);}cell.addView(stamp);
             if(me && state.equals("failed") && kind.equals("text")){
                 String reason=m.optString("error",getString(R.string.old_failure));TextView failure=Ui.t(this,reason+"\n"+getString(R.string.retry_details),11,Ui.dim,App.cairoSB);failure.setMaxWidth(Ui.dp(this,280));failure.setOnClickListener(v->retryMessage(m));cell.addView(failure);
             }
             Ui.pad(cell,0,0,0,12,this);
-            msgs.addView(cell);
+            LinearLayout.LayoutParams rowLp=Ui.lp(-1,-2);rowLp.bottomMargin=Ui.dp(this,8);msgs.addView(cell,rowLp);
         }
-        scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
+        if(!preserveSelectionScroll)scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
     }
 
+    private void refreshSelection(){if(msgs==null)return;int y=scroll.getScrollY();for(int i=0;i<msgs.getChildCount();i++){View row=msgs.getChildAt(i);Object tag=row.getTag();if(tag instanceof JSONObject){JSONObject m=(JSONObject)tag;if(m.optString("kind").equals("file")){row.setBackground(selection.has(m)?Ui.round(0x3058a4ff,12,this):null);row.setOnClickListener(selection.active()?v->selection.toggle(m):null);}}invalidateSelection(row);}scroll.post(()->scroll.scrollTo(0,y));}
+    private void invalidateSelection(View v){v.invalidate();if(v instanceof android.view.ViewGroup){android.view.ViewGroup g=(android.view.ViewGroup)v;for(int i=0;i<g.getChildCount();i++)invalidateSelection(g.getChildAt(i));}}
+    private boolean preserveSelectionScroll;
     private void sendText(String text){
         JSONObject m=new JSONObject();try{m.put("id",java.util.UUID.randomUUID().toString());m.put("kind","text");m.put("body",text);m.put("me",true);m.put("ts",System.currentTimeMillis());m.put("state","sending");Store.addMsg(peerId,m);}catch(Exception ignored){}renderThread();deliver(m);
     }
@@ -185,7 +188,7 @@ public class ChatActivity extends Activity {
         JSONObject current=Store.peerById(peerId);String local=Net.localIp(this);String ip=current==null?"?":current.optString("ip");int port=current==null?Store.PORT:current.optInt("port",Store.PORT);
         TextView details=Ui.t(this,getString(R.string.checking),13,Ui.text,App.cairoSB);Ui.pad(details,20,20,20,20,this);details.setTextIsSelectable(true);
         android.app.AlertDialog dialog=new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.connection_details)).setView(details).setPositiveButton(android.R.string.ok,null).setNeutralButton(getString(R.string.open_wifi),(d,n)->PairUi.wifi(this)).setNegativeButton(getString(R.string.copy_details),(d,n)->PairUi.copy(this,details.getText().toString())).create();dialog.show();
-        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.1.4\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
+        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.1.5\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
     }
 
     private void pickFile() {
