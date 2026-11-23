@@ -125,3 +125,8 @@ Private/group hold-to-record AAC notes, release to send, slide to cancel; audio 
 ## 1.1.12 voice UI device-test candidate
 
 Combined mic/send composer action, clean B+ voice cards, pre-play duration metadata, live recording amplitude/timer overlay. Actual Android layout/gesture/audio validation still pending. See release1112-notes.txt. No promotion.
+
+
+## 1.1.13 compact voice UI test candidate
+
+Drawn mic silhouette, shorter voice cards, centered seek/play/options and lower time, recording hint/toast removed while keeping timer/live bars. No playback waveform added. Actual Android pixels remain pending. See release1113-notes.txt. No promotion.

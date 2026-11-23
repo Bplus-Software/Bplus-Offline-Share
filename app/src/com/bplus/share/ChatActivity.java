@@ -91,10 +91,10 @@ public class ChatActivity extends Activity {
         ilp.setMarginStart(Ui.dp(this, 10));
         ilp.setMarginEnd(Ui.dp(this, 10));
         bar.addView(input, ilp);
-        TextView send = Ui.t(this, "➤", 16, Color.WHITE, App.cairoB);
+        TextView send = new ComposerButton(this);
         send.setGravity(Gravity.CENTER);
-        send.setBackground(Ui.round(Ui.accent, 20, this));
-        bar.addView(send, Ui.lp(Ui.dp(this, 40), Ui.dp(this, 40)));
+        send.setBackground(Ui.round(Ui.accent, 24, this));
+        bar.addView(send, Ui.lp(Ui.dp(this, 44), Ui.dp(this, 44)));
         send.setOnClickListener(v -> {
             String text = input.getText().toString().trim();
             if (text.isEmpty()) return;

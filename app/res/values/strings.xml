@@ -297,4 +297,6 @@
 <string name="voice_live_level">Live microphone level</string>
 <string name="voice_slide_hint">Release to send. Slide sideways to cancel.</string>
 <string name="voice_cancel_release">Release to cancel</string>
+<string name="auto_update_check">Check for updates automatically</string>
+<string name="auto_update_check_note">When enabled, checks when the home screen opens, at most once every 6 hours while the app is running. No background checks, downloads or installs.</string>
 </resources>

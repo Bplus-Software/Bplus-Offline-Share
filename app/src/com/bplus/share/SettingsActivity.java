@@ -63,6 +63,7 @@ public class SettingsActivity extends Activity {
         box.addView(Ui.setRow(this, getString(R.string.save_to), null, "Downloads/B+ Share"));
 
         LinearLayout testVersions=Ui.setRow(this,getString(R.string.include_test_versions),getString(R.string.include_test_versions_note),Store.get("includeTestVersions","1").equals("1")?getString(R.string.autosend_on):getString(R.string.autosend_off));box.addView(testVersions);testVersions.setOnClickListener(v->{Store.set("includeTestVersions",Store.get("includeTestVersions","1").equals("1")?"0":"1");build();});
+        LinearLayout autoCheck=Ui.setRow(this,getString(R.string.auto_update_check),getString(R.string.auto_update_check_note),Store.get("autoUpdateCheck","0").equals("1")?getString(R.string.autosend_on):getString(R.string.autosend_off));box.addView(autoCheck);autoCheck.setOnClickListener(v->{Store.set("autoUpdateCheck",Store.get("autoUpdateCheck","0").equals("1")?"0":"1");build();});
         String st = Store.get("updateState", "");
         String uv = st.isEmpty() ? null : st;
         LinearLayout upd = Ui.setRow(this, getString(R.string.check_updates), getString(R.string.updates_sub), uv);
@@ -90,7 +91,7 @@ public class SettingsActivity extends Activity {
         themeRow.setOnClickListener(v -> pickTheme());
         box.addView(themeRow);
 
-        box.addView(Ui.setRow(this, getString(R.string.about), getString(R.string.about_sub, "1.1.12"), null));
+        box.addView(Ui.setRow(this, getString(R.string.about), getString(R.string.about_sub, "1.1.13"), null));
         TextView prayer = Ui.t(this, getString(R.string.prayer), 12, Ui.dim, App.cairoSB);
         Ui.pad(prayer, 22, 8, 22, 24, this);
         box.addView(prayer);

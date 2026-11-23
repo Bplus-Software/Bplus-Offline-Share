@@ -297,4 +297,6 @@
 <string name="voice_live_level">مستوى الميكروفون المباشر</string>
 <string name="voice_slide_hint">اترك للإرسال. اسحب جانبًا للإلغاء.</string>
 <string name="voice_cancel_release">اترك للإلغاء</string>
+<string name="auto_update_check">البحث عن تحديثات تلقائيًا</string>
+<string name="auto_update_check_note">عند التفعيل، يبحث عند فتح الشاشة الرئيسية، مرة كل 6 ساعات بحد أقصى أثناء تشغيل التطبيق. لا بحث بالخلفية ولا تنزيل أو تثبيت تلقائي.</string>
 </resources>
