@@ -292,4 +292,9 @@
 <string name="voice_play">Play or pause voice message</string>
 <string name="voice_play_failed">Audio unavailable</string>
 <string name="voice_limit">Recording limit reached. This recording was discarded.</string>
+<string name="voice_duration_loading">Loading duration...</string>
+<string name="voice_duration_unknown">Duration unavailable</string>
+<string name="voice_live_level">Live microphone level</string>
+<string name="voice_slide_hint">Release to send. Slide sideways to cancel.</string>
+<string name="voice_cancel_release">Release to cancel</string>
 </resources>

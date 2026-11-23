@@ -120,3 +120,8 @@ New private-chat receipt-bound Delete for everyone, local permanent-delete succe
 ## 1.1.11 voice-message device-test candidate
 
 Private/group hold-to-record AAC notes, release to send, slide to cancel; audio cards with play/pause/seek/duration. Foreground mic permission explanation; no background recording. Actual Android audio/gesture/layout test remains pending. Includes 1.1.10 test updater/recall/emoji changes. See release1111-notes.txt. No promotion.
+
+
+## 1.1.12 voice UI device-test candidate
+
+Combined mic/send composer action, clean B+ voice cards, pre-play duration metadata, live recording amplitude/timer overlay. Actual Android layout/gesture/audio validation still pending. See release1112-notes.txt. No promotion.

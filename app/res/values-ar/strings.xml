@@ -292,4 +292,9 @@
 <string name="voice_play">تشغيل أو إيقاف الرسالة الصوتية</string>
 <string name="voice_play_failed">الصوت غير متاح</string>
 <string name="voice_limit">وصل التسجيل إلى الحد الأقصى وتم إلغاؤه.</string>
+<string name="voice_duration_loading">جارٍ تحميل المدة...</string>
+<string name="voice_duration_unknown">المدة غير متاحة</string>
+<string name="voice_live_level">مستوى الميكروفون المباشر</string>
+<string name="voice_slide_hint">اترك للإرسال. اسحب جانبًا للإلغاء.</string>
+<string name="voice_cancel_release">اترك للإلغاء</string>
 </resources>

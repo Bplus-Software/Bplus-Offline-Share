@@ -104,7 +104,8 @@ public class ChatActivity extends Activity {
         TextView emoji=Ui.t(this,"☺",22,Ui.accent,App.cairoB);emoji.setGravity(Gravity.CENTER);LinearLayout.LayoutParams emojiLp=Ui.lp(Ui.dp(this,44),Ui.dp(this,44));emojiLp.setMarginEnd(Ui.dp(this,12));bar.addView(emoji,0,emojiLp);
         emoji.setContentDescription(getString(R.string.emoji_title));
         emoji.setOnClickListener(v->EmojiPicker.show(this,input));
-        TextView mic=Ui.t(this,"🎙",23,Ui.accent,App.cairoB);mic.setGravity(Gravity.CENTER);bar.addView(mic,Ui.lp(Ui.dp(this,44),Ui.dp(this,48)));voice=new VoiceRecorder(this,mic,(uri,voiceName,size)->exec.execute(()->{TransferService.sendToPeer(peer,uri,voiceName,size);runOnUiThread(this::renderThread);}));
+        voice=new VoiceRecorder(this,send,input,(uri,voiceName,size)->exec.execute(()->{TransferService.sendToPeer(peer,uri,voiceName,size);runOnUiThread(this::renderThread);}));
+        send.setText("🎙");input.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int start,int count,int after){}public void onTextChanged(CharSequence s,int start,int before,int count){send.setText(s.length()==0?"🎙":"➤");send.setContentDescription(getString(s.length()==0?R.string.voice_hold:R.string.send_now));}public void afterTextChanged(android.text.Editable e){}});
         root.addView(bar);
         setContentView(root);
 
