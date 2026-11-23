@@ -91,7 +91,7 @@ public class SettingsActivity extends Activity {
         themeRow.setOnClickListener(v -> pickTheme());
         box.addView(themeRow);
 
-        box.addView(Ui.setRow(this, getString(R.string.about), getString(R.string.about_sub, "1.1.13"), null));
+        box.addView(Ui.setRow(this, getString(R.string.about), getString(R.string.about_sub, "1.1.14"), null));
         TextView prayer = Ui.t(this, getString(R.string.prayer), 12, Ui.dim, App.cairoSB);
         Ui.pad(prayer, 22, 8, 22, 24, this);
         box.addView(prayer);

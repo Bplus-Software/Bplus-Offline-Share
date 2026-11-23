@@ -130,3 +130,8 @@ Combined mic/send composer action, clean B+ voice cards, pre-play duration metad
 ## 1.1.13 compact voice UI test candidate
 
 Drawn mic silhouette, shorter voice cards, centered seek/play/options and lower time, recording hint/toast removed while keeping timer/live bars. No playback waveform added. Actual Android pixels remain pending. See release1113-notes.txt. No promotion.
+
+
+## 1.1.14 centered playback test candidate
+
+Centered plain seek line, lazy background source preparation, one active audio note, playing-only progress. Confirmed source workload defects addressed; actual device stutter cause and fix not established. No playback waveform until clarified. See release1114-notes.txt. No promotion.
