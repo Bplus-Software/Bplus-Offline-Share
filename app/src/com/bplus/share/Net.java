@@ -62,12 +62,9 @@ public class Net {
         return h;
     }
 
-    public static JSONObject ping(String ip, int port, String token) {
-        try {
-            HttpURLConnection h = open("GET", "http://" + ip + ":" + port + "/ping?token=" + token);
-            if (h.getResponseCode() != 200) return null;
-            return new JSONObject(readAll(h.getInputStream()));
-        } catch (Exception e) { return null; }
+    public static JSONObject ping(String ip,int port,String token){
+        error.remove();java.net.HttpURLConnection h=null;
+        try{h=open("GET","http://"+ip+":"+port+"/ping?token="+token);h.setReadTimeout(8000);int code=h.getResponseCode();if(code!=200){error.set("HTTP "+code);return null;}return new JSONObject(readAll(h.getInputStream()));}catch(Exception e){failed(e);return null;}finally{if(h!=null)h.disconnect();}
     }
 
     public static JSONObject pair(String ip, int port, String qrToken) {
@@ -130,6 +127,7 @@ public class Net {
 
     // push a file to a peer's inbox
     public static boolean send(Context c, String ip, int port, String token, Uri uri, String name, long size, Progress pr) {
+        error.remove();
         try {
             HttpURLConnection h = open("POST", "http://" + ip + ":" + port + "/recv?token=" + token
                     + "&name=" + java.net.URLEncoder.encode(name, "UTF-8") + "&from=" + Store.get("deviceId", ""));
@@ -148,24 +146,17 @@ public class Net {
             out.flush(); in.close();
             boolean ok = h.getResponseCode() == 200;
             if (!ok) try { out.close(); } catch (Exception ignored) {}
+            if(!ok)error.set("HTTP "+h.getResponseCode());
             return ok;
-        } catch (Exception e) { return false; }
+        } catch (Exception e) { failed(e); return false; }
     }
 
-    public static boolean sendMsg(String ip, int port, String token, String text) {
-        try {
-            JSONObject body = new JSONObject();
-            body.put("text", text);
-            body.put("from", Store.get("deviceId", ""));
-            HttpURLConnection h = open("POST", "http://" + ip + ":" + port + "/msg?token=" + token);
-            h.setDoOutput(true);
-            h.setRequestProperty("Content-Type", "application/json");
-            byte[] b = body.toString().getBytes("UTF-8");
-            h.setFixedLengthStreamingMode(b.length);
-            h.getOutputStream().write(b);
-            h.getOutputStream().close();
-            return h.getResponseCode() == 200;
-        } catch (Exception e) { return false; }
+    public static boolean sendMsg(String ip,int port,String token,String text){
+        error.remove();HttpURLConnection h=null;
+        try{
+            JSONObject body=new JSONObject();body.put("text",text);body.put("from",Store.get("deviceId",""));
+            h=open("POST","http://"+ip+":"+port+"/msg?token="+token);h.setReadTimeout(8000);h.setDoOutput(true);h.setRequestProperty("Content-Type","application/json");byte[] bytes=body.toString().getBytes("UTF-8");h.setFixedLengthStreamingMode(bytes.length);try(OutputStream out=h.getOutputStream()){out.write(bytes);}int code=h.getResponseCode();if(code!=200){error.set("HTTP "+code);return false;}return true;
+        }catch(Exception e){failed(e);return false;}finally{if(h!=null)h.disconnect();}
     }
 
     public static JSONObject history(String ip, int port, String token) {

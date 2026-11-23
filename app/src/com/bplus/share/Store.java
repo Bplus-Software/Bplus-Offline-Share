@@ -78,7 +78,8 @@ public class Store {
         try { return new JSONArray(get("thread_" + peerId, "[]")); } catch (Exception e) { return new JSONArray(); }
     }
 
-    public static void addMsg(String peerId, JSONObject msg) {
+    public static synchronized void addMsg(String peerId, JSONObject msg) {
+        try{if(msg.optString("id").isEmpty())msg.put("id",UUID.randomUUID().toString());}catch(Exception ignored){}
         JSONArray t = thread(peerId);
         t.put(msg);
         set("thread_" + peerId, t.toString());

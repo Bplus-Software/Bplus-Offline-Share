@@ -374,6 +374,7 @@ public class TransferService extends Service {
             msg.put("kind", "file"); msg.put("name", name); msg.put("size", size);
             msg.put("me", true); msg.put("ts", System.currentTimeMillis());
             msg.put("state", ok ? "sent" : "failed");
+            if(!ok)msg.put("error",Net.lastError());
             msg.put("uri",uri.toString());msg.put("mime",Save.mime(name));
             Store.addMsg(peer.optString("id"), msg);
         } catch (Exception ignored) {}

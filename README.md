@@ -2,6 +2,15 @@
 
 Native Android app for direct phone-to-phone file sharing on a trusted local Wi-Fi network. Android 8 or later. English and Arabic, light and dark themes.
 
+## Version 1.0.3
+
+- Failed text messages retain a concrete HTTP/network failure reason. Tap the failed message to review the reason, inspect connectivity or retry that exact message. Retry uses a stable local message ID rather than updating the last pending message.
+- Header information button tests the saved peer address, shows local/target IP and result, and offers Wi-Fi settings and token-free Copy details. A failed ping does not establish the cause.
+- Retrying after an uncertain delivery may duplicate a message, since wire protocol v1 has no acknowledgement IDs/deduplication. The app warns before retry. No automatic resend was added.
+- File menu adds Share via another app using the Android system chooser and temporary read access. Choose WhatsApp/Messenger or another compatible installed app, then select and confirm the recipient there. Unavailable old files still require a local copy.
+- File failures retain safe reasons and offer a confirmed Send file again action.
+- JVM tests of the actual message network methods cover HTTP success, HTTP 403, refused connection, ping and a bounded response stall. The exact 1.0.2 updater downloaded the candidate 1.0.3 APK through a redirect with matching SHA-256. Android UI/installer/share-sheet operation remains untested.
+
 ## Version 1.0.2
 
 - A Chats button on the main screen opens the paired-device conversation list.

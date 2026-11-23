@@ -1,0 +1,2 @@
+PASS exact 1.0.2 downloader: candidate 1.0.3 version, metadata fetch, redirected real APK download and SHA-256
+Signer and Android versionCode verified separately with apksigner/aapt2. Android installer/runtime not tested.

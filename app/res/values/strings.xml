@@ -160,4 +160,14 @@
 <string name="remove_chat">Remove from chat</string>
 <string name="remove_chat_help">Remove this message on this phone only? The original file stays saved. Nothing is deleted on the other device.</string>
 <string name="remove_message">Remove message only</string>
+<string name="share_file">Share via another app</string>
+<string name="connection_details">Connection details</string>
+<string name="old_failure">No reason was recorded by the older app. Retry to get current details.</string>
+<string name="retry_details">Tap to retry or view connection details</string>
+<string name="peer_missing">Paired device record is missing. Pair again.</string>
+<string name="not_delivered_title">Message not confirmed delivered</string>
+<string name="retry_duplicate_note">If a reply was lost, the other phone may already have received this message. Retrying may send it twice.</string>
+<string name="device_responded">Device responded to the connection test</string>
+<string name="diagnostic_note">This tests the saved device address, not message delivery. Keep both apps open on a network that allows devices to communicate. Mobile-data internet transfer is not supported yet. A failed test alone does not prove the cause. No pairing tokens or message contents are copied.</string>
+<string name="file_failed_actions">Not sent · hold for details or retry</string><string name="retry_file">Send file again</string>
 </resources>

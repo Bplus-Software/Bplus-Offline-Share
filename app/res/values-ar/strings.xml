@@ -160,4 +160,14 @@
 <string name="remove_chat">إزالة من المحادثة</string>
 <string name="remove_chat_help">إزالة الرسالة من محادثتك هنا بس؟ الملف الأصلي هيفضل محفوظ، ومش هيتحذف أي شيء من الجهاز التاني.</string>
 <string name="remove_message">إزالة الرسالة فقط</string>
+<string name="share_file">مشاركة عبر تطبيق آخر</string>
+<string name="connection_details">تفاصيل الاتصال</string>
+<string name="old_failure">النسخة القديمة ما سجلتش سبب الفشل. جرّب تاني علشان تظهر التفاصيل الحالية.</string>
+<string name="retry_details">اضغط لإعادة المحاولة أو عرض تفاصيل الاتصال</string>
+<string name="peer_missing">بيانات الجهاز المرتبط مش موجودة. اربطه تاني.</string>
+<string name="not_delivered_title">لم يتم تأكيد وصول الرسالة</string>
+<string name="retry_duplicate_note">لو رد التأكيد ضاع، ممكن الموبايل التاني يكون استلم الرسالة. إعادة المحاولة ممكن تبعتها مرتين.</string>
+<string name="device_responded">الجهاز رد على اختبار الاتصال</string>
+<string name="diagnostic_note">ده اختبار لعنوان الجهاز المحفوظ، مش تأكيد وصول الرسالة. خلّي التطبيق مفتوح على الجهازين على شبكة تسمح بتواصلهم. الإرسال بالنت من بيانات الموبايل لسه مش متاح. فشل الاختبار لوحده مش بيحدد السبب. النسخ مش بيشمل رموز الربط أو محتوى الرسائل.</string>
+<string name="file_failed_actions">لم يتم الإرسال · اضغط مطوّلًا للتفاصيل أو إعادة المحاولة</string><string name="retry_file">إرسال الملف مرة أخرى</string>
 </resources>

@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 public class ChatActivity extends Activity {
     private static final int REQ_PICK = 61;
     private JSONObject locating;
+    private final java.util.Set<String> retrying=java.util.Collections.synchronizedSet(new java.util.HashSet<String>());
     private String peerId;
     private JSONObject peer;
     private LinearLayout msgs;
@@ -53,6 +54,8 @@ public class ChatActivity extends Activity {
         TextView status = Ui.t(this, "", 11, Ui.green, App.cairoB);
         meta.addView(status);
         head.addView(meta, Ui.lpw(1));
+        TextView diagnose=Ui.ghost(this,"ⓘ");Ui.pad(diagnose,12,8,12,8,this);head.addView(diagnose);diagnose.setContentDescription(getString(R.string.connection_details));diagnose.setOnClickListener(v->diagnostics());
+        status.setOnClickListener(v->diagnostics());
         head.setBackgroundColor(Ui.bar);
         root.addView(head);
         checkOnline(status);
@@ -139,48 +142,47 @@ public class ChatActivity extends Activity {
             View bub;
             if(kind.equals("text")){
                 TextView text=Ui.t(this,m.optString("body"),14,me?Color.WHITE:Ui.text,App.cairoSB);
-                text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);bub=text;
+                text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);if(me&&m.optString("state").equals("failed"))text.setOnClickListener(v->retryMessage(m));bub=text;
             }else{
                 bub=FileCards.card(this,m,()->fileMenu(m));
                 if(FileCards.uri(m)==null)bub.setOnClickListener(v->locate(m));
             }
             String time = tf.format(new Date(m.optLong("ts")));
             String state=m.optString("state");
-            if(me)time+=" · "+getString(state.equals("failed")?R.string.failed_retry:state.equals("sending")?R.string.sending:R.string.sent);
+            if(me)time+=" · "+getString(state.equals("failed")?(kind.equals("text")?R.string.failed_retry:R.string.file_failed_actions):state.equals("sending")?R.string.sending:R.string.sent);
             TextView stamp = Ui.t(this,time,10,Ui.dim,App.cairoSB);
             LinearLayout cell = Ui.col(this);cell.setGravity(me?Gravity.END:Gravity.START);
             LinearLayout.LayoutParams bp=Ui.lp(-2,-2);bp.gravity=me?Gravity.END:Gravity.START;cell.addView(bub,bp);cell.addView(stamp);
+            if(me && state.equals("failed") && kind.equals("text")){
+                String reason=m.optString("error",getString(R.string.old_failure));TextView failure=Ui.t(this,reason+"\n"+getString(R.string.retry_details),11,Ui.dim,App.cairoSB);failure.setMaxWidth(Ui.dp(this,280));failure.setOnClickListener(v->retryMessage(m));cell.addView(failure);
+            }
             Ui.pad(cell,0,0,0,12,this);
             msgs.addView(cell);
         }
         scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
     }
 
-    private void sendText(String text) {
-        JSONObject msg = new JSONObject();
-        try {
-            msg.put("kind", "text"); msg.put("body", text);
-            msg.put("me", true); msg.put("ts", System.currentTimeMillis()); msg.put("state", "sending");
-            Store.addMsg(peerId, msg);
-        } catch (Exception ignored) {}
-        renderThread();
-        exec.execute(() -> {
-            boolean ok = peer != null && Net.sendMsg(peer.optString("ip"), peer.optInt("port", Store.PORT), peer.optString("token"), text);
-            markLast(ok ? "sent" : "failed");
+    private void sendText(String text){
+        JSONObject m=new JSONObject();try{m.put("id",java.util.UUID.randomUUID().toString());m.put("kind","text");m.put("body",text);m.put("me",true);m.put("ts",System.currentTimeMillis());m.put("state","sending");Store.addMsg(peerId,m);}catch(Exception ignored){}renderThread();deliver(m);
+    }
+    private void deliver(JSONObject m){
+        String id=m.optString("id");if(!retrying.add(id))return;
+        exec.execute(()->{JSONObject current=Store.peerById(peerId);boolean ok=current!=null&&Net.sendMsg(current.optString("ip"),current.optInt("port",Store.PORT),current.optString("token"),m.optString("body"));String why=ok?"":current==null?getString(R.string.peer_missing):Net.lastError();
+            synchronized(Store.class){JSONArray thread=Store.thread(peerId);for(int i=0;i<thread.length();i++){JSONObject item=thread.optJSONObject(i);if(item!=null&&id.equals(item.optString("id"))){try{item.put("state",ok?"sent":"failed");item.put("error",why);}catch(Exception ignored){}break;}}Store.saveThread(peerId,thread);}retrying.remove(id);runOnUiThread(this::renderThread);
         });
     }
-
-    private void markLast(String state) {
-        JSONArray t = Store.thread(peerId);
-        for (int i = t.length() - 1; i >= 0; i--) {
-            JSONObject m = t.optJSONObject(i);
-            if (m != null && m.optBoolean("me") && "sending".equals(m.optString("state"))) {
-                try { m.put("state", state); } catch (Exception ignored) {}
-                break;
-            }
-        }
-        Store.saveThread(peerId, t);
-        runOnUiThread(this::renderThread);
+    private void retryMessage(JSONObject m){
+        if(retrying.contains(m.optString("id")))return;
+        final JSONObject[] selected={m};
+        new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.not_delivered_title)).setMessage(m.optString("error",getString(R.string.old_failure))+"\n\n"+getString(R.string.retry_duplicate_note)).setNegativeButton(getString(R.string.cancel),null).setNeutralButton(getString(R.string.connection_details),(d,n)->diagnostics()).setPositiveButton(getString(R.string.try_again),(d,n)->{
+            synchronized(Store.class){JSONArray thread=Store.thread(peerId);for(int i=0;i<thread.length();i++){JSONObject item=thread.optJSONObject(i);if(same(item,m)&&item.optString("body").equals(m.optString("body"))){try{if(item.optString("id").isEmpty())item.put("id",java.util.UUID.randomUUID().toString());item.put("state","sending");selected[0]=item;}catch(Exception ignored){}break;}}Store.saveThread(peerId,thread);}renderThread();deliver(selected[0]);
+        }).show();
+    }
+    private void diagnostics(){
+        JSONObject current=Store.peerById(peerId);String local=Net.localIp(this);String ip=current==null?"?":current.optString("ip");int port=current==null?Store.PORT:current.optInt("port",Store.PORT);
+        TextView details=Ui.t(this,getString(R.string.checking),13,Ui.text,App.cairoSB);Ui.pad(details,20,20,20,20,this);details.setTextIsSelectable(true);
+        android.app.AlertDialog dialog=new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.connection_details)).setView(details).setPositiveButton(android.R.string.ok,null).setNeutralButton(getString(R.string.open_wifi),(d,n)->PairUi.wifi(this)).setNegativeButton(getString(R.string.copy_details),(d,n)->PairUi.copy(this,details.getText().toString())).create();dialog.show();
+        exec.execute(()->{boolean ok=current!=null&&Net.ping(ip,port,current.optString("token"))!=null;String reason=current==null?getString(R.string.peer_missing):ok?getString(R.string.device_responded):Net.lastError();String text="B+ Share 1.0.3\n"+getString(R.string.target_address)+": "+ip+":"+port+"\n"+getString(R.string.local_address)+": "+(local==null?getString(R.string.no_lan):local)+"\n"+getString(R.string.failure_reason)+": "+reason+"\n\n"+getString(R.string.diagnostic_note);runOnUiThread(()->{if(dialog.isShowing())details.setText(text);});});
     }
 
     private void pickFile() {
@@ -226,16 +228,21 @@ public class ChatActivity extends Activity {
         });
     }
 
-    private static boolean same(JSONObject a,JSONObject b){return a!=null && a.optLong("ts")==b.optLong("ts") && a.optString("name").equals(b.optString("name")) && a.optBoolean("me")==b.optBoolean("me");}
+    private static boolean same(JSONObject a,JSONObject b){return a!=null && (b.optString("id").isEmpty() || a.optString("id").equals(b.optString("id"))) && a.optLong("ts")==b.optLong("ts") && a.optString("name").equals(b.optString("name")) && a.optBoolean("me")==b.optBoolean("me");}
     private void locate(JSONObject m){
         new android.app.AlertDialog.Builder(this).setMessage(getString(R.string.file_unavailable_help)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.locate_file),(d,n)->{locating=m;Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");startActivityForResult(i,62);}).show();
     }
     private void fileMenu(JSONObject m){
-        String[] options={getString(R.string.open_file),getString(R.string.forward_file),getString(R.string.remove_chat),getString(R.string.locate_file)};
+        String[] options={getString(R.string.open_file),getString(R.string.forward_file),getString(R.string.remove_chat),getString(R.string.locate_file),getString(R.string.share_file),getString(R.string.retry_file)};
         new android.app.AlertDialog.Builder(this).setTitle(m.optString("name")).setItems(options,(d,n)->{
             if(n==0){if(FileCards.uri(m)==null)locate(m);else FileCards.open(this,m);}
             else if(n==1)FileCards.forward(this,m);
             else if(n==3)locate(m);
+            else if(n==5){
+                if(!FileCards.available(this,m)){locate(m);return;}
+                new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.retry_file)).setMessage(m.optString("error",getString(R.string.old_failure))+"\n\n"+getString(R.string.forward_confirm,m.optString("name"),peer.optString("name"))).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.send_now),(retryDialog,retryWhich)->exec.execute(()->{JSONObject current=Store.peerById(peerId);boolean ok=current!=null&&TransferService.sendToPeer(current,FileCards.uri(m),m.optString("name"),m.optLong("size"));runOnUiThread(()->{renderThread();android.widget.Toast.makeText(this,getString(ok?R.string.sent:R.string.file_failed_actions),android.widget.Toast.LENGTH_LONG).show();});})).show();
+            }
+            else if(n==4){if(FileCards.uri(m)==null)locate(m);else FileCards.share(this,m);}
             else new android.app.AlertDialog.Builder(this).setTitle(getString(R.string.remove_chat)).setMessage(getString(R.string.remove_chat_help)).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.remove_message),(confirm,which)->{JSONArray old=Store.thread(peerId),kept=new JSONArray();boolean removed=false;for(int j=0;j<old.length();j++){JSONObject item=old.optJSONObject(j);if(!removed&&same(item,m)){removed=true;continue;}kept.put(item);}Store.saveThread(peerId,kept);renderThread();}).show();
         }).show();
     }

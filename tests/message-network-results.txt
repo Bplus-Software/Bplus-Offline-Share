@@ -1,0 +1,6 @@
+PASS message delivered HTTP 200
+PASS HTTP 403 preserved
+PASS refused connection reason
+PASS connectivity ping
+PASS bounded stalled-message timeout with reason
+JVM network tests, not Android UI or OS share-sheet tests.

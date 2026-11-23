@@ -29,6 +29,10 @@ public final class FileCards {
   if(!available(a,m)){new AlertDialog.Builder(a).setMessage(a.getString(R.string.file_unavailable_help)).setPositiveButton(android.R.string.ok,null).show();return;}
   try{Uri u=uri(m);Intent i=new Intent(Intent.ACTION_VIEW);String mime=a.getContentResolver().getType(u);if(mime==null||mime.equals("*/*"))mime=m.optString("mime",Save.mime(m.optString("name")));i.setDataAndType(u,mime);i.setClipData(ClipData.newRawUri("attachment",u));i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);a.startActivity(i);}catch(ActivityNotFoundException e){Toast.makeText(a,a.getString(R.string.no_file_app),Toast.LENGTH_LONG).show();}catch(Exception e){Toast.makeText(a,a.getString(R.string.file_open_failed)+" "+e.getClass().getSimpleName(),Toast.LENGTH_LONG).show();}
  }
+ public static void share(Activity a,JSONObject m){
+  if(!available(a,m)){open(a,m);return;}
+  try{Uri u=uri(m);String mime=a.getContentResolver().getType(u);if(mime==null||mime.equals("*/*"))mime=m.optString("mime",Save.mime(m.optString("name")));if(mime.isEmpty()||mime.equals("null"))mime=Save.mime(m.optString("name"));Intent send=new Intent(Intent.ACTION_SEND);send.setType(mime);send.putExtra(Intent.EXTRA_STREAM,u);send.setClipData(ClipData.newRawUri("attachment",u));send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);Intent chooser=Intent.createChooser(send,a.getString(R.string.share_file));chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);a.startActivity(chooser);}catch(Exception e){Toast.makeText(a,a.getString(R.string.file_open_failed)+" "+e.getClass().getSimpleName(),Toast.LENGTH_LONG).show();}
+ }
  public static void forward(Activity a,JSONObject m){
   if(!available(a,m)){open(a,m);return;}
   ArrayList<String> labels=new ArrayList<>();ArrayList<ArrayList<JSONObject>> targets=new ArrayList<>();JSONArray peers=Store.peers();
