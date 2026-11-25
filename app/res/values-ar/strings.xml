@@ -428,4 +428,18 @@
 <string name="share_group_member">مجموعة · الإرسال عبر منشئ المجموعة</string>
 <string name="share_group_target">مجموعة: %1$s</string>
 <string name="forward_short">إعادة توجيه</string>
+<string name="continue_label">متابعة</string>
+<string name="delete_grant_title">السماح بحذف الملف</string>
+<string name="delete_grant_note">أندرويد يحتاج إذن لهذا الملف بالتحديد. اختار %1$s من منتقي الملفات. لن يتم حذف ملف مختلف.</string>
+<string name="delete_wrong_file">العنصر المحدد ليس نفس الملف المحفوظ. لم يتم حذف أي شيء.</string>
+<string name="delete_not_verified">الملف ما زال موجودا أو تعذر التحقق من حذفه. لم يتم اعتباره محذوفا.</string>
+<string name="delete_verified_summary">تم الحذف والتحقق: %1$d. محذوف مسبقا: %2$d. لم يحذف: %3$d.</string>
+<string name="delete_verified_cards">الملفات المحذوفة لا تظهر كبطاقات قابلة للاستخدام. الملفات التي فشلت تبقى كما هي. الأجهزة الأخرى لم تتغير.</string>
+<string name="local_file_deleted">تم حذف النسخة المحلية</string>
+<string name="manage_group">إدارة المجموعة</string>
+<string name="manage_admins">إدارة المسؤولين</string>
+<string name="promote_admin">تعيين مسؤول</string>
+<string name="demote_admin">إلغاء دور المسؤول</string>
+<string name="admin_scope_note">المسؤول يستطيع حذف أي ملف مشترك وحذف المجموعة. المنشئ فقط يدير المسؤولين ويظل هو مستضيف الشبكة ويجب أن يبقى متصلا. جميع الأجهزة تحتاج 1.0.20 للأدوار المفوضة. هذا لا ينقل الاستضافة.</string>
+<string name="admin_updated">تم حفظ دور المسؤول. الأجهزة القديمة أو غير المتصلة تظل معلقة.</string>
 </resources>

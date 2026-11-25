@@ -215,7 +215,7 @@ public class ChatActivity extends Activity {
     }
 
     @Override protected void onActivityResult(int req, int res, Intent data) {
-        super.onActivityResult(req, res, data);if(capture!=null&&capture.result(req,res,data))return;if(selection!=null&&selection.activityResult(req,res))return;
+        super.onActivityResult(req, res, data);if(capture!=null&&capture.result(req,res,data))return;if(selection!=null&&selection.activityResult(req,res,data))return;
         if(req==62 && res==RESULT_OK && data!=null && data.getData()!=null && locating!=null){
             Uri u=data.getData();if(!Attachments.readable(this,u)){android.widget.Toast.makeText(this,R.string.attach_permission,1).show();return;}try{getContentResolver().takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
             JSONObject selected=locating;locating=null;

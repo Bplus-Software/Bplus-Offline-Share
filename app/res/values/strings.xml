@@ -428,4 +428,18 @@
 <string name="share_group_member">Group · Sends through the group host</string>
 <string name="share_group_target">Group: %1$s</string>
 <string name="forward_short">Forward</string>
+<string name="continue_label">Continue</string>
+<string name="delete_grant_title">Allow file deletion</string>
+<string name="delete_grant_note">Android needs access to this exact file. Select %1$s in the system file picker. A different file will never be deleted.</string>
+<string name="delete_wrong_file">The selected item is not the same saved file. Nothing was deleted.</string>
+<string name="delete_not_verified">The file still exists, or Android could not verify removal. It was not marked deleted.</string>
+<string name="delete_verified_summary">Deleted and verified: %1$d. Already gone: %2$d. Not deleted: %3$d.</string>
+<string name="delete_verified_cards">Removed files no longer appear as usable file cards. Failed files stay unchanged. Other devices are unchanged.</string>
+<string name="local_file_deleted">Local file deleted</string>
+<string name="manage_group">Manage group</string>
+<string name="manage_admins">Manage admins</string>
+<string name="promote_admin">Make admin</string>
+<string name="demote_admin">Remove admin role</string>
+<string name="admin_scope_note">Admins can delete any shared file and delete the group. Only the creator can manage admins. The creator remains the network host and must stay online. All devices need 1.0.20 for delegated roles. This does not migrate the host.</string>
+<string name="admin_updated">Admin role saved. Offline or older devices remain pending.</string>
 </resources>

@@ -1,0 +1,1 @@
+Test support uses isolated API/storage/network shims, NOT actual Android device providers. Compile this tree with org.json and actual FileDelete.java (delete120) or LocalGroups.java (group120). Run TestDelete120 or TestGroups119/TestRetry119/TestAdmin120 separately.
