@@ -378,7 +378,7 @@
 <string name="update_rate_later">GitHub محدد عدد محاولات الفحص. حاول لاحقاً أو افتح صفحة الإصدارات. وقت المحاولة الجاية مش متاح.</string>
 <string name="update_open_releases">فتح صفحة الإصدارات</string>
 <string name="update_feed_no_new">المصدر البديل مفيهوش تحديث أحدث تم التحقق منه. الفحص الأساسي مش متاح. حاول لاحقاً.</string>
-<string name="share_select_device">اختار الجهاز</string>
+<string name="share_select_device">اختار جهاز أو مجموعة</string>
 <string name="share_ready_count">جاهز للإرسال: %1$d ملفات · %2$d رسائل نصية</string>
 <string name="share_total_size">الإجمالي: %1$s</string>
 <string name="share_kind_computer">كمبيوتر</string>
@@ -412,4 +412,20 @@
 <string name="group_name_required">اكتب اسم للجروب</string>
 <string name="group_create_failed">تعذّر حفظ الجروب. حاول تاني.</string>
 <string name="group_pair_first">اربط جهاز الأول، وبعدها ابعت له دعوة للجروب.</string>
+
+    
+    <string name="folder_fallback">مزود الملفات لا يسمح بفتح المجلد المحدد. سيتم فتح التنزيلات بدلا منه.</string>
+    <string name="group_roles_note">المنشئ (المسؤول): حذف المجموعة أو أي ملف مشترك. الأعضاء: حذف ملفاتهم فقط. حذف النسخة المحلية اختيار منفصل.</string>
+    <string name="group_creator">المنشئ / المسؤول</string>
+    <string name="delete_group">حذف المجموعة للجميع</string>
+    <string name="delete_group_note">حذف المجموعة والمحادثة المشتركة للجميع؟ الملفات المحملة تبقى على الأجهزة. الأجهزة غير المتصلة أو القديمة تظل معلقة حتى تتصل وتحدث التطبيق.</string>
+    <string name="group_delete_file_note">إزالة الملف المشترك من المجموعة للجميع؟ النسخ المحملة والأصلية تبقى على الأجهزة. الأجهزة غير المتصلة أو القديمة تظل معلقة حتى تتصل وتحدث التطبيق.</string>
+    <string name="group_delete_pending">تحديثات حذف معلقة: %1$d. أعد اتصال الأجهزة وحدث التطبيقات القديمة.</string>
+    <string name="group_deleted_host">تم حذف المجموعة بواسطة منشئها</string>
+    <string name="group_file_deleted">تم حذف الملف بواسطة %1$s</string>
+<string name="member_delete_pending"> · معلق - غير متصل أو تطبيق قديم</string>
+<string name="share_group_host">مجموعة · أنت المنشئ</string>
+<string name="share_group_member">مجموعة · الإرسال عبر منشئ المجموعة</string>
+<string name="share_group_target">مجموعة: %1$s</string>
+<string name="forward_short">إعادة توجيه</string>
 </resources>

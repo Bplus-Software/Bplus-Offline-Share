@@ -378,7 +378,7 @@
 <string name="update_rate_later">GitHub is limiting update checks. Try later or open the releases page. Reset time is unavailable.</string>
 <string name="update_open_releases">Open releases page</string>
 <string name="update_feed_no_new">The backup feed has no verified newer update. Full API check is unavailable. Try again later.</string>
-<string name="share_select_device">Choose a device</string>
+<string name="share_select_device">Choose a device or group</string>
 <string name="share_ready_count">Ready to send: %1$d files · %2$d text messages</string>
 <string name="share_total_size">Total: %1$s</string>
 <string name="share_kind_computer">Computer</string>
@@ -412,4 +412,20 @@
 <string name="group_name_required">Enter a group name</string>
 <string name="group_create_failed">Could not save group. Try again.</string>
 <string name="group_pair_first">Pair a device first, then invite it to this group.</string>
+
+    
+    <string name="folder_fallback">This file provider cannot reveal the exact folder. Opening Downloads instead.</string>
+    <string name="group_roles_note">Creator (admin): delete the group or any shared file. Members: delete their own uploads. Local file deletion is separate.</string>
+    <string name="group_creator">Creator / admin</string>
+    <string name="delete_group">Delete group for everyone</string>
+    <string name="delete_group_note">Delete this group and its shared conversation for everyone? Downloaded files stay on each device. Offline or older devices may remain pending until they reconnect and update.</string>
+    <string name="group_delete_file_note">Remove this shared file from the group for everyone? Downloaded copies and original files stay on devices. Offline or older devices stay pending until they reconnect and update.</string>
+    <string name="group_delete_pending">%1$d deletion updates pending. Reconnect all devices and update older apps.</string>
+    <string name="group_deleted_host">Group was deleted by its host</string>
+    <string name="group_file_deleted">File deleted by %1$s</string>
+<string name="member_delete_pending"> · Pending - offline or older app</string>
+<string name="share_group_host">Group · You are the creator</string>
+<string name="share_group_member">Group · Sends through the group host</string>
+<string name="share_group_target">Group: %1$s</string>
+<string name="forward_short">Forward</string>
 </resources>

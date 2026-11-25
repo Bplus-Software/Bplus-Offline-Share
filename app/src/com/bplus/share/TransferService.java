@@ -76,7 +76,7 @@ public class TransferService extends Service {
         if(!bound){stopForeground(STOP_FOREGROUND_REMOVE);stopSelf();return;}
         startServer();
         startAutosendWatcher();
-        Outbox.start();Unpair.start();
+        Outbox.start();Unpair.start();LocalGroups.start();
     }
 
     private Notification buildNotification(String title, String text) {

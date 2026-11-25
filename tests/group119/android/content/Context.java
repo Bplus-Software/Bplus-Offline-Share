@@ -1,0 +1,1 @@
+package android.content;public class Context{public Resolver getContentResolver(){return new Resolver();}public static class Resolver{public java.io.InputStream openInputStream(android.net.Uri u){return new java.io.ByteArrayInputStream("abc".getBytes());}}}

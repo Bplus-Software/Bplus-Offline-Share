@@ -1,0 +1,1 @@
+Compile all Java shims under this directory and app/src/com/bplus/share/LocalGroups.java with Java11+ and org.json on classpath. Run com.bplus.share.TestGroups119 and TestRetry119 separately. Shims deliberately isolate Android UI/storage/network; they are NOT device tests.

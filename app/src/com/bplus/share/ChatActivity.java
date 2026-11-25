@@ -158,7 +158,7 @@ public class ChatActivity extends Activity {
                 TextView text=Ui.t(this,m.optString("body"),14,me?Color.WHITE:Ui.text,App.cairoSB);
                 ChatLinks.apply(this,text,()->selection.active());text.setLineSpacing(0,1.25f);text.setMaxWidth(Ui.dp(this,280));text.setBackground(Ui.round(me?Ui.accent:Ui.card,16,this));Ui.pad(text,13,9,13,9,this);if(me&&m.optString("state").equals("failed"))text.setOnClickListener(v->retryMessage(m));text.setOnLongClickListener(v->{selection.toggle(m);return true;});bub=text;
             }else{
-                bub=FileCards.card(this,m,()->selection.toggle(m));
+                bub=FileCards.card(this,m,()->selection.toggle(m),()->fileMenu(m));
 
 
                 if(!selection.active()&&!Attachments.state(this,m).equals("ok"))bub.setOnClickListener(v->locate(m));
@@ -254,12 +254,13 @@ public class ChatActivity extends Activity {
         locating=m;Attachments.locate(this,m,62);
     }
     private void fileMenu(JSONObject m){
-        String[] options={getString(R.string.open_file),getString(R.string.forward_file),getString(R.string.remove_chat),getString(R.string.locate_file),getString(R.string.share_file),getString(R.string.retry_file)};
+        String[] options={getString(R.string.open_file),getString(R.string.forward_file),getString(R.string.remove_chat),getString(R.string.locate_file),getString(R.string.share_file),getString(R.string.retry_file),getString(R.string.delete_local_files),getString(R.string.delete_everyone),getString(R.string.open_folder)};
         new AppDialog(this).setTitle(m.optString("name")).setItems(options,(d,n)->{
-            if(n==0){if(FileCards.uri(m)==null)locate(m);else FileCards.open(this,m);}
+            if(n==8){Attachments.folder(this,m);return;}if(n==7){java.util.ArrayList<JSONObject> chosen=new java.util.ArrayList<>();chosen.add(m);RecallAction.show(this,peerId,chosen,this::renderThread);return;}if(n==6){selection.deleteLocal(m);return;}if(n==0){if(FileCards.uri(m)==null)locate(m);else FileCards.open(this,m);}
             else if(n==1)FileCards.forward(this,m);
             else if(n==3)locate(m);
             else if(n==5){
+                if(m.optString("job").matches("[a-f0-9]{24}")&&m.optBoolean("me")){exec.execute(()->FileJobs.retry(peerId,m));return;}
                 if(!FileCards.available(this,m)){locate(m);return;}
                 new AppDialog(this).setTitle(getString(R.string.retry_file)).setMessage(m.optString("error",getString(R.string.old_failure))+"\n\n"+getString(R.string.forward_confirm,m.optString("name"),peer.optString("name"))).setNegativeButton(getString(R.string.cancel),null).setPositiveButton(getString(R.string.send_now),(retryDialog,retryWhich)->exec.execute(()->{JSONObject current=Store.peerById(peerId);boolean ok=current!=null&&TransferService.sendToPeer(current,FileCards.uri(m),m.optString("name"),m.optLong("size"));runOnUiThread(()->{renderThread();android.widget.Toast.makeText(this,getString(ok?R.string.sent:R.string.file_failed_actions),android.widget.Toast.LENGTH_LONG).show();});})).show();
             }
