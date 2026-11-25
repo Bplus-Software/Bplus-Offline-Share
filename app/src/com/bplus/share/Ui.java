@@ -131,6 +131,9 @@ public class Ui {
         return v;
     }
 
+    /** Transparent icon with a separate 44dp touch target; never uses filled ghost-button padding. */
+    public static TextView icon(Context c,String symbol,String label){TextView v=t(c,symbol,22,dim,null);v.setTypeface(android.graphics.Typeface.DEFAULT);v.setGravity(Gravity.CENTER);v.setIncludeFontPadding(false);v.setSingleLine(true);v.setBackgroundColor(Color.TRANSPARENT);v.setPadding(0,0,0,0);v.setMinWidth(dp(c,44));v.setMinHeight(dp(c,44));v.setLayoutParams(lp(dp(c,44),dp(c,44)));v.setContentDescription(label);v.setTooltipText(label);return v;}
+
     // settings-style row: name + sub on the left, value on the right
     public static LinearLayout setRow(Context c, String name, String sub, String value) {
         LinearLayout r = row(c);

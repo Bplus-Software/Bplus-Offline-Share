@@ -1,0 +1,6 @@
+package com.bplus.share;
+import android.app.*;import android.content.*;import android.net.Uri;import android.text.*;import android.text.style.*;import android.text.method.LinkMovementMethod;import android.view.View;import android.widget.*;
+/** Explicit web URLs only; no preview fetch or executable URI scheme. */
+public final class ChatLinks{
+ public static void apply(Activity a,TextView text,java.util.function.BooleanSupplier selecting){SpannableString s=new SpannableString(text.getText());java.util.regex.Matcher m=WebLinks.PATTERN.matcher(s);while(m.find()){String raw=WebLinks.clean(m.group());if(!WebLinks.safe(raw))continue;final String url=raw;s.setSpan(new ClickableSpan(){public void onClick(View v){if(selecting.getAsBoolean())return;try{a.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(url)).addCategory(Intent.CATEGORY_BROWSABLE));}catch(Exception unavailable){android.widget.Toast.makeText(a,R.string.link_open_failed,1).show();}}public void updateDrawState(TextPaint p){p.setUnderlineText(true);p.setColor(text.getCurrentTextColor());}},m.start(),m.start()+raw.length(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);}text.setText(s);text.setMovementMethod(LinkMovementMethod.getInstance());text.setLinksClickable(true);}
+}

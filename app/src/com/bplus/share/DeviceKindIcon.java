@@ -1,0 +1,4 @@
+package com.bplus.share;
+import android.graphics.*;import android.graphics.drawable.Drawable;
+/** Vector strokes avoid emoji or font-dependent platform glyphs. */
+public final class DeviceKindIcon extends Drawable{private final String kind;private final Paint p=new Paint(3);public DeviceKindIcon(String k,int color){kind=k;p.setColor(color);p.setStyle(Paint.Style.STROKE);p.setStrokeWidth(1.5f);}public void draw(Canvas c){c.save();c.translate(getBounds().left,getBounds().top);c.scale(getBounds().width()/24f,getBounds().height()/24f);if(kind.equals("computer")){c.drawRoundRect(2,3,22,17,2,2,p);c.drawLine(8,21,16,21,p);c.drawLine(12,17,12,21,p);}else if(kind.equals("phone")){c.drawRoundRect(6,1,18,23,2,2,p);c.drawLine(10,19,14,19,p);}else{c.drawRoundRect(3,3,21,21,3,3,p);c.drawCircle(12,12,3,p);}c.restore();}public void setAlpha(int a){p.setAlpha(a);}public void setColorFilter(ColorFilter f){p.setColorFilter(f);}public int getOpacity(){return PixelFormat.TRANSLUCENT;}}

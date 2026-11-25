@@ -1,0 +1,3 @@
+package com.bplus.share;
+import java.net.*;import java.util.regex.*;
+public final class WebLinks{public static final Pattern PATTERN=Pattern.compile("(?i)(?<![A-Za-z0-9+.-])https?://[^\\s<>\\\"'\\u0000-\\u001f]+");public static String clean(String s){while(!s.isEmpty()&&".,;!?)،؛".indexOf(s.charAt(s.length()-1))>=0)s=s.substring(0,s.length()-1);return s;}public static boolean safe(String s){try{URI u=new URI(s);return ("http".equalsIgnoreCase(u.getScheme())||"https".equalsIgnoreCase(u.getScheme()))&&u.getHost()!=null&&!u.getHost().isEmpty()&&u.getRawUserInfo()==null;}catch(Exception e){return false;}}}

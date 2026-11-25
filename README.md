@@ -1,6 +1,6 @@
 # B+ Offline Share
 
-Official Android release: 1.0.0. Android versionCode23. Package com.bplus.share, original signing certificate.
+Official Android release: 1.0.0. Candidate1.0.1 is a pre-release with durable private text queue, profile sync, remove-device and delivery/read status. See release101-notes.txt and PROTOCOL-v2-SYNC.md for compatibility and test limits. Android versionCode23. Package com.bplus.share, original signing certificate.
 
 Direct sharing on the same trusted Wi-Fi network: QR/nearby pairing, chats, files, voice notes and Android share targets. Android8 or later, Arabic and English. Existing Downloads/B+ Share storage path retained for compatibility. No Firebase/internet transport in this release. Local HTTP is not encrypted, use trusted private networks only.
 

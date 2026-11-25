@@ -60,13 +60,13 @@ public class DevicesActivity extends Activity {
     }
 
     @Override protected void onResume() {
-        super.onResume();
+        super.onResume();TransferService.listen("device-profile",(type,data)->runOnUiThread(()->{if(!isFinishing())refreshRowsOnly();}));
         refresh();
     }
 
     private void refresh() {
         listBox.removeAllViews();
-        JSONArray peers = Store.peers();
+        JSONArray peers = Store.listedPeers();
         if (peers.length() == 0) {
             TextView none = Ui.t(this, "—", 14, Ui.dim, App.cairoSB);
             none.setGravity(Gravity.CENTER);
@@ -104,7 +104,7 @@ public class DevicesActivity extends Activity {
     private void refreshRowsOnly() {
         // simple approach: rebuild (cheap for a small list)
         listBox.removeAllViews();
-        JSONArray peers = Store.peers();
+        JSONArray peers = Store.listedPeers();
         for (int i = 0; i < peers.length(); i++) {
             JSONObject peer = peers.optJSONObject(i);
             if (peer != null) listBox.addView(peerRow(peer));
@@ -112,35 +112,22 @@ public class DevicesActivity extends Activity {
     }
 
     private View peerRow(JSONObject peer) {
-        LinearLayout r = Ui.row(this);
+        LinearLayout r = Ui.col(this);
         r.setBackground(Ui.roundBorder(Ui.card, Ui.border, 16, this));
         Ui.pad(r, 12, 12, 12, 12, this);
-        LinearLayout.LayoutParams lp = Ui.lp(-1, -2);
-        lp.bottomMargin = Ui.dp(this, 8);
-        r.setLayoutParams(lp);
-        TextView ic = Ui.t(this, "📱", 20, Ui.dim, App.cairoSB);
-        ic.setGravity(Gravity.CENTER);
-        ic.setBackground(Ui.round(Ui.field, 12, this));
-        r.addView(ic, Ui.lp(Ui.dp(this, 42), Ui.dp(this, 42)));
-        LinearLayout meta = Ui.col(this);
-        Ui.pad(meta, 13, 0, 13, 0, this);
-        meta.addView(Ui.t(this, peer.optString("name"), 14.5f, Ui.text, App.cairoB));
-        boolean on = peer.optBoolean("online");
-        TextView st = Ui.t(this, "● " + getString(on ? R.string.online_wifi : R.string.not_nearby), 11.5f,
-                on ? Ui.green : Ui.dim, App.cairoSB);
-        meta.addView(st);
-        r.addView(meta, Ui.lpw(1));
-        TextView send = Ui.t(this, getString(R.string.send), 12.5f, Color.WHITE, App.cairoB);
-        send.setBackground(Ui.round(Ui.accent, 12, this));
-        send.setGravity(Gravity.CENTER);
-        Ui.pad(send, 16, 8, 16, 8, this);
-        send.setOnClickListener(v -> {
-            Intent i = new Intent(this, ChatActivity.class);
-            i.putExtra("peer", peer.optString("id"));
-            i.putExtra("attach", true);
-            startActivity(i);
-        });
-        r.addView(send);
+        LinearLayout.LayoutParams lp = Ui.lp(-1, -2);lp.bottomMargin = Ui.dp(this, 8);r.setLayoutParams(lp);
+        LinearLayout identity=Ui.row(this);r.addView(identity,Ui.lp(-1,-2));
+        TextView ic=Ui.t(this,"📱",20,Ui.dim,App.cairoSB);ic.setGravity(Gravity.CENTER);identity.addView(ic,Ui.lp(Ui.dp(this,42),Ui.dp(this,42)));
+        LinearLayout meta=Ui.col(this);Ui.pad(meta,12,0,0,0,this);
+        TextView title=Ui.t(this,peer.optString("name"),16,Ui.text,App.cairoB);title.setSingleLine(true);title.setEllipsize(android.text.TextUtils.TruncateAt.END);meta.addView(title,Ui.lp(-1,-2));
+        boolean unpaired=peer.optBoolean("unpaired"),on=peer.optBoolean("online");TextView st=Ui.t(this,unpaired?getString(R.string.not_paired):"● "+getString(on?R.string.online_wifi:R.string.not_nearby),12,unpaired?0xffff6565:on?Ui.green:Ui.dim,App.cairoSB);st.setSingleLine(true);st.setEllipsize(android.text.TextUtils.TruncateAt.END);meta.addView(st,Ui.lp(-1,-2));identity.addView(meta,Ui.lpw(1));
+        if(unpaired){st.setBackground(Ui.roundBorder(Ui.bg,0xffff6565,3,this));Ui.pad(st,6,1,6,1,this);}
+        LinearLayout actions=Ui.row(this);Ui.pad(actions,0,10,0,0,this);r.addView(actions,Ui.lp(-1,-2));
+        TextView send=Ui.t(this,getString(R.string.send),13,Color.WHITE,App.cairoB);send.setGravity(Gravity.CENTER);send.setSingleLine(true);send.setEllipsize(android.text.TextUtils.TruncateAt.END);send.setBackground(Ui.round(Ui.accent,12,this));send.setEnabled(!unpaired);send.setAlpha(unpaired?.35f:1f);actions.addView(send,new LinearLayout.LayoutParams(0,Ui.dp(this,44),1));
+        send.setOnClickListener(v->{Intent i=new Intent(this,ChatActivity.class);i.putExtra("peer",peer.optString("id"));i.putExtra("attach",true);startActivity(i);});
+        if(!unpaired){TextView settings=Ui.icon(this,"⚙",getString(R.string.device_settings));LinearLayout.LayoutParams settingsLp=Ui.lp(Ui.dp(this,44),Ui.dp(this,44));settingsLp.setMarginStart(Ui.dp(this,8));actions.addView(settings,settingsLp);settings.setOnClickListener(v->DeviceSettingsActivity.open(this,peer.optString("id")));}
+        TextView menu=Ui.icon(this,"⋮",getString(R.string.device_actions));actions.addView(menu);menu.setOnClickListener(v->DeviceRemoval.menu(this,peer.optString("id"),this::refresh));
+
         r.setOnClickListener(v -> {
             Intent i = new Intent(this, ChatActivity.class);
             i.putExtra("peer", peer.optString("id"));
@@ -193,7 +180,7 @@ public class DevicesActivity extends Activity {
         ImageView qr = new ImageView(this);
         JSONObject payload = new JSONObject();
         try {
-            payload.put("v", 1); payload.put("app", "bplus-share");
+            payload.put("v", 1); payload.put("app", "bplus-share");payload.put("pairEpoch",Recall.secret());
             payload.put("id", Store.get("deviceId", ""));
             payload.put("name", Profile.local().optString("name"));payload.put("username",Profile.local().optString("username"));
             payload.put("ip", Net.localIp(this)); payload.put("port", Store.PORT);
@@ -253,4 +240,6 @@ public class DevicesActivity extends Activity {
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
+    @Override protected void onPause(){TransferService.unlisten("device-profile");super.onPause();}
+
 }

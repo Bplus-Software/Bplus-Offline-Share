@@ -1,0 +1,12 @@
+package com.bplus.share;
+import org.json.*;import java.net.*;import java.io.*;
+/** The release tag determines the ONLY acceptable APK name and URL. */
+public final class UpdateAsset{
+ public static final String REPO="Bplus-Software/Bplus-Offline-Share";
+ public static final String[] REPOS={REPO,"basem-sadoun/Bplus-Offline-Share","basem-sadoun/Bplus-Share"};
+ public static boolean allowedPath(String path,String suffix){for(String repo:REPOS)if(("/"+repo+suffix).equals(path))return true;return false;}
+ public static String fetch(String suffix)throws IOException{IOException last=null;for(String repo:REPOS)try{return UpdateHttp.text("https://"+(suffix.startsWith("/releases.atom")?"github.com/":"api.github.com/repos/")+repo+suffix);}catch(UpdateHttp.HttpFailure failure){if(failure.status!=404)throw failure;last=failure;}throw last==null?new IOException("Update source unavailable"):last;}
+
+ public static final String API="https://api.github.com/repos/"+REPO+"/releases?per_page=100";
+ public static JSONObject exact(JSONObject release)throws Exception{String tag=release.optString("tag_name");if(!tag.matches("v[0-9]+\\.[0-9]+\\.[0-9]+"))throw new IOException("Unrecognized release tag");if(release.optBoolean("draft"))throw new IOException("Draft release");String name="BplusShare-"+tag.substring(1)+".apk";JSONArray assets=release.optJSONArray("assets");JSONObject found=null;if(assets!=null)for(int i=0;i<assets.length();i++){JSONObject a=assets.optJSONObject(i);if(a!=null&&name.equals(a.optString("name"))){if(found!=null)throw new IOException("Duplicate update asset");found=a;}}if(found==null)throw new IOException("Exact Share APK missing");if(!found.optString("state","uploaded").equals("uploaded"))throw new IOException("APK not uploaded");long size=found.optLong("size",-1);if(size<=0||size>268435456L)throw new IOException("Invalid APK size");String digest=found.optString("digest");if(!digest.matches("sha256:[a-fA-F0-9]{64}"))throw new IOException("Missing or invalid GitHub SHA-256");URI uri=new URI(found.getString("browser_download_url"));String suffix="/releases/download/"+tag+"/"+name;if(!"https".equals(uri.getScheme())||!"github.com".equals(uri.getHost())||uri.getPort()!=-1||uri.getRawUserInfo()!=null||uri.getRawQuery()!=null||uri.getRawFragment()!=null||!allowedPath(uri.getRawPath(),suffix))throw new IOException("Unexpected Share APK URL");if(ReleaseChoice.buildCode(release)<=0)throw new IOException("Missing Android build metadata");return found;}
+}

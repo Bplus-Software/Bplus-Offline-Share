@@ -1,0 +1,20 @@
+B+ Offline Share 1.0.2, Android device-test pre-release
+
+BPLUS_VERSION_CODE: 25
+
+- Incoming notifications use the paired sender name as their title. Voice: You received a voice message / وصلتك رسالة صوتية. Photo: You received a photo / وصلتك صورة. Video: You received a video / وصلك فيديو. File: You received a file / وصلك ملف. Text notifications contain the text itself. Unknown sender fallback: Unknown sender / مرسل غير معروف. No raw media filenames in notifications.
+- Chat-list last-message previews use a microphone + Voice message / رسالة صوتية, camera + Photo / صورة, play + Video / فيديو, paperclip + File / ملف. Text is shown as text. No duration claimed. Applies to both private/group incoming notification paths and list previews. Audio files are labeled voice messages using MIME/extension, consistent with existing audio playback support.
+- Each private-device chat-list row now has its own visible overflow menu offering Remove device / حذف الجهاز; long-press is also supported. Existing Devices-list remove button and chat menu remain. Confirmation preserves local chats/files, cancels queued text and removes local pairing only. No remote deletion. In-flight requests can complete.
+- No peer names changed automatically. A model label such as SM-A556E is the default. The user can change their display name in Profile or device name in Settings; paired names refresh through1.0.1+ LAN sync.
+
+Same com.bplus.share package and original signing certificate, versionCode25 increases from24. Install over the app, do not uninstall or clear data. Updater path allowlist accepts exact old Bplus-Share and renamed Bplus-Offline-Share github.com paths. From1.0.1 use the test-version update channel for this pre-release; official-only stays1.0.0. Installed1.0.0 still needs one manual migration because of repository rename.
+
+Validated: signed SDK34 build, manifest package/version and signer,9 media-classification checks and both EN/AR resource sets; shared notification/list routes and row-removal confirmation wiring; existing19 sync/auth/queue checks, version/reset/updater selector regressions. Published1.0.1 APK independently downloaded and SHA verified unchanged; its release still has Windows.exe, source.zip and one APK. Its actual shared live API selection and canonical renamed path acceptance verified. No1.0.1 assets modified.
+
+Not independently verified: Android notification shade/list/menu pixels, actual notification delivery on a phone, Android OS permission/battery behavior, installer/data preservation or two-device Android/Windows runtime. No duration added to preview. This remains a pre-release, do not promote without device evidence. Trusted local network only, no encryption/internet transport added.
+
+Android APK: BplusShare-1.0.2.apk
+Android SHA-256: 6fe7996ffb59668b8026f11933c2455238ab3c4c6f2a987d80f75dac194d015b
+Android bytes: 615387
+
+Owner refinement: removed pairings stay visible as a token-free archived device row with small red bordered Not paired / غير مقترن badge. Active trust/token/address is removed; queued text canceled. Local chat remains readable. Same-ID QR/Nearby re-pair removes archive and restores one active row.9 actual Store JVM checks cover archive, queue cancellation, retained records and repeated remove/re-pair. No protocol changes.

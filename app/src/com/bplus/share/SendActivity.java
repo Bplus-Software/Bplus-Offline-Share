@@ -50,7 +50,7 @@ public class SendActivity extends Activity {
     }
 
     @Override protected void onDestroy() {
-        TransferService.unlisten("send");
+        if(isFinishing()&&state!=3&&batchId!=null)TransferService.cancelBatch(batchId);TransferService.unlisten("send");
         super.onDestroy();
     }
 
@@ -207,7 +207,7 @@ public class SendActivity extends Activity {
         String ip = Net.localIp(this);
         JSONObject payload = new JSONObject();
         try {
-            payload.put("v", 1); payload.put("app", "bplus-share");
+            payload.put("v", 1); payload.put("app", "bplus-share");payload.put("pairEpoch",Recall.secret());
             payload.put("id", Store.get("deviceId", ""));
             payload.put("name", Profile.local().optString("name"));payload.put("username",Profile.local().optString("username"));
             payload.put("ip", ip); payload.put("port", Store.PORT);
@@ -239,7 +239,7 @@ public class SendActivity extends Activity {
         wrap.addView(chip, chlp);
         container.addView(wrap, Ui.lpW1());
         TextView cancel = Ui.ghost(this, getString(R.string.cancel));
-        cancel.setOnClickListener(v -> finish());
+        cancel.setOnClickListener(v -> {if(batchId!=null)TransferService.cancelBatch(batchId);finish();});
         LinearLayout bottom = Ui.row(this);
         bottom.setGravity(Gravity.CENTER);
         bottom.setBackgroundColor(Ui.bar);
@@ -315,7 +315,7 @@ public class SendActivity extends Activity {
         info.addView(Ui.t(this, getString(R.string.dont_lock), 11, Ui.dim, App.cairoSB));
         bottom.addView(info, Ui.lpw(1));
         TextView cancel = Ui.ghost(this, getString(R.string.cancel));
-        cancel.setOnClickListener(v -> finish());
+        cancel.setOnClickListener(v -> {if(batchId!=null)TransferService.cancelBatch(batchId);finish();});
         bottom.addView(cancel);
         container.addView(bottom);
     }

@@ -15,7 +15,7 @@ import java.util.Enumeration;
 
 public class Net {
 
-    private static final ThreadLocal<String> error = new ThreadLocal<>();
+    private static final ThreadLocal<String> error = new ThreadLocal<>();private static final ThreadLocal<Integer> httpStatus=new ThreadLocal<>();public static int lastHttp(){Integer c=httpStatus.get();return c==null?0:c;}
     public static String lastError(){String e=error.get();return e==null?"No response":e;}
     private static void failed(Exception e){error.set(e.getClass().getSimpleName()+": "+(e instanceof java.net.SocketTimeoutException?"Connection timed out":e instanceof java.net.ConnectException?"Connection refused or unreachable":e instanceof java.net.NoRouteToHostException?"No route to device":"Network or response error"));}
 
@@ -62,15 +62,20 @@ public class Net {
         return h;
     }
 
+    public static JSONObject contactProfile(JSONObject peer)throws Exception{HttpURLConnection h=open("POST","http://"+peer.getString("ip")+":"+peer.optInt("port",Store.PORT)+"/profile-details");try{h.setReadTimeout(6000);h.setDoOutput(true);JSONObject b=new JSONObject().put("from",Store.get("deviceId","")).put("senderToken",Store.token()).put("targetToken",peer.getString("token"));byte[] bytes=b.toString().getBytes("UTF-8");h.setFixedLengthStreamingMode(bytes.length);try(OutputStream out=h.getOutputStream()){out.write(bytes);}if(h.getResponseCode()!=200)throw new IOException("Profile unavailable");ByteArrayOutputStream buffer=new ByteArrayOutputStream();try(InputStream in=h.getInputStream()){byte[] chunk=new byte[512];int count;while((count=in.read(chunk))>0){if(buffer.size()+count>2000)throw new IOException("Profile too large");buffer.write(chunk,0,count);}}String raw=buffer.toString("UTF-8");JSONObject result=new JSONObject(raw);if(!peer.getString("id").equals(result.optString("id")))throw new IOException("Wrong peer");return result;}finally{h.disconnect();}}
+
     public static JSONObject ping(String ip,int port,String token){
         error.remove();java.net.HttpURLConnection h=null;
         try{h=open("GET","http://"+ip+":"+port+"/ping?token="+token);h.setReadTimeout(8000);int code=h.getResponseCode();if(code!=200){error.set("HTTP "+code);return null;}return new JSONObject(readAll(h.getInputStream()));}catch(Exception e){failed(e);return null;}finally{if(h!=null)h.disconnect();}
     }
 
     public static JSONObject pair(String ip, int port, String qrToken) {
+        return pair(ip,port,qrToken,"");
+    }
+    public static JSONObject pair(String ip,int port,String qrToken,String epoch){
         error.remove();
         try {
-            JSONObject body = Profile.local();
+            JSONObject body = Profile.local();if(epoch.matches("[a-f0-9]{64}"))body.put("pairEpoch",epoch);
             body.put("token", Store.token());
             HttpURLConnection h = open("POST", "http://" + ip + ":" + port + "/pair?token=" + qrToken);
             h.setDoOutput(true);
@@ -126,29 +131,22 @@ public class Net {
     // push a file to a peer's inbox
     public static boolean send(Context c, String ip, int port, String token, Uri uri, String name, long size, Progress pr) {
         return send(c,ip,port,token,uri,name,size,pr,"","");}
-    public static boolean send(Context c,String ip,int port,String token,Uri uri,String name,long size,Progress pr,String wire,String key){
-        error.remove();
-        try {
-            HttpURLConnection h = open("POST", "http://" + ip + ":" + port + "/recv?token=" + token
-                    + "&name=" + java.net.URLEncoder.encode(name, "UTF-8") + "&from=" + Store.get("deviceId", "")+"&wire="+wire+"&key="+key+"&senderToken="+Store.token());
-            h.setDoOutput(true);
-            h.setRequestProperty("Content-Type", "application/octet-stream");
-            h.setFixedLengthStreamingMode(size);
-            InputStream in = c.getContentResolver().openInputStream(uri);
-            OutputStream out = new BufferedOutputStream(h.getOutputStream());
-            byte[] buf = new byte[65536];
-            long done = 0; int n;
-            while ((n = in.read(buf)) > 0) {
-                out.write(buf, 0, n);
-                done += n;
-                if (pr != null) pr.onProgress(done, size);
-            }
-            out.flush(); in.close();
-            boolean ok = h.getResponseCode() == 200;
-            if (!ok) try { out.close(); } catch (Exception ignored) {}
-            if(!ok)error.set("HTTP "+h.getResponseCode());
-            return ok;
-        } catch (Exception e) { failed(e); return false; }
+    private static final java.util.concurrent.ConcurrentHashMap<String,HttpURLConnection> autoConnections=new java.util.concurrent.ConcurrentHashMap<>();
+    public static void cancelAuto(String id){HttpURLConnection h=autoConnections.remove(id);if(h!=null)new Thread(h::disconnect).start();}
+    public static boolean send(Context c,String ip,int port,String token,Uri uri,String name,long size,Progress pr,String wire,String key){return sendGuarded(c,ip,port,token,uri,name,size,pr,wire,key,"",()->true);}
+    public static boolean sendGuarded(Context c,String ip,int port,String token,Uri uri,String name,long size,Progress pr,String wire,String key,String autoId,java.util.function.BooleanSupplier allowed){
+        return sendJob(c,ip,port,token,uri,name,size,pr,wire,key,autoId,allowed,"");
+    }
+    public static boolean sendJob(Context c,String ip,int port,String token,Uri uri,String name,long size,Progress pr,String wire,String key,String autoId,java.util.function.BooleanSupplier allowed,String job){
+        error.remove();httpStatus.remove();TransferTiming timing=TransferTiming.begin();HttpURLConnection h=null;
+        try{
+            if(!allowed.getAsBoolean())throw new IOException("Automatic send stopped");
+            h=open("POST","http://"+ip+":"+port+"/recv?token="+token+"&name="+java.net.URLEncoder.encode(name,"UTF-8")+"&from="+Store.get("deviceId","")+"&wire="+wire+"&key="+key+"&senderToken="+Store.token()+"&job="+job);
+            if(!autoId.isEmpty())autoConnections.put(autoId,h);
+            h.setDoOutput(true);h.setRequestProperty("Content-Type","application/octet-stream");h.setFixedLengthStreamingMode(size);
+            if(!allowed.getAsBoolean())throw new IOException("Automatic send stopped");
+            try(InputStream in=c.getContentResolver().openInputStream(uri);OutputStream out=new BufferedOutputStream(h.getOutputStream())){timing.opened();byte[] buf=new byte[65536];long done=0;int n;while(true){long r=System.nanoTime();n=in.read(buf);long w=System.nanoTime();if(n<=0)break;if(!allowed.getAsBoolean())throw new IOException("Automatic send stopped");out.write(buf,0,n);long callback=System.nanoTime();done+=n;if(pr!=null)pr.onProgress(done,size);timing.chunk(n,w-r,callback-w,System.nanoTime()-callback);}if(done!=size)throw new IOException("Source size changed");if(!allowed.getAsBoolean())throw new IOException("Automatic send stopped");out.flush();if(!allowed.getAsBoolean())throw new IOException("Automatic send stopped");int code=h.getResponseCode();httpStatus.set(code);timing.ack(code);boolean ok=code==200;if(!ok)error.set("HTTP "+code);return ok;}
+        }catch(Exception e){failed(e);if(h!=null&&allowed.getAsBoolean())try{int status=h.getResponseCode();httpStatus.set(status);if(status>=400)error.set("HTTP "+status);}catch(Exception ignored){}return false;}finally{if(h!=null){if(!autoId.isEmpty())autoConnections.remove(autoId,h);h.disconnect();}}
     }
 
     public static boolean sendMsg(String ip,int port,String token,String text){

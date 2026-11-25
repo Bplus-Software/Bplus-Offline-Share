@@ -156,7 +156,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
             String ip = payload.optString("ip");
             int port = payload.optInt("port", Store.PORT);
             String qrToken = payload.optString("token");
-            JSONObject res = Net.pair(ip, port, qrToken);
+            JSONObject res = Net.pair(ip, port, qrToken,payload.optString("pairEpoch"));
             if (res == null) { pairError=Net.lastError(); main.post(this::failPair); return; }
             peerId = res.optString("id");
             peerName = res.optString("name");
@@ -167,10 +167,10 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
                 peer.put("name", peerName);
                 peer.put("ip", ip);
                 peer.put("port", port);
-                peer.put("token", qrToken);
+                peer.put("token", qrToken);String epoch=payload.optString("pairEpoch");if(epoch.matches("[a-f0-9]{64}")&&epoch.equals(res.optString("pairEpoch")))peer.put("pairEpoch",epoch);
                 peer.put("lastSeen", System.currentTimeMillis());
                 Store.upsertPeer(peer);
-            } catch (Exception ignored) {}
+            } catch (Exception invalid) {pairError="Invalid pairing profile or save failed";main.post(this::failPair);return;}
             // History migration requires the explicit action on the paired screen.
             String batch = payload.optString("batch", "");
             if (!batch.isEmpty()) {

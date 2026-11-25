@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 public class SettingsActivity extends Activity {
     private static final int REQ_TREE = 71;
-    private static final String REPO = "basem-sadoun/Bplus-Share";
+
     private LinearLayout box;
     private TextView updateValue;
 
@@ -39,6 +39,8 @@ public class SettingsActivity extends Activity {
         box.removeAllViews();
         box.addView(Ui.secHead(this, getString(R.string.sec_transfer)));
 
+        LinearLayout retries=Ui.setRow(this,getString(R.string.file_auto_retry),getString(R.string.file_auto_retry_note),Store.get("fileAutoRetry","1").equals("1")?getString(R.string.autosend_on):getString(R.string.autosend_off));box.addView(retries);retries.setOnClickListener(v->{Store.set("fileAutoRetry",Store.get("fileAutoRetry","1").equals("1")?"0":"1");build();});
+        LinearLayout transfers=Ui.setRow(this,getString(R.string.file_transfers),null,"›");box.addView(transfers);transfers.setOnClickListener(v->startActivity(new Intent(this,TransfersActivity.class)));
         // transfer mode
         boolean internet = Store.get("mode", "wifi").equals("internet");
         LinearLayout modeRow = Ui.setRow(this, getString(R.string.transfer_mode), getString(R.string.transfer_mode_sub), null);
@@ -70,11 +72,7 @@ public class SettingsActivity extends Activity {
         upd.setOnClickListener(v -> checkUpdates());
         box.addView(upd);
 
-        boolean auto = Store.autosendOn();
-        String autoVal = auto ? getString(R.string.autosend_on) : getString(R.string.autosend_off);
-        LinearLayout autoRow = Ui.setRow(this, getString(R.string.autosend), getString(R.string.autosend_sub), autoVal);
-        autoRow.setOnClickListener(v -> configureAutosend());
-        box.addView(autoRow);
+
 
         box.addView(Ui.secHead(this, getString(R.string.general)));
 
@@ -128,7 +126,7 @@ public class SettingsActivity extends Activity {
                 .setView(wrap)
                 .setPositiveButton("OK", (d, w) -> {
                     String n = e.getText().toString().trim();
-                    if (!n.isEmpty()) Store.set("deviceName", n);
+                    if (!n.isEmpty()){Store.set("deviceName", n);Store.set("profileName",n);Outbox.kick();}
                     build();
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
@@ -137,65 +135,6 @@ public class SettingsActivity extends Activity {
 
     private void checkUpdates() {
         startActivity(new Intent(this,UpdateActivity.class));
-    }
-
-    private void configureAutosend() {
-        if (!Store.autosendOn() && Store.autosendFolder().isEmpty()) {
-            Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-            startActivityForResult(i, REQ_TREE);
-            return;
-        }
-        String[] items = {getString(R.string.autosend_on), getString(R.string.autosend_off), getString(R.string.pick_folder), getString(R.string.pick_target)};
-        new AppDialog(this)
-                .setTitle(getString(R.string.autosend))
-                .setItems(items, (d, which) -> {
-                    if (which == 0) Store.set("autosend", "1");
-                    else if (which == 1) Store.set("autosend", "0");
-                    else if (which == 2) startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), REQ_TREE);
-                    else pickAutosendTarget();
-                    build();
-                }).show();
-    }
-
-    private void pickAutosendTarget() {
-        java.util.ArrayList<String> labels = new java.util.ArrayList<>();
-        java.util.ArrayList<String> ids = new java.util.ArrayList<>();
-        JSONArray peers = Store.peers();
-        for (int i = 0; i < peers.length(); i++) {
-            JSONObject p = peers.optJSONObject(i);
-            if (p == null) continue;
-            labels.add(p.optString("name"));
-            ids.add("dev:" + p.optString("id"));
-        }
-        JSONArray groups = Store.groups();
-        for (int i = 0; i < groups.length(); i++) {
-            JSONObject g = groups.optJSONObject(i);
-            if (g == null) continue;
-            labels.add("▦ " + g.optString("name"));
-            ids.add("grp:" + g.optString("id"));
-        }
-        if (ids.isEmpty()) return;
-        new AppDialog(this)
-                .setTitle(getString(R.string.pick_target))
-                .setItems(labels.toArray(new String[0]), (d, which) -> {
-                    Store.set("autosendTarget", ids.get(which));
-                    Store.set("autosend", "1");
-                    build();
-                }).show();
-    }
-
-    @Override protected void onActivityResult(int req, int res, Intent data) {
-        super.onActivityResult(req, res, data);
-        if (req == REQ_TREE && res == RESULT_OK && data != null) {
-            Uri tree = data.getData();
-            try {
-                getContentResolver().takePersistableUriPermission(tree,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            } catch (Exception ignored) {}
-            Store.set("autosendFolder", tree.toString());
-            if (Store.autosendTarget().isEmpty()) pickAutosendTarget();
-            else { Store.set("autosend", "1"); build(); }
-        }
     }
 
     private void pickLanguage() {

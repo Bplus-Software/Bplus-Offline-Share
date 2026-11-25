@@ -9,7 +9,8 @@ import org.json.JSONObject;
 
 public class AutoSend {
     // list direct children of a SAF tree folder (non-recursive for v1.0)
-    public static JSONArray listFiles(Context c, Uri treeUri) {
+    public static JSONArray listFiles(Context c,Uri treeUri){try{return listFilesChecked(c,treeUri);}catch(Exception e){return new JSONArray();}}
+    public static JSONArray listFilesChecked(Context c, Uri treeUri)throws Exception {
         JSONArray out = new JSONArray();
         try {
             String docId = DocumentsContract.getTreeDocumentId(treeUri);
@@ -21,7 +22,7 @@ public class AutoSend {
                             DocumentsContract.Document.COLUMN_SIZE,
                             DocumentsContract.Document.COLUMN_MIME_TYPE},
                     null, null, null);
-            if (cur == null) return out;
+            if (cur == null) throw new java.io.IOException("Folder inaccessible");
             while (cur.moveToNext()) {
                 String mime = cur.getString(3);
                 if (DocumentsContract.Document.MIME_TYPE_DIR.equals(mime)) continue;
@@ -33,7 +34,7 @@ public class AutoSend {
                 out.put(o);
             }
             cur.close();
-        } catch (Exception ignored) {}
+        } catch (Exception e) {throw e;}
         return out;
     }
 }

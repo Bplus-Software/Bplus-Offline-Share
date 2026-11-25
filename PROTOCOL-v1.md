@@ -38,3 +38,7 @@ New received files use typed subfolders. No old files are moved. Received file U
 ## 1.1.1 local host groups
 
 Separate liveGroups records, not legacy recipient lists. A paired host sends /group/invite with its known pairing token, group ID and unique per-member group key. Recipient explicitly calls /group/join; invitation alone enables no messages. /group/message accepts joined member key + IP and assigns sender from host membership, not supplied sender text. Host queues /group/deliver with each member's own key; recipient verifies host IP/key and joined state. /group/file and /group/file-deliver stream local files with the same gates and group-scoped message IDs. Duplicate file requests drain their bodies without resaving. All routes require POST. Text JSON cap 20KB, text 8000 chars, files <2GB. No cloud relay, automatic retry, offline history, host election, roster sync, removal/leave or encryption. A host ack is not proof of delivery to every member. Group secrets and IP binding are not cryptographic identity. Network changes are not automatically repaired.
+
+## Durable LAN sync v2 extension
+
+See PROTOCOL-v2-SYNC.md for Android/Windows1.0.1 text queue, idempotent receipt/status, live profile refresh and peer removal behavior. Existing QR and v1 endpoints retained.
