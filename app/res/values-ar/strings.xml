@@ -449,4 +449,12 @@
 <string name="delete_grant_cancelled">توقف الحذف المحلي قبل فتح منتقي ملفات أندرويد. لم يتم تأكيد أي حذف.</string>
 <string name="delete_picker_cancelled">أندرويد لم يرجع ملفا محددا أو إذن وصول. لم يتم تأكيد أي حذف.</string>
 <string name="delete_consent_denied">أندرويد لم يوافق على طلب الحذف المحلي. لم يتم تأكيد أي حذف.</string>
+
+<string name="pair_device">اقتران</string>
+<string name="repair_title">الاقتران مع %1$s</string>
+<string name="repair_note">المحادثة هتفضل موجودة. وصل الجهازين بنفس الواي فاي أو نقطة الاتصال وافتح الأجهزة القريبة في التطبيقين، ووافق من الجهاز الآخر. أو اعرض رمز QR جديد على نفس الجهاز وامسحه هنا. الاقتران مش هيرجع إلا بعد التأكيد.</string>
+<string name="repair_nearby">ابحث عن نفس الجهاز بالقرب منك</string>
+<string name="repair_qr">امسح رمز QR الخاص به</string>
+<string name="repair_wait">جاري البحث عن %1$s. افتح الأجهزة القريبة عليه ووافق على الطلب. المحادثة محفوظة.</string>
+<string name="repair_wrong_qr">ده مش رمز اقتران جديد للجهاز المحفوظ ده. اعرض رمز QR جديد على نفس الجهاز. المحادثة بدون تغيير.</string>
 </resources>

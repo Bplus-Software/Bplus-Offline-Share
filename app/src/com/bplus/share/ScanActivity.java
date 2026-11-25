@@ -136,7 +136,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
         try {
             JSONObject o = new JSONObject(text);
             if (!"bplus-share".equals(o.optString("app"))) throw new Exception("not ours");
-            payload = o;
+            if(!Repair.matches(Repair.target(this),o.optString("id"))||!Repair.fresh(Repair.target(this),o.optString("pairEpoch"))||!Repair.target(this).isEmpty()&&!o.optString("batch").isEmpty()){stopCamera();new AppDialog(this).setTitle(R.string.pair_device).setMessage(R.string.repair_wrong_qr).setPositiveButton(R.string.try_again,(d,n)->showScan()).setNegativeButton(R.string.cancel,(d,n)->finish()).setOnCancelListener(d->showScan()).show();return;}payload = o;
         } catch (Exception e) {
             handled = false;
             return;
@@ -158,7 +158,7 @@ public class ScanActivity extends Activity implements TextureView.SurfaceTexture
             String qrToken = payload.optString("token");
             JSONObject res = Net.pair(ip, port, qrToken,payload.optString("pairEpoch"));
             if (res == null) { pairError=Net.lastError(); main.post(this::failPair); return; }
-            peerId = res.optString("id");
+            if(!Repair.target(this).isEmpty()&&(!Repair.matches(Repair.target(this),res.optString("id"))||!payload.optString("pairEpoch").equals(res.optString("pairEpoch")))){pairError="Same device and fresh pairing epoch were not confirmed";main.post(this::failPair);return;}peerId = res.optString("id");
             peerName = res.optString("name");
             peerToken = qrToken;
             try {

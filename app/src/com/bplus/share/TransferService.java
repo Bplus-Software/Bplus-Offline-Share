@@ -156,7 +156,7 @@ public class TransferService extends Service {
                 if(len<0||len>48000){err(out,400);return;}
                 byte[] body = readBody(in, len);
                 JSONObject input=new JSONObject(new String(body,"UTF-8"));
-                JSONObject peer=Profile.clean(input);peer.put("token",input.getString("token"));String epoch=input.optString("pairEpoch");if(epoch.matches("[a-f0-9]{64}"))peer.put("pairEpoch",epoch);
+                JSONObject peer=Profile.clean(input);peer.put("token",input.getString("token"));String epoch=input.optString("pairEpoch");if(Unpair.load(peer.getString("id"))!=null&&!epoch.matches("[a-f0-9]{64}"))throw new java.io.IOException("Fresh epoch required for re-pair");if(epoch.matches("[a-f0-9]{64}"))peer.put("pairEpoch",epoch);
                 peer.put("ip", s.getInetAddress().getHostAddress());
                 peer.put("port", Store.PORT);
                 peer.put("lastSeen", System.currentTimeMillis());

@@ -141,8 +141,8 @@ public class ChatActivity extends Activity {
         });
     }
 
-    @Override protected void onResume(){super.onResume();resumed=true;if(msgs!=null)renderThread();syncUi.removeCallbacks(syncTick);syncUi.post(syncTick);Outbox.kick();}
-    @Override protected void onPause(){resumed=false;syncUi.removeCallbacks(syncTick);if(voice!=null)voice.cancel();VoicePlayer.release(this);super.onPause();}
+    @Override protected void onResume(){super.onResume();peer=Store.listedPeer(peerId);if(peer==null){finish();return;}resumed=true;if(msgs!=null)renderThread();syncUi.removeCallbacks(syncTick);syncUi.post(syncTick);Outbox.kick();}
+    @Override protected void onPause(){EmojiPicker.dismiss(this);resumed=false;syncUi.removeCallbacks(syncTick);if(voice!=null)voice.cancel();VoicePlayer.release(this);super.onPause();}
     private void renderThread() {
         VoicePlayer.release(this);
         msgs.removeAllViews();progressLabels.clear();progressBars.clear();

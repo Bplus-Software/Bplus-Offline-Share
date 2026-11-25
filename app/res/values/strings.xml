@@ -449,4 +449,12 @@
 <string name="delete_grant_cancelled">Local deletion stopped before the Android file picker opened. No deletion was confirmed.</string>
 <string name="delete_picker_cancelled">Android returned no selected file or access grant. No deletion was confirmed.</string>
 <string name="delete_consent_denied">Android did not approve the local delete request. No deletion was confirmed.</string>
+
+<string name="pair_device">Pair</string>
+<string name="repair_title">Pair with %1$s</string>
+<string name="repair_note">Your chat stays here. On the same Wi-Fi or hotspot, open Nearby on both apps and accept on the other device. Or show a fresh QR code on that device and scan it here. Pairing is not restored until confirmed.</string>
+<string name="repair_nearby">Find this device nearby</string>
+<string name="repair_qr">Scan its QR code</string>
+<string name="repair_wait">Looking for %1$s. Open Nearby on that device and accept the request. Your chat is kept.</string>
+<string name="repair_wrong_qr">This is not a fresh pairing code for this saved device. Show a new QR code on the same device. Your chat is unchanged.</string>
 </resources>
