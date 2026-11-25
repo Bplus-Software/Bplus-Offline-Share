@@ -1,0 +1,14 @@
+B+ Share 1.1.15, inbound sharing device-test pre-release
+
+Changes
+- B+ Share registers as an Android SEND/SEND_MULTIPLE target for text/URLs and file types, including images/video/audio/documents. Apps that use Android's compatible share sheet can offer it. Individual social apps control their own menus and what data they expose; some share a link rather than original media. No promise it appears in every custom social-app menu.
+- Incoming share opens a preview of text and prepared filenames/sizes, then a list of paired private chats/devices. Pick a target and explicitly press Send in confirmation. No content is sent automatically. Groups are not inbound-share targets in this first version.
+- Readable content-URI attachments are copied to private app staging before choosing a chat, because temporary source grants can expire. Up to 20 files, 100MB per file, 200MB total and 8000 text characters. Actual streamed bytes enforce limits. Unsupported/missing/unreadable/over-limit input stops with nothing sent. Non-content URIs and own-app provider URIs are refused; links in shared text stay text, not fetched.
+- Cancelling before Send removes staging copies. Committing sends text as one new message and files as copies through the normal private transfer path; retained staged copies back the resulting chat cards/retry, including failed sends. Source originals untouched. Partial item count shown. No automatic retry or duplicate prevention beyond existing receipt rules. App recreation during import/send is not resumable. Process termination can leave an orphan staging copy; no automatic cleanup is claimed.
+- Includes 1.1.14 centered plain seek line and lazy single-note playback improvements; no playback waveform added while unconfirmed.
+
+Validation and limits
+- Clean signed build, versionCode20, original signer. Import-rule tests cover count/actual-byte/text bounds, content-only source and own-provider rejection; manifest/source checks cover SEND/MULTIPLE/ClipData and explicit confirmation/cleanup. Prior suites pass; exact 1.1.14 candidate updater redirect/SHA harness included.
+- Actual Android share-sheet appearance, social-app payloads/grants, import preview/layout, staging lifetime and two-phone transfers remain unverified. No runtime 1.1.15 pixels. Test-only, risk unmeasured. Test Gallery one image, multiple images, text/link from a browser/social app and cancellation before important use.
+- Existing LAN/reachability/unencrypted HTTP/group-host/voice/recall/storage/installer limits unchanged. Both phones need receipt-capable version for new private remote recall. No cloud relay, Windows, group recall or automatic social-media download.
+- Pre-release, no promotion. GitHub normal latest stays 1.1.5. In 1.1.10+, Settings > Check for updates with tests enabled can discover it. Install over current, do not uninstall. Downgrade may require uninstall and lose local data.
