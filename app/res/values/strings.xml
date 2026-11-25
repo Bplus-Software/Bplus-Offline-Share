@@ -5,7 +5,7 @@
     <string name="send_files">Send files</string>
     <string name="send_sub">Pick anything and show a QR code</string>
     <string name="receive_files">Receive files</string>
-    <string name="receive_sub">Scan the code on the other phone</string>
+    <string name="receive_sub">Scan the code on the other device</string>
     <string name="devices_groups">Devices &amp; groups</string>
     <string name="footer">No accounts · No internet needed · Any file type</string>
     <string name="select_files">Select files</string>
@@ -13,7 +13,7 @@
     <string name="next">Next →</string>
     <string name="files_selected">%1$d files selected</string>
     <string name="show_code">Show this code</string>
-    <string name="qr_hint">Open B+ Offline Share on the other phone and choose "Receive files"</string>
+    <string name="qr_hint">Open B+ Offline Share on the other device and choose "Receive files"</string>
     <string name="waiting">Waiting to connect…</string>
     <string name="this_phone">This phone: %1$s</string>
     <string name="cancel">Cancel</string>
@@ -27,7 +27,7 @@
     <string name="sending">Sending…</string>
     <string name="receiving">Receiving…</string>
     <string name="overall">Overall progress</string>
-    <string name="keep_open">Keep both phones open</string>
+    <string name="keep_open">Keep both devices open</string>
     <string name="dont_lock">Don\'t lock the screen</string>
     <string name="done_title">Transfer complete</string>
     <string name="done_sub">%1$d files · %2$s · saved to Downloads/B+ Share</string>
@@ -42,7 +42,7 @@
     <string name="mode_internet">Internet</string>
     <string name="internet_soon">Coming in the next version</string>
     <string name="device_name">Device name</string>
-    <string name="device_name_sub">Shown to the other phone when pairing</string>
+    <string name="device_name_sub">Shown to the other device when pairing</string>
     <string name="save_to">Save received files to</string>
     <string name="check_updates">Check for updates</string>
     <string name="updates_sub">Updates come from the B+ Offline Share GitHub releases page</string>
@@ -120,23 +120,23 @@
     <string name="verifying_signature">Verifying the app package, version and signing certificate.</string>
     <string name="installer_help">Android installer opens after download and verification. Confirm there to finish.</string>
     <string name="details_copied">Details copied</string>
-    <string name="connect_phones">Connect both phones first</string>
-    <string name="lan_steps">Local transfers need a connection between phones. Mobile data alone is not enough.\n\n1. Connect both phones to the same Wi-Fi.\n\n2. Or turn on a hotspot on one phone and join it from the other.\n\n3. Come back and check the connection.</string>
+    <string name="connect_phones">Connect both devices first</string>
+    <string name="lan_steps">Local transfers need a connection between phones. Mobile data alone is not enough.\n\n1. Connect both devices to the same Wi-Fi.\n\n2. Or turn on a hotspot on one phone and join it from the other.\n\n3. Come back and check the connection.</string>
     <string name="open_wifi">Open Wi-Fi settings</string>
     <string name="check_connection">Check connection</string>
     <string name="no_lan">No usable Wi-Fi or hotspot address found yet.</string>
     <string name="lan_note">Internet access is not required. The network must allow phones to connect to each other.</string>
-    <string name="peer_not_responding">The other phone is not responding</string>
+    <string name="peer_not_responding">The other device is not responding</string>
     <string name="target_device">Device</string>
     <string name="target_address">Target address</string>
     <string name="local_address">This phone address</string>
     <string name="failure_reason">Reason</string>
-    <string name="pair_help">Keep B+ Offline Share open on both phones and check their network. On guest Wi-Fi, try another network or a hotspot. Details do not include pairing tokens or file contents.</string>
+    <string name="pair_help">Keep B+ Offline Share open on both devices and check their network. On guest Wi-Fi, try another network or a hotspot. Details do not include pairing tokens or file contents.</string>
     <string name="try_again">Try again</string>
 <string name="history_confirm">Copy chat text and file records from %1$s? This is a one-time local copy. File contents are not copied. Existing threads on this phone are kept.</string>
 <string name="copy_history">Copy history</string>
 <string name="history_copied">History copied. File records do not include the original files.</string>
-<string name="history_failed">History was not copied. Check the other phone or existing threads.</string>
+<string name="history_failed">History was not copied. Check the other device or existing threads.</string>
 <string name="chats_title">Chats</string>
 <string name="chats_sub">Open a conversation directly</string>
 <string name="no_chats">Pair a device to start chatting.</string>
@@ -166,13 +166,13 @@
 <string name="retry_details">Tap to retry or view connection details</string>
 <string name="peer_missing">Paired device record is missing. Pair again.</string>
 <string name="not_delivered_title">Message not confirmed delivered</string>
-<string name="retry_duplicate_note">If a reply was lost, the other phone may already have received this message. Retrying may send it twice.</string>
+<string name="retry_duplicate_note">If a reply was lost, the other device may already have received this message. Retrying may send it twice.</string>
 <string name="device_responded">Device responded to the connection test</string>
 <string name="diagnostic_note">This tests the saved device address, not message delivery. Keep both apps open on a network that allows devices to communicate. Mobile-data internet transfer is not supported yet. A failed test alone does not prove the cause. No pairing tokens or message contents are copied.</string>
 <string name="file_failed_actions">Not sent · hold for details or retry</string><string name="retry_file">Send file again</string>
 <string name="nearby_title">Add nearby people</string>
-<string name="nearby_notice">Visible only while this screen is open. Open Nearby on both phones on the same trusted Wi-Fi. Your name and photo are visible here. No files/chat are shared before acceptance.</string>
-<string name="nearby_empty">No devices found yet. Keep Nearby open on both phones. Some routers block discovery. Use QR as a fallback.</string>
+<string name="nearby_notice">Visible only while this screen is open. Open Nearby on both devices on the same trusted Wi-Fi. Your name and photo are visible here. No files/chat are shared before acceptance.</string>
+<string name="nearby_empty">No devices found yet. Keep Nearby open on both devices. Some routers block discovery. Use QR as a fallback.</string>
 <string name="nearby_failed">Discovery could not start. Check Wi-Fi/permissions or use QR.</string>
 <string name="qr_fallback">QR pairing / paired devices</string>
 <string name="request_pair">Send pairing request</string>
@@ -184,7 +184,7 @@
 <string name="accept_pair">Accept pairing</string>
 <string name="decline_pair">Decline</string>
 <string name="block_pair">Block this device</string>
-<string name="keep_nearby_open">Accepted. Keep this screen open until the other phone confirms.</string>
+<string name="keep_nearby_open">Accepted. Keep this screen open until the other device confirms.</string>
 <string name="my_profile">My profile</string>
 <string name="change_photo">Change photo</string>
 <string name="display_name">Display name</string>
@@ -220,7 +220,7 @@
 <string name="group_join_note">Invitation from %1$s. Joining enables group text and file delivery on this Wi-Fi. No old history is copied.</string>
 <string name="invite_member">Invite paired device</string>
 <string name="invite_confirm">Send a group invitation to %1$s? They must accept before group messages/files are delivered.</string>
-<string name="invite_sent">Invitation sent. Open Groups on the other phone.</string>
+<string name="invite_sent">Invitation sent. Open Groups on the other device.</string>
 <string name="groups_empty">No joined groups or invitations yet. Create a group or ask its host to invite your paired device.</string>
 <string name="legacy_lists">Devices / old file recipient lists</string>
 <string name="attach_no_reference">This old chat record has no saved file reference. The file may still be in Downloads/B+ Share.</string>
@@ -232,7 +232,7 @@
 <string name="send_selected_confirm">Send %1$d selected files to %2$s?</string>
 <string name="remove_cards_only">Remove selected chat cards only</string>
 <string name="delete_local_files">Delete files from this phone</string>
-<string name="remove_cards_note">Remove %1$d chat cards on this phone only? Files stay on disk and other phones are unchanged.</string>
+<string name="remove_cards_note">Remove %1$d chat cards on this phone only? Files stay on disk and other devices are unchanged.</string>
 <string name="delete_files_note">Permanently delete up to %1$d selected local file copies? Original files you sent may also be selected. This cannot be undone; chat cards stay as records. Other phones are unchanged. Android may refuse protected files.</string>
 <string name="delete_result">Delete request finished. %1$d files could not be deleted. Chat cards were kept.</string>
 <string name="share_other_apps">Share to other apps</string>
@@ -249,11 +249,11 @@
 <string name="clear_file_cards">Remove all file cards from this chat</string>
 <string name="clear_conversation">Clear this conversation on this phone</string>
 <string name="send_all_files">Send all chat files to another device</string>
-<string name="clear_file_cards_note">Remove all file cards from this chat on this phone only? Text messages, actual disk files, the received library and other phones stay unchanged. This is not disk-file deletion.</string>
-<string name="clear_conversation_note">Clear every message and file card in this conversation on this phone? Actual disk files, received library, pairing, group membership and other phones stay unchanged.</string>
+<string name="clear_file_cards_note">Remove all file cards from this chat on this phone only? Text messages, actual disk files, the received library and other devices stay unchanged. This is not disk-file deletion.</string>
+<string name="clear_conversation_note">Clear every message and file card in this conversation on this phone? Actual disk files, received library, pairing, group membership and other devices stay unchanged.</string>
 <string name="send_all_files_note">Send copies of %1$d chat file entries to %2$s? Originals and cards stay here. Repeated entries may send duplicate copies. No automatic retries.</string>
 <string name="no_chat_files">No file cards in this chat</string>
-    <string name="remove_card_note">Remove 1 chat card on this phone only? Files stay on disk and other phones are unchanged.</string>
+    <string name="remove_card_note">Remove 1 chat card on this phone only? Files stay on disk and other devices are unchanged.</string>
     <string name="remove_selected_messages">Delete from this chat</string>
     <string name="remove_message_note">Delete this message from this chat? The file stays on your phone.</string>
     <string name="remove_messages_note">Delete these %1$d messages from this chat? Files stay on your phone.</string>
@@ -277,8 +277,8 @@
 <string name="delete_everyone">Delete for everyone</string>
 <string name="recall_private_only">Delete for everyone is available in private chats only.</string>
 <string name="recall_unavailable">Select only messages or files you sent with this feature. Both phones need 1.1.10 or newer. Older items cannot be deleted remotely.</string>
-<string name="recall_confirm">Delete the selected messages on both phones and their B+ Offline Share received files on the other phone? Your original files stay here. This cannot be undone.</string>
-<string name="recall_result">Deleted on both phones: %1$d. Not confirmed: %2$d. Unconfirmed items stay in this chat. The other phone may be offline, outdated, or unable to delete the file. Try again or choose Delete from this chat.</string>
+<string name="recall_confirm">Delete the selected messages on both devices and their B+ Offline Share received files on the other device? Your original files stay here. This cannot be undone.</string>
+<string name="recall_result">Deleted on both devices: %1$d. Not confirmed: %2$d. Unconfirmed items stay in this chat. The other device may be offline, outdated, or unable to delete the file. Try again or choose Delete from this chat.</string>
 <string name="recall_pending_label">Delete for everyone not confirmed</string>
 <string name="delete_success_cards_removed">Successfully deleted files were also removed from this chat. Failed items stay here.</string>
 <string name="include_test_versions">Include test versions</string>
@@ -444,4 +444,6 @@
 <string name="admin_updated">Admin role saved. Offline or older devices remain pending.</string>
 <string name="developer_mode">Developer mode</string>
 <string name="developer_mode_note">Show diagnostic controls for files, transfers, discovery and updates. Off by default. Error dialogs can still offer details.</string>
+<string name="recall_unknown_hint">The other device has no saved receipt for this item. Old files cannot be matched safely by name. Send it again after both apps are updated to 1.0.23.</string>
+<string name="recall_update_hint">The other device does not support this request. Update both apps to 1.0.23 and retry.</string>
 </resources>
