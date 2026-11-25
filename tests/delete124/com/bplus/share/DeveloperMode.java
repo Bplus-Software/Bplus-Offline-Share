@@ -1,0 +1,1 @@
+package com.bplus.share;class DeveloperMode{static boolean enabled(){return false;}}

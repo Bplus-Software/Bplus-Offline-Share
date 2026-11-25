@@ -446,4 +446,7 @@
 <string name="developer_mode_note">Show diagnostic controls for files, transfers, discovery and updates. Off by default. Error dialogs can still offer details.</string>
 <string name="recall_unknown_hint">The other device has no saved receipt for this item. Old files cannot be matched safely by name. Send it again after both apps are updated to 1.0.23.</string>
 <string name="recall_update_hint">The other device does not support this request. Update both apps to 1.0.23 and retry.</string>
+<string name="delete_grant_cancelled">Local deletion stopped before the Android file picker opened. No deletion was confirmed.</string>
+<string name="delete_picker_cancelled">Android returned no selected file or access grant. No deletion was confirmed.</string>
+<string name="delete_consent_denied">Android did not approve the local delete request. No deletion was confirmed.</string>
 </resources>

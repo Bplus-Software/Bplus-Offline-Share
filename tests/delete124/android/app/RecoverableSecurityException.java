@@ -1,0 +1,1 @@
+package android.app;public class RecoverableSecurityException extends SecurityException{public Action getUserAction(){return new Action();}public static class Action{public PendingIntent getActionIntent(){return new PendingIntent();}}}
